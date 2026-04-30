@@ -29,7 +29,12 @@
   <header>
     <div class="header-content">
       <div class="logo">RGP</div>
-      <nav>
+      <button class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav id="nav-menu">
         <a href="/">Home</a>
         <a href="/about/">About Us</a>
         <a href="/services/">Services</a>
@@ -140,5 +145,26 @@ With the right messaging and channels, you capture a meaningful share of that de
       </div>
     </div>
   </footer>
+
+  <script>
+    // Hamburger Menu Toggle
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (hamburger && navMenu) {
+      hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+      });
+
+      // Close menu when a link is clicked
+      navMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function() {
+          hamburger.classList.remove('active');
+          navMenu.classList.remove('active');
+        });
+      });
+    }
+  </script>
 </body>
 </html>
