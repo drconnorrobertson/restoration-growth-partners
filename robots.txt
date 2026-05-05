@@ -3,4 +3,8 @@ Allow: /
 Disallow: /admin/
 Disallow: /private/
 
+# Sitemaps
 Sitemap: https://restorationgrowthpartners.com/sitemap.xml
+
+# Crawl-delay (optional, polite)
+Crawl-delay: 1

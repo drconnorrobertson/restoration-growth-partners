@@ -995,3 +995,39 @@ footer a:hover {
   padding: 0 4px;
   border-radius: 2px;
 }
+
+/* Logo image styles */
+.logo img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.logo {
+  text-decoration: none;
+}
+
+/* Client logos section */
+.client-logos img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  filter: grayscale(30%);
+  transition: filter 0.3s ease;
+}
+
+.client-logos img:hover {
+  filter: grayscale(0%);
+}
+
+/* Related links section */
+.related-links ul li,
+.related-services p {
+  margin-bottom: 0.5rem;
+}
+
+.related-links a,
+.related-services a {
+  color: var(--primary-blue, #2B5797);
+  text-decoration: underline;
+}
