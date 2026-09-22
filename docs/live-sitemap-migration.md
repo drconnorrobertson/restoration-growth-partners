@@ -2,6 +2,8 @@
 
 Captured from https://www.restorationgrowthpartners.com/sitemap.xml on 2026-09-22. The public domain remains on the current site. Do not point it to Vercel until every `rebuild` row has an equivalent page or an explicitly approved redirect and all 25 legacy paths are tested on the Vercel deployment.
 
+The 10 distinct pages marked `rebuild` have source-text and media-reference snapshots in [legacy-page-snapshots](legacy-page-snapshots/). Each snapshot records the original URL and an SHA-256 digest of the retrieved HTML. These files preserve migration source material; they are not published pages and do not satisfy the cutover gate.
+
 | Status | Count | Meaning |
 | --- | ---: | --- |
 | Retained | 6 | Same-content route exists on Vercel |
@@ -36,4 +38,4 @@ Captured from https://www.restorationgrowthpartners.com/sitemap.xml on 2026-09-2
 | `/keep-in-touch-with-site-visitors-and-boost-loyalty` | rebuild | **Pending** |
 | `/tips-for-writing-great-posts-that-increase-your-site-traffic` | rebuild | **Pending** |
 
-The three general blog posts, two package pages, two training pages, the lead analysis page, the home-services article, and Restoration Heroes case study are the ten pages still requiring content migration. Preserve their relevant text, media, offers, and conversion paths before switching the domain. Do not add these incomplete URLs to Vercel's XML sitemap.
+The three general blog posts, two package pages, two training pages, the lead analysis page, the home-services article, and Restoration Heroes case study are the ten pages still requiring content migration. Rebuild their relevant text, media, offers, and conversion paths before switching the domain. Do not add these incomplete URLs to Vercel's XML sitemap.
