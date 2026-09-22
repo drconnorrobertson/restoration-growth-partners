@@ -16,10 +16,15 @@ The user-supplied keyword screenshot reports these volume and KD estimates: "wat
 | Water damage agency/commercial | /services/water-damage-marketing/ | water damage restoration marketing; water restoration marketing |
 | Water damage education | /guides/complete-water-damage-marketing-guide/ | how to market a water damage restoration company |
 | Local organic tactic | /blog/water-damage-seo | water damage SEO |
-| Paid search tactic | /blog/google-ads-water-damage | Google Ads for water damage |
-| Lead sourcing | /blog/water-damage-lead-generation | water damage lead generation |
-| Financial planning | /blog/water-damage-marketing-budget | water damage marketing budget |
-| Call conversion | /blog/water-damage-emergency-calls | water damage emergency calls |
+| Google Maps and Business Profile | /guides/water-damage-google-business-profile/ | water damage Google Maps and GBP |
+| Paid search tactic | /guides/water-damage-google-ads/ | Google Ads for water damage |
+| Local Services Ads | /guides/water-damage-local-services-ads/ | water damage LSA |
+| Website conversion | /guides/water-damage-website-conversion/ | water damage website design and calls |
+| Financial planning | /guides/water-damage-lead-economics/ | water damage marketing budget and lead cost |
+| Referral and commercial | /guides/water-damage-referrals-commercial/ | plumber, property manager, and facility referrals |
+| Call conversion | /guides/water-damage-call-handling/ | water damage emergency calls |
+
+The 250-keyword inventory in `docs/water-damage-250-keywords.csv` maps each phrase to one of these 10 water-damage-specific pages. Existing broader articles remain as supporting resources. Closely related search phrases share a page when the user needs the same answer.
 
 One page owns each intent. Update or consolidate an existing page before publishing another URL with the same purpose.
 
@@ -39,7 +44,7 @@ Every page should answer an actual buyer or operator question, reflect RGP's rea
 
 ## Technical release checklist
 
-- Confirm canonical URLs resolve to the intended 200 response on the deployed Vercel site.
+- Confirm canonical URLs resolve to the intended 200 response after the public domain moves to Vercel. Until then, the Vercel preview is accessible but the canonical host still points to the current site.
 - Check title, description, H1, structured data, navigation, and mobile layout.
 - Add new URLs to the sitemap and submit the sitemap in Search Console.
 - Inspect whether the old guide is indexed and whether it earns queries before changing its URL. This implementation keeps its existing URL.

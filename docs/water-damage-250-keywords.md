@@ -64,7 +64,7 @@ Suggested primary URL: `/blog/water-damage-seo`
 
 ## Google Maps and GBP
 
-Suggested primary URL: `/services/google-business-profile/`
+Suggested primary URL: `/guides/water-damage-google-business-profile/`
 
 51. Google Business Profile optimization for water damage restoration
 52. how water damage companies rank on Google Maps
@@ -94,7 +94,7 @@ Suggested primary URL: `/services/google-business-profile/`
 
 ## Google Ads and PPC
 
-Suggested primary URL: `/blog/google-ads-water-damage`
+Suggested primary URL: `/guides/water-damage-google-ads/`
 
 76. Google Ads management for water damage restoration companies
 77. water damage restoration PPC campaign structure
@@ -124,7 +124,7 @@ Suggested primary URL: `/blog/google-ads-water-damage`
 
 ## Local Services Ads
 
-Suggested primary URL: `/blog/local-service-ads-restoration`
+Suggested primary URL: `/guides/water-damage-local-services-ads/`
 
 101. Local Services Ads for water damage restoration companies
 102. water damage restoration Google LSA setup guide
@@ -154,7 +154,7 @@ Suggested primary URL: `/blog/local-service-ads-restoration`
 
 ## Website and conversion
 
-Suggested primary URL: `/services/website-design/`
+Suggested primary URL: `/guides/water-damage-website-conversion/`
 
 126. water damage restoration website design for lead generation
 127. water damage restoration website redesign checklist
@@ -184,7 +184,7 @@ Suggested primary URL: `/services/website-design/`
 
 ## Lead economics and measurement
 
-Suggested primary URL: `/blog/water-damage-marketing-budget`
+Suggested primary URL: `/guides/water-damage-lead-economics/`
 
 151. water damage restoration marketing budget calculator
 152. how much should water damage companies spend on marketing
@@ -214,7 +214,7 @@ Suggested primary URL: `/blog/water-damage-marketing-budget`
 
 ## Referral and commercial
 
-Suggested primary URL: `/blog/plumber-referral-partnerships`
+Suggested primary URL: `/guides/water-damage-referrals-commercial/`
 
 176. water damage restoration plumber referral marketing
 177. water damage restoration property manager marketing
@@ -244,7 +244,7 @@ Suggested primary URL: `/blog/plumber-referral-partnerships`
 
 ## Operations and calls
 
-Suggested primary URL: `/blog/water-damage-emergency-calls`
+Suggested primary URL: `/guides/water-damage-call-handling/`
 
 201. water damage restoration emergency call conversion checklist
 202. water damage restoration after hours call answering strategy
