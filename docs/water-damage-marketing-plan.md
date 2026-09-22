@@ -53,9 +53,9 @@ Weeks 3-4: add verified client proof and original visual examples to hub and gui
 Weeks 5-8: refresh the existing lead generation and Google Ads articles using actual RGP insights; publish a useful budget worksheet or calculator; earn relevant industry coverage.
 Weeks 9-12: assess query-to-page fit in Search Console. Improve pages with impressions but weak CTR or engagement. Expand only into distinct questions surfaced by real search and sales data.
 
-## Off-site properties
+## One-site strategy
 
-Defer new domains until this cluster is indexed and producing useful data. A later research or tools property needs its own audience, original assets, and independent value. Multiple similar agency domains created to occupy the same result page would risk doorway abuse under Google's published spam policy.
+Build and maintain this campaign on restorationgrowthpartners.com. Publish future research, calculators, templates, and case studies in the most relevant sections of the same site. Do not create satellite domains for these keywords. Keep one clear URL for each search intent and consolidate overlapping pages as the library grows.
 
 ## Reporting
 
