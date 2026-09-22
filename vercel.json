@@ -5,16 +5,75 @@
     {
       "source": "/assets/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/case-studies/american-water-damage-restoration",
+      "destination": "/case-studies/american-water-damage/",
+      "permanent": true
+    },
+    {
+      "source": "/cgp-book-a-call",
+      "destination": "/contact/",
+      "permanent": true
+    },
+    {
+      "source": "/contractor-growth-partners-test",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/cgp-about-us",
+      "destination": "/about/",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/about/",
+      "permanent": true
+    },
+    {
+      "source": "/case-studies/ercolano-cleaning-and-restoration",
+      "destination": "/case-studies/ercolano-cleaning-restoration/",
+      "permanent": true
+    },
+    {
+      "source": "/schedule-a-call",
+      "destination": "/contact/",
+      "permanent": true
+    },
+    {
+      "source": "/case-studies/1-800-water-damage-of-utah-county",
+      "destination": "/case-studies/1800-water-damage-utah/",
+      "permanent": true
+    },
+    {
+      "source": "/home-old",
+      "destination": "/",
+      "permanent": true
     }
   ]
 }
