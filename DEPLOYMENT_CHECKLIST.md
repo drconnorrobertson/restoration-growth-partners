@@ -1,5 +1,13 @@
 # Deployment Checklist - Restoration Growth Partners
 
+## Domain migration gate
+
+- [ ] Review all 25 URLs in [the live sitemap inventory](docs/live-sitemap-migration.md).
+- [ ] Rebuild or explicitly map the 10 distinct live pages marked `rebuild`.
+- [ ] Test every legacy URL on the Vercel deployment for a useful page or permanent redirect.
+- [ ] Confirm the booking calendar and contact paths work after the migration.
+- [ ] Only then change the public domain from its current host to Vercel.
+
 ## Pre-Deployment (Customize)
 
 - [ ] Update footer company name, address, phone, email
