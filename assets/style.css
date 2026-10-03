@@ -1206,3 +1206,19 @@ footer ul li a {
   padding: 0 4px;
   border-radius: 2px;
 }
+
+/* Visual refinement 2026-10: preserve the existing brand, layout and content. */
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+h1, h2, h3 { text-wrap: balance; }
+p, blockquote { text-wrap: pretty; }
+:where(a, button, input, select, textarea):focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+:where(article, .content, .article-content) a { text-underline-offset: .2em; text-decoration-thickness: 1px; }
+:where(.hero-grid, .features-grid, .cards-grid, .grid, .footer-grid) > * { min-width: 0; }
+@media (max-width: 600px) { input, select, textarea { font-size: 16px; } :where(.hero-cta, .hero-actions, .cta-actions) { flex-wrap: wrap; row-gap: 12px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; } }
+
+.card { box-shadow: 0 1px 2px rgba(15,23,42,.035), 0 10px 30px rgba(15,23,42,.055); }
+
+.btn, .btn-primary, .btn-outline { transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+
+h1, h2 { letter-spacing: -.02em; } .eyebrow { line-height: 1.6; } .body-copy { line-height: 1.8; }
