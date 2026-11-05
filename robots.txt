@@ -8,3 +8,6 @@ Sitemap: https://restorationgrowthpartners.com/sitemap.xml
 
 # Crawl-delay (optional, polite)
 Crawl-delay: 1
+
+# Marketing playbook library on this deployment
+Sitemap: https://restoration-growth-partners.vercel.app/sitemap-playbooks.xml

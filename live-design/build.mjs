@@ -9,4 +9,6 @@ cpSync(join(root, 'live-design/overrides'), build, {recursive:true});
 execFileSync('npm', ['ci','--ignore-scripts','--no-audit','--no-fund'], {cwd:build, stdio:'inherit'});
 execFileSync('npm', ['run','build'], {cwd:build, stdio:'inherit',env:{...process.env,ASTRO_TELEMETRY_DISABLED:'1'}});
 execFileSync(process.execPath,[join(root,'live-design/publish.mjs'),build],{cwd:root,stdio:'inherit'});
+execFileSync('python3',[join(root,'content-engine/generate.py')],{cwd:root,stdio:'inherit'});
+execFileSync('python3',[join(root,'content-engine/validate.py')],{cwd:root,stdio:'inherit'});
 console.log('Rebuilt static website from preserved ZIP components and agency overrides.');

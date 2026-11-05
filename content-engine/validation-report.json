@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "content_pages": 4000,
+  "navigation_hubs": 151,
+  "total_new_pages": 4151,
+  "unique_titles": 4151,
+  "unique_h1s": 4151,
+  "unique_descriptions": 4151,
+  "unique_target_keywords": 4000,
+  "reachable_pages_from_library_root": 4151,
+  "internal_link_checks": 168779,
+  "local_asset_checks": 24906,
+  "structured_data_blocks": 4151,
+  "sitemap_urls": 4151,
+  "min_main_words": 1054,
+  "max_main_words": 1198,
+  "original_extracted_files_hash_verified": 229,
+  "original_archive_sha256_verified": true,
+  "errors": [],
+  "error_count": 0,
+  "limitations": [
+    "Keyword search volume and difficulty unverified: connected GSC subscription inactive.",
+    "Indexing and traffic are not guaranteed or established by these checks.",
+    "One original extracted synthetic-credential test fixture remains blocked by GitHub, preserved inside unchanged ZIP."
+  ]
+}
