@@ -1,0 +1,12 @@
+import { cpSync, mkdtempSync, mkdirSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { resolve, join } from 'node:path';
+import { execFileSync } from 'node:child_process';
+const root = resolve(import.meta.dirname, '..');
+const build = mkdtempSync(join(tmpdir(), 'rgp-live-design-'));
+cpSync(join(root, 'design-source/rgp-website-main'), build, {recursive:true});
+cpSync(join(root, 'live-design/overrides'), build, {recursive:true});
+execFileSync('npm', ['ci','--ignore-scripts','--no-audit','--no-fund'], {cwd:build, stdio:'inherit'});
+execFileSync('npm', ['run','build'], {cwd:build, stdio:'inherit',env:{...process.env,ASTRO_TELEMETRY_DISABLED:'1'}});
+execFileSync(process.execPath,[join(root,'live-design/publish.mjs'),build],{cwd:root,stdio:'inherit'});
+console.log('Rebuilt static website from preserved ZIP components and agency overrides.');

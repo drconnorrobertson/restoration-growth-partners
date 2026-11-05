@@ -1,0 +1,102 @@
+---
+/**
+ * Shared mobile sticky CTA bar (§10). Mounted from BaseLayout so every page
+ * type inherits it — never per-page.
+ *
+ * Design: owner-selected 2026-08-25 (option C frame, single action). A dark
+ * floating card with a reassurance line above one full-width call button.
+ * Deliberately ONE action: at the moment someone needs an emergency
+ * restoration crew, a competing "Request" button splits attention away from
+ * the call. The copy line does the persuading; the button does one thing.
+ *
+ * Behavior: hidden over the first viewport, revealed after ~50% of it (a
+ * "hero fully scrolled past" trigger fires far too late — split heroes are 2+
+ * viewports tall on mobile). Copy comes from per-client site data, never
+ * invented here. Motion respects prefers-reduced-motion via global.css.
+ */
+import { site } from '../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  /**
+   * Reassurance line above the button. Defaults to standard agency wording
+   * (owner decision 2026-08-25: hardcode it; only change on request) — so no
+   * build has to supply it and no site ships a blank or placeholder line.
+   *
+   * The availability claim is interpolated from verified intake
+   * (site.emergencyAvailability) rather than written into this string: hardcoding
+   * "24/7" would state an unverified claim on every page of a client who does
+   * not actually answer around the clock (§6).
+   */
+  copy?: string;
+  /** Button label. Shown with the approved number, which DNI swaps (§9). */
+  buttonLabel?: string;
+}
+
+const {
+  copy = 'Ready to grow your restoration business?',
+  buttonLabel = 'Call',
+} = Astro.props;
+---
+
+<!--
+  Hidden/shown by toggling an INLINE transform, not a utility class or a scoped
+  CSS rule. Both of those proved unreliable here: a toggled Tailwind class
+  depends on JIT generation, and an Astro-scoped attribute selector did not
+  match the element. An inline style is immune to both.
+-->
+<!--
+  While hidden the bar is `inert` + aria-hidden: an off-screen call button must not take keyboard
+  focus or be read out (PageSpeed/axe "aria-hidden-focus", flagged on client sites). The script
+  removes both the moment the bar slides in.
+-->
+<div
+  class="pointer-events-none fixed inset-x-0 bottom-0 z-50 md:hidden"
+  style="transform: translateY(110%); transition: transform 0.3s ease;"
+  data-mobile-sticky-cta
+  inert
+  aria-hidden="true"
+>
+  <div class="pointer-events-auto m-3 mb-[max(0.75rem,env(safe-area-inset-bottom))] rounded-md bg-dark p-2.5 shadow-xl">
+    <p class="flex items-center gap-2 px-1 pb-2 text-sm font-bold text-on-dark">
+      <span class="relative flex size-2 shrink-0" aria-hidden="true">
+        <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-bright/70"></span>
+        <span class="relative inline-flex size-2 rounded-full bg-accent-bright"></span>
+      </span>
+      {copy}
+    </p>
+
+    <a
+      href={site.phoneHref}
+      class="flex min-h-12 items-center justify-center gap-2.5 rounded-md bg-accent text-lg font-bold text-white transition hover:bg-accent-hover"
+    >
+      <Icon name="lucide:phone" class="size-5 shrink-0" aria-hidden="true" />
+      {buttonLabel} {site.phoneDisplay}
+    </a>
+  </div>
+</div>
+
+<script>
+  /**
+   * Reveal rule (§10): hidden in the initial hero view, shown after the user
+   * scrolls ~half the first viewport. A "hero out of view" trigger is
+   * deliberately NOT used — split heroes are 2+ viewports tall on mobile, which
+   * would reveal the bar far too late. The 50%-of-first-viewport clause in §10
+   * covers exactly this case.
+   */
+  const cta = document.querySelector('[data-mobile-sticky-cta]');
+  if (cta instanceof HTMLElement) {
+    const apply = () => {
+      const past = window.scrollY > window.innerHeight * 0.5;
+      cta.style.transform = past ? 'translateY(0)' : 'translateY(110%)';
+      cta.dataset.visible = String(past);
+      // Hidden = unfocusable and silent; visible = fully interactive (§10, axe aria-hidden-focus).
+      cta.inert = !past;
+      if (past) cta.removeAttribute('aria-hidden');
+      else cta.setAttribute('aria-hidden', 'true');
+    };
+    addEventListener('scroll', apply, { passive: true });
+    addEventListener('resize', apply, { passive: true });
+    apply();
+  }
+</script>

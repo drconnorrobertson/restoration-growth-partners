@@ -1,0 +1,1 @@
+import{n as e,t}from"./load-on-approach.Dt8eMbKD.js";document.querySelectorAll(`[data-review-widget]`).forEach(n=>{e(n,()=>{t(`https://elfsightcdn.com/platform.js`)},{rootMargin:600})});
