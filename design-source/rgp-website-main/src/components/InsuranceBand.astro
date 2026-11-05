@@ -1,0 +1,52 @@
+---
+/**
+ * Insurance section — REQUIRED on the default homepage (James, 2026-08-25).
+ * "We work with all major insurance companies" + carrier logo cards +
+ * "All others accepted" chip. Light section (keeps the dark/light rhythm after
+ * the dark VS + process pair). Carrier logo assets ship with the starter in
+ * /public/logos/insurance/ (sourced from the Romexterra reference build).
+ * The claim itself is standard agency positioning verified on both live
+ * reference sites; per-client wording still flows from approved copy.
+ */
+interface Props {
+  eyebrow?: string;
+  heading: string;
+  support?: string;
+}
+
+const { eyebrow = 'Insurance', heading, support } = Astro.props;
+
+const logos = [
+  { src: '/logos/insurance/State-farm-logo-2.svg', alt: 'State Farm Insurance' },
+  { src: '/logos/insurance/Allstate-Logo-2.svg', alt: 'Allstate Insurance' },
+  { src: '/logos/insurance/Farmers-Insurance-Logo-1.svg', alt: 'Farmers Insurance' },
+  { src: '/logos/insurance/GEICO-Logo.wine.svg', alt: 'GEICO Insurance' },
+  { src: '/logos/insurance/Liberty-Mutual-Logo.svg', alt: 'Liberty Mutual Insurance' },
+  { src: '/logos/insurance/nationwide-insurance.svg', alt: 'Nationwide Insurance' },
+  { src: '/logos/insurance/the-travelers-companies-1.svg', alt: 'Travelers Insurance' },
+  { src: '/logos/insurance/MetLife-Logo.svg.png', alt: 'MetLife Insurance' },
+  { src: '/logos/insurance/aig-1-logo-svg-vector.svg', alt: 'AIG Insurance' },
+  { src: '/logos/insurance/Mercury-Insurance.svg', alt: 'Mercury Insurance' },
+  { src: '/logos/insurance/allied-insurance-water-damage-1.png', alt: 'Allied Insurance' },
+];
+---
+
+<section class="bg-white py-16 md:py-20">
+  <div class="mx-auto max-w-7xl px-4 text-center md:px-6">
+    <p class="text-xs font-bold uppercase tracking-eyebrow text-accent">{eyebrow}</p>
+    <h2 class="mt-3 font-display text-4xl font-bold text-ink md:text-5xl">{heading}</h2>
+    {support && <p class="mx-auto mt-4 max-w-2xl text-ink-muted">{support}</p>}
+
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      {logos.map((logo) => (
+        <div class="flex h-20 w-36 items-center justify-center rounded-md border border-border bg-white p-4 shadow-sm">
+          <img src={logo.src} alt={logo.alt} loading="lazy" decoding="async" width="112" height="48" class="max-h-12 w-auto max-w-full object-contain" />
+        </div>
+      ))}
+      <div class="flex h-20 w-36 flex-col items-center justify-center rounded-md border border-border bg-surface p-4 shadow-sm">
+        <span class="font-display text-lg font-bold text-accent" aria-hidden="true">+</span>
+        <span class="text-xs font-bold text-ink">All Others Accepted</span>
+      </div>
+    </div>
+  </div>
+</section>

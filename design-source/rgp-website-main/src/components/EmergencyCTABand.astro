@@ -1,0 +1,45 @@
+---
+/**
+ * Emergency CTA band — high-contrast accent strip directly after the hero
+ * (archetype §4). Diagonal-stripe texture, pulse indicator, phone-first CTA
+ * with the number visible (§9).
+ */
+import { site } from '../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  heading: string;
+  support: string;
+}
+
+const { heading, support } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-accent text-white">
+  <div
+    class="absolute inset-0 opacity-10"
+    style="background-image: repeating-linear-gradient(-45deg, currentColor 0, currentColor 2px, transparent 2px, transparent 14px);"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto flex max-w-7xl flex-col items-start gap-6 px-4 py-8 md:flex-row md:items-center md:px-6">
+    <span class="relative mt-1 flex size-4 shrink-0" aria-hidden="true">
+      <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white/60"></span>
+      <span class="relative inline-flex size-4 rounded-full border-2 border-white bg-accent"></span>
+    </span>
+
+    <div class="min-w-0 flex-1">
+      <h2 class="font-display text-2xl font-bold sm:text-3xl">{heading}</h2>
+      <p class="mt-1 text-sm text-white/90 sm:text-base">{support}</p>
+    </div>
+
+    <a
+      href={site.phoneHref}
+      class="inline-flex shrink-0 items-center gap-3 rounded-md border-2 border-white/90 bg-white/10 px-7 py-4 font-display text-xl font-bold tracking-wide transition hover:bg-white hover:text-accent"
+    >
+      <Icon name="lucide:phone" class="size-5" aria-hidden="true" />
+      Call {site.phoneDisplay} Now
+    </a>
+  </div>
+</section>

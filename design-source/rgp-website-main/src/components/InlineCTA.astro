@@ -1,0 +1,47 @@
+---
+/**
+ * In-body inline CTA (§12). Required twice on every service/city/city-service
+ * page: once after the first body section, once closing the final narrative
+ * section — BOTH uses must be this same component. Phone-first, number visible
+ * on desktop/tablet (§9). Copy arrives via props from the page's approved copy.
+ */
+import { site } from '../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  eyebrow?: string;
+  /** Mobile phone-button label. 'Call Now' suits emergency pages; planned-purchase and
+   *  sensitive pages should soften it — see the voice tiers in CityServicePage.astro. */
+  phoneLabel?: string;
+  heading: string;
+  support?: string;
+  secondaryLabel?: string;
+}
+
+const { phoneLabel = 'Call Now', eyebrow = `${site.emergencyAvailability} emergency response`, heading, support, secondaryLabel = 'Request Service' } = Astro.props;
+---
+
+<aside class="not-article my-8 overflow-hidden rounded-md border-l-4 border-accent bg-dark text-on-dark shadow-md">
+  <div class="flex flex-col gap-5 p-6 sm:p-7 lg:flex-row lg:items-center lg:justify-between">
+    <div class="flex items-start gap-4">
+      <span class="hidden size-11 shrink-0 items-center justify-center rounded-md bg-accent sm:inline-flex" aria-hidden="true">
+        <Icon name="lucide:phone" class="size-5 text-white" aria-hidden="true" />
+      </span>
+      <div>
+        <p class="text-xs font-bold uppercase tracking-eyebrow text-accent-bright">{eyebrow}</p>
+        <h3 class="mt-1 font-display text-2xl font-bold">{heading}</h3>
+        {support && <p class="mt-1.5 max-w-lg text-sm text-on-dark/75">{support}</p>}
+      </div>
+    </div>
+    <div class="flex shrink-0 flex-wrap gap-3">
+      <a href={site.phoneHref} class="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-3 font-bold text-white shadow-md transition hover:bg-accent-hover">
+        <Icon name="lucide:phone" class="size-4" aria-hidden="true" />
+        <span class="hidden sm:inline">Call {site.phoneDisplay}</span>
+        <span class="sm:hidden">{phoneLabel}</span>
+      </a>
+      <a href="#request-service" class="inline-flex items-center rounded-md border-2 border-on-dark/30 px-5 py-3 text-sm font-bold text-on-dark transition hover:border-on-dark/70">
+        {secondaryLabel}
+      </a>
+    </div>
+  </div>
+</aside>

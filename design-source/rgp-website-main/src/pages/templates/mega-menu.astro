@@ -1,0 +1,25 @@
+---
+/**
+ * Template preview route (§17): the grouped mega-menu header (`header: mega_menu_grouped_services`)
+ * rendered with the example tree in src/data/megaNav.ts and the starter theme tokens.
+ * noindex, excluded from nav/sitemaps. On a client build the tree is generated from the page map.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Mega Menu — template preview" description="Grouped mega-menu header preview." header="mega_menu_grouped_services" noindex>
+  <main class="mx-auto max-w-7xl px-6 py-16">
+    <h1 class="font-display text-4xl font-bold text-ink">Mega-menu preview</h1>
+    <p class="mt-3 max-w-2xl text-ink-muted">
+      Hover or click <strong>Services</strong> and <strong>Service Areas</strong> above.
+      Resize to phone width to see the nested accordion drawer. Press <kbd>Escape</kbd> to close.
+    </p>
+    <ul class="mt-8 space-y-2 text-sm text-ink-muted">
+      <li>· One column per service hub; columns scroll rather than truncate — every approved page reachable</li>
+      <li>· County columns: cities link to city hubs, never to city-service pages (§14)</li>
+      <li>· Column headings are links to their hub, never dead labels</li>
+      <li>· Phone CTA stays visible and is never covered by an open panel</li>
+      <li>· Required for clients with more than one service category and child pages</li>
+    </ul>
+    <div class="mt-16 h-[60vh] rounded-md border border-border bg-surface-2"></div>
+  </main>
+</BaseLayout>

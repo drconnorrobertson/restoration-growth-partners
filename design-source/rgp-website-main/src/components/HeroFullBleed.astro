@@ -1,0 +1,119 @@
+---
+/**
+ * Hero — variant `premium_full_bleed` (archetype candidate #4).
+ * Full-bleed image treatment with centered content: eyebrow, display H1 with
+ * accent word, subhead, trust chips row, dual phone-first CTA (§9).
+ * No side form — pages using this variant must place the shared
+ * RequestServicePanel in the section immediately after the hero (§11).
+ * Until client photos land (§18), a layered gradient stands in for the image.
+ */
+import { site } from '../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface H1Line {
+  text: string;
+  accent?: boolean;
+}
+
+import type { ImageMetadata } from 'astro';
+import HeroImage from './HeroImage.astro';
+
+interface Props {
+  eyebrow: string;
+  h1Lines: H1Line[];
+  subhead: string;
+  /** 4-6 short conversion facts. Keep each to ~2-4 words: long bullets wrap and
+   *  break the grid rhythm. Sourced from the Messaging Pack, never invented. */
+  trustChips: string[];
+  secondaryCtaLabel?: string;
+  /**
+   * REQUIRED. This variant is photography-gated: its entire premise is a strong
+   * real image. Rendered without one it collapses into an oversized sparse hero —
+   * the exact anti-pattern the acceptance rubric fails (rejected in review,
+   * 2026-08-25). No approved hero photo → use `image_backed_split_form` instead.
+   * Also: NOT the default for emergency-restoration clients — the split hero
+   * with the form is. This variant targets premium-brand clients with assets.
+   */
+  /**
+   * Pass an IMPORTED image (ImageMetadata) — it renders through HeroImage (responsive AVIF/WebP,
+   * eager, fetchpriority high), so it can be the page's fast LCP element. A string URL still works
+   * for older client code but ships one unoptimized file as a late-discovered CSS background, the
+   * pattern PageSpeed flagged (oversized, slow LCP); validate:built warns about it.
+   */
+  backgroundImage: ImageMetadata | string;
+}
+
+const { eyebrow, h1Lines, subhead, trustChips, secondaryCtaLabel = 'Request Service', backgroundImage } = Astro.props;
+
+if (!backgroundImage) {
+  throw new Error(
+    'HeroFullBleed requires an approved hero photo (backgroundImage). Without one, use the image_backed_split_form hero variant.'
+  );
+}
+---
+
+<section class="relative overflow-hidden bg-dark text-on-dark" data-page-hero>
+  {typeof backgroundImage === 'string' ? (
+    <div class="absolute inset-0 bg-cover bg-center opacity-30" style={`background-image: url('${backgroundImage}');`} aria-hidden="true" data-unoptimized-hero-background></div>
+  ) : (
+    <div class="absolute inset-0 opacity-30" aria-hidden="true">
+      <HeroImage src={backgroundImage} alt="" class="h-full w-full object-cover" />
+    </div>
+  )}
+  <div class="absolute inset-0 bg-gradient-to-b from-dark/70 via-transparent to-dark" aria-hidden="true"></div>
+
+  <!--
+    Mobile density is deliberately tight here: a centered full-bleed stack
+    (eyebrow + 3-line H1 + subhead + chips) will push the phone CTA off screen
+    at 390x844 otherwise, which fails §24. Do not loosen the mobile padding,
+    subhead size, or chip grid without re-checking CTA position at 375px.
+  -->
+  <div class="relative mx-auto flex max-w-4xl flex-col items-center justify-center px-4 py-12 text-center md:min-h-[640px] md:px-6 md:py-28">
+    <p class="inline-flex items-center gap-2 rounded-full border border-dark-3 bg-dark-2/80 px-4 py-2 text-xs font-bold uppercase tracking-eyebrow text-on-dark/90">
+      <Icon name="lucide:star" class="size-3.5 text-accent-bright" fill="currentColor" aria-hidden="true" />
+      {eyebrow}
+    </p>
+
+    <h1 class="mt-5 font-display text-4xl font-bold leading-none sm:text-6xl md:mt-7 xl:text-7xl">
+      {h1Lines.map((line) => (
+        <span class:list={['block md:whitespace-nowrap', { 'text-accent-bright': line.accent }]}>{line.text}{' '}</span>
+      ))}
+    </h1>
+
+    <p class="mt-4 max-w-2xl text-on-dark/80 md:mt-6 md:text-lg">{subhead}</p>
+
+    <!--
+      Aligned check rows, NOT bordered pills. Pills force equal-width cells, so
+      uneven bullet lengths produce ragged boxes of different heights. Aligned
+      checkmarks let text of any length read as intentional. Centered inline-grid
+      keeps the block centered while each row stays left-aligned.
+    -->
+    <ul class="mt-6 inline-grid gap-x-8 gap-y-2.5 text-left sm:grid-cols-2 md:mt-8">
+      {trustChips.map((chip) => (
+        <li class="flex items-start gap-2.5 text-sm font-semibold sm:items-center sm:text-base">
+          <span class="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-accent sm:mt-0" aria-hidden="true">
+            <Icon name="lucide:check" class="size-3 text-white" stroke-width={3} aria-hidden="true" />
+          </span>
+          {chip}
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-7 flex flex-wrap justify-center gap-3 md:mt-10 md:gap-4">
+      <a
+        href={site.phoneHref}
+        class="inline-flex items-center gap-3 rounded-md bg-accent px-8 py-4 text-lg font-bold text-white shadow-lg transition hover:bg-accent-hover"
+      >
+        <Icon name="lucide:phone" class="size-5" aria-hidden="true" />
+        <span class="hidden sm:inline">Call Now — {site.phoneDisplay}</span>
+        <span class="sm:hidden">Call Now</span>
+      </a>
+      <a
+        href="#request-service"
+        class="inline-flex items-center rounded-md border-2 border-on-dark/30 px-8 py-4 text-lg font-bold text-on-dark transition hover:border-on-dark/70"
+      >
+        {secondaryCtaLabel}
+      </a>
+    </div>
+  </div>
+</section>

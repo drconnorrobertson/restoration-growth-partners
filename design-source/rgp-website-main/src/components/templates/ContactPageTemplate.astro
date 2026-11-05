@@ -1,0 +1,102 @@
+---
+/**
+ * Contact page template (§13) — its own template, not the inner-page layout,
+ * because the structure differs: no two-column article, form comes first.
+ * Modeled on the approved Green State contact page.
+ *
+ * Order (§13, strict):
+ *   1. Phone-first hero — tap-to-call + "Request Service" anchor to the form
+ *   2. Request section FIRST — two columns: "when to call vs. submit" support
+ *      panel with phone/response-time/email on the left, shared form on the right
+ *   3. Location / NAP cards for EVERY approved GBP location
+ *   (footer conversion band closes the page, from the shared shell)
+ *
+ * Locations, maps, and general contact copy must never precede the form (§13).
+ */
+import PageHero from '../PageHero.astro';
+import RequestServicePanel from '../RequestServicePanel.astro';
+import ContactLocations from '../ContactLocations.astro';
+import { site } from '../../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  heroEyebrow: string;
+  h1: string;
+  heroIntro?: string;
+  /** Left-column framing: when to call vs. when the form is fine. */
+  requestEyebrow: string;
+  requestHeading: string;
+  requestCopy: string[];
+  locationsHeading: string;
+  locationsIntro?: string;
+}
+
+const {
+  heroEyebrow,
+  h1,
+  heroIntro,
+  requestEyebrow,
+  requestHeading,
+  requestCopy,
+  locationsHeading,
+  locationsIntro,
+} = Astro.props;
+---
+
+<PageHero eyebrow={heroEyebrow} h1={h1} intro={heroIntro} />
+
+<!-- Form section is the FIRST body section after the hero (§13) -->
+<section class="bg-surface py-16 md:py-20" id="request-service">
+  <div class="mx-auto grid max-w-6xl grid-cols-1 items-start gap-10 px-4 md:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:gap-12">
+    <div class="max-w-xl">
+      <p class="text-xs font-bold uppercase tracking-eyebrow text-accent">{requestEyebrow}</p>
+      <h2 class="mt-3 font-display text-4xl font-bold leading-none text-ink md:text-5xl">{requestHeading}</h2>
+      {requestCopy.map((p) => <p class="mt-4 leading-relaxed text-ink-muted">{p}</p>)}
+
+      <!-- Direct-contact card: phone, response expectation, email -->
+      <div class="mt-7 divide-y divide-border rounded-md border border-border bg-white shadow-sm">
+        <div class="flex items-center gap-4 p-5">
+          <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-accent" aria-hidden="true">
+            <Icon name="lucide:phone" class="size-5 text-white" aria-hidden="true" />
+          </span>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-eyebrow text-ink-muted">
+              {site.emergencyAvailability} emergency calls
+            </p>
+            <a href={site.phoneHref} class="font-display text-2xl font-bold text-ink transition hover:text-accent">
+              {site.phoneDisplay}
+            </a>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 p-5">
+          <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-surface-2" aria-hidden="true">
+            <Icon name="lucide:clock" class="size-5 text-accent" aria-hidden="true" />
+          </span>
+          <p class="text-sm text-ink-muted">{site.form.responseNotice}</p>
+        </div>
+
+        <div class="flex items-center gap-4 p-5">
+          <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-surface-2" aria-hidden="true">
+            <Icon name="lucide:mail" class="size-5 text-accent" aria-hidden="true" />
+          </span>
+          <div class="min-w-0">
+            <p class="text-xs font-bold uppercase tracking-eyebrow text-ink-muted">Email</p>
+            <a href={`mailto:${site.email}`} class="break-words text-sm font-bold text-ink transition hover:text-accent">
+              {site.email}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full">
+      <RequestServicePanel idPrefix="contact" />
+    </div>
+  </div>
+</section>
+
+<!-- Locations AFTER the form (§13) -->
+<ContactLocations heading={locationsHeading} intro={locationsIntro} />
+
+<slot />

@@ -1,0 +1,20 @@
+---
+/** Template preview route (§17): process + reviews (reserved state). noindex. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProcessSection from '../../components/ProcessSection.astro';
+import ReviewSection from '../../components/ReviewSection.astro';
+import { site } from '../../data/site';
+
+/* PREVIEW-ONLY placeholder photography — see src/assets/photos/README.md */
+import processPhoto from '../../assets/photos/placeholder-process.jpg';
+---
+
+<BaseLayout title="Template preview — process + reviews" description="Internal template preview." noindex>
+  <ProcessSection {...site.process} backgroundImage={processPhoto} />
+  <ReviewSection
+    eyebrow="What our customers say"
+    heading={`Property owners trust ${site.name}`}
+    intro="Every review comes straight from the platforms our customers use — nothing is edited or hand-picked."
+    reviewsUrl="https://example.com/reviews"
+  />
+</BaseLayout>

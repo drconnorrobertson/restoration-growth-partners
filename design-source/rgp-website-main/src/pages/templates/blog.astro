@@ -1,0 +1,18 @@
+---
+/** Template preview route (§17): blog index with example posts. noindex. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogIndexTemplate from '../../components/templates/BlogIndexTemplate.astro';
+import p1 from '../../assets/photos/placeholder-service-1.jpg';
+import p2 from '../../assets/photos/placeholder-service-2.jpg';
+---
+<BaseLayout title="Blog — Template preview" description="Internal blog index template preview." noindex>
+  <BlogIndexTemplate
+    eyebrow="Blog"
+    h1="Restoration Advice and Updates"
+    intro="Practical guidance from the crews who do the work."
+    posts={[
+      { title: 'What to Do in the First Hour After a Pipe Bursts', url: '/templates/blog-post/', excerpt: 'Shut the water off, then document before you move anything. Here is the order that protects your claim.', date: '2026-01-15', image: p1, imageAlt: 'Water on a kitchen floor' },
+      { title: 'Why Drying Takes Longer Than It Looks', url: '/templates/blog-post/', excerpt: 'Surfaces dry first. Subfloor and framing do not, and that is where mold starts.', date: '2026-02-02', image: p2, imageAlt: 'Drying equipment in a hallway' },
+    ]}
+  />
+</BaseLayout>

@@ -1,0 +1,78 @@
+---
+/**
+ * Differentiator — variant `dark_advantage_board` (archetype §7).
+ * Designed two-panel comparison: muted "industry problems" panel with ✗ rows
+ * VS a raised light card with the client's ✓ answers. Never a plain bullet list.
+ * ✓ uses the semantic success token, not the brand accent.
+ */
+import { site } from '../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface Row {
+  title: string;
+  text: string;
+}
+
+interface Props {
+  /** Client-voice label — required so no build ships generic placeholder wording. */
+  leftEyebrow: string;
+  leftHeading: string;
+  rightHeading: string;
+  problems: Row[];
+  answers: Row[];
+}
+
+const {
+  leftEyebrow,
+  leftHeading,
+  rightHeading,
+  problems,
+  answers,
+} = Astro.props;
+---
+
+<section class="border-t-2 border-accent bg-dark py-16 text-on-dark md:py-24">
+  <div class="relative mx-auto grid max-w-7xl items-start gap-10 px-4 md:px-6 lg:grid-cols-[1fr_auto_1.1fr] lg:gap-8">
+    <div class="rounded-md border border-dark-3 bg-dark-2/60">
+      <div class="border-b border-dark-3 px-7 py-6">
+        <p class="text-xs font-bold uppercase tracking-eyebrow text-on-dark/50">{leftEyebrow}</p>
+        <h2 class="mt-2 font-display text-3xl font-bold text-on-dark/90">{leftHeading}</h2>
+      </div>
+      <ul>
+        {problems.map((row) => (
+          <li class="flex gap-4 border-b border-dark-3 px-7 py-5 last:border-b-0">
+            <span class="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-dark-3 text-sm font-bold text-on-dark/60" aria-hidden="true">✕</span>
+            <div>
+              <h3 class="font-display text-lg font-bold text-on-dark/85">{row.title}</h3>
+              <p class="mt-0.5 text-sm text-on-dark/60">{row.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="hidden items-center self-stretch lg:flex">
+      <span class="inline-flex size-12 items-center justify-center rounded-full border-4 border-dark bg-white font-display text-lg font-bold text-dark shadow-xl">VS</span>
+    </div>
+
+    <div class="overflow-hidden rounded-md bg-white text-ink shadow-xl">
+      <div class="border-b-4 border-success bg-dark-2 px-7 py-6">
+        <p class="text-xs font-bold uppercase tracking-eyebrow text-on-dark/60">{site.name}</p>
+        <h2 class="mt-2 font-display text-3xl font-bold text-white">{rightHeading}</h2>
+      </div>
+      <ul>
+        {answers.map((row) => (
+          <li class="flex gap-4 border-b border-border px-7 py-5 last:border-b-0">
+            <span class="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-success" aria-hidden="true">
+              <Icon name="lucide:check" class="size-3.5 text-white" stroke-width={3} aria-hidden="true" />
+            </span>
+            <div>
+              <h3 class="font-display text-lg font-bold">{row.title}</h3>
+              <p class="mt-0.5 text-sm text-ink-muted">{row.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

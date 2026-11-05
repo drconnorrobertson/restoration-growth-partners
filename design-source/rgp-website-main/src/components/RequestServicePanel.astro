@@ -1,0 +1,158 @@
+---
+/// <reference path="../webmcp.d.ts" />
+/**
+ * Shared request-service form panel (§11). Brand-color header, emergency callout with
+ * visible phone, fixed field set with natural row pairing, full-width submit.
+ * Form action/routing is wired per client at build time — never hard-coded here.
+ */
+import { site } from '../data/site';
+
+interface Props {
+  /**
+   * Which mount this is (hero, sidebar, contact page…). Sent to the lead router as
+   * `form_location` so you can see WHICH form on a 1,700-page site converted.
+   */
+  formLocation?: string;
+  /**
+   * Unique prefix for field ids when the shared panel renders more than once on
+   * a page (hero + footer). Duplicate ids break label targeting — every second
+   * mount MUST pass its own prefix.
+   */
+  idPrefix?: string;
+}
+
+const { idPrefix = 'rs', formLocation = 'sidebar' } = Astro.props;
+
+const router = site.leadRouter;
+/** Never post to a placeholder endpoint — an unconfigured router must fail loudly, not swallow leads. */
+const routerReady = Boolean(router.submitUrl && router.clientId);
+/**
+ * WebMCP (§28 Agentic Browsing): the form is a declarative tool AI agents can call. The name must be
+ * unique on the page (the panel mounts more than once), and EVERY agent-fillable field carries a
+ * toolparamdescription: Lighthouse's webmcp-schema-validity scores a field without one 0.5, not a pass.
+ */
+const toolName = idPrefix === 'rs' ? 'request_restoration_service' : `request_restoration_service_${idPrefix.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
+---
+
+<div class="overflow-hidden rounded-md bg-white text-ink shadow-xl" data-component="request-service">
+  <div class="bg-accent px-5 py-5 text-white sm:px-6">
+    <p id={`${idPrefix}-title`} class="font-display text-3xl font-bold">Request Service</p>
+    <p class="mt-1 text-sm text-white/90">{site.form.responseNotice}</p>
+  </div>
+
+  <div class="space-y-4 p-5 sm:p-6">
+    {/* The router redirects non-JSON submissions back to page_url with ?form_status=… (src/scripts/lead-forms.ts) */}
+    <div data-form-status="request_service" hidden class="rounded-sm border-l-4 px-4 py-3 text-sm leading-snug"></div>
+    <p class="rounded-sm border-l-4 border-accent bg-surface px-4 py-3 text-sm leading-snug">
+      <strong>{site.form.emergencyNoticeLead}</strong>
+      {' '}Call{' '}
+      <a href={site.phoneHref} class="font-bold text-accent whitespace-nowrap">{site.phoneDisplay}</a>
+      {' '}now for immediate assistance.
+    </p>
+
+    {!routerReady && (
+      <p class="rounded-sm border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-sm leading-snug text-amber-900">
+        <strong>Form routing not configured.</strong> Set <code>site.leadRouter</code> before launch
+        (B-08). Submissions are disabled rather than silently discarded.
+      </p>
+    )}
+
+    <form
+      class="space-y-4"
+      method="post"
+      action={routerReady ? router.submitUrl : undefined}
+      data-lead-form
+      data-form-type="request_service"
+      aria-labelledby={`${idPrefix}-title`}
+      toolname={toolName}
+      tooldescription={`Request restoration service from ${site.name}. Sends the requester's name, phone, email, the service needed and the property's city or ZIP (details optional); the team follows up by phone. For an emergency, calling ${site.phoneDisplay} is faster.`}
+    >
+      {/* Router contract — required on every submission. */}
+      <input type="hidden" name="client_id" value={router.clientId} />
+      <input type="hidden" name="site_id" value={router.siteId} />
+      <input type="hidden" name="form_type" value="request_service" />
+      <input type="hidden" name="service_type" value="General Restoration" />
+      <input type="hidden" name="form_location" value={formLocation} />
+      <input type="hidden" name="page_url" data-page-url value="" />
+      <input type="hidden" name="idempotency_key" data-idempotency value="" />
+      {/* Attribution — populated from the landing URL, persisted for the session. */}
+      <input type="hidden" name="utm_source" data-utm="utm_source" value="" />
+      <input type="hidden" name="utm_medium" data-utm="utm_medium" value="" />
+      <input type="hidden" name="utm_campaign" data-utm="utm_campaign" value="" />
+      <input type="hidden" name="gclid" data-utm="gclid" value="" />
+      <input type="hidden" name="fbclid" data-utm="fbclid" value="" />
+      {/* Honeypot — the router treats a filled `company_website` as spam and silently drops it. */}
+      <div class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+        <label>Company website<input type="text" name="company_website" tabindex="-1" autocomplete="off" toolparamdescription="Always leave empty. Spam trap: any value here discards the request." /></label>
+      </div>
+      <div>
+        <label for={`${idPrefix}-name`} class="mb-1 block text-xs font-bold uppercase tracking-wide text-ink-muted">Name *</label>
+        <input id={`${idPrefix}-name`} name="name" type="text" required autocomplete="name" placeholder="Your name"
+          toolparamdescription="Full name of the person requesting service."
+          class="w-full rounded-sm border border-border min-h-11 px-3 py-2.5 text-sm outline-none transition focus:border-accent" />
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label for={`${idPrefix}-phone`} class="mb-1 block text-xs font-bold uppercase tracking-wide text-ink-muted">Phone *</label>
+          <input id={`${idPrefix}-phone`} name="phone" type="tel" required autocomplete="tel" placeholder="(555) 000-0000"
+            toolparamdescription="Best callback phone number, including area code."
+            class="w-full rounded-sm border border-border min-h-11 px-3 py-2.5 text-sm outline-none transition focus:border-accent" />
+        </div>
+        <div>
+          <label for={`${idPrefix}-email`} class="mb-1 block text-xs font-bold uppercase tracking-wide text-ink-muted">Email *</label>
+          <input id={`${idPrefix}-email`} name="email" type="email" required autocomplete="email" placeholder="your@email.com"
+            toolparamdescription="Email address for the confirmation and follow-up."
+            class="w-full rounded-sm border border-border min-h-11 px-3 py-2.5 text-sm outline-none transition focus:border-accent" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label for={`${idPrefix}-damage`} class="mb-1 block text-xs font-bold uppercase tracking-wide text-ink-muted">Service needed *</label>
+          <select id={`${idPrefix}-damage`} name="damage_type" required
+            toolparamdescription="The service needed: one of the listed option values, or other."
+            class="w-full rounded-sm border border-border bg-white min-h-11 px-3 py-2.5 text-sm outline-none transition focus:border-accent">
+            <option value="" selected disabled>Select a service…</option>
+            {site.services.map((s) => <option value={s.id}>{s.label}</option>)}
+            <option value="other">Something else</option>
+          </select>
+        </div>
+        <div>
+          <label for={`${idPrefix}-city`} class="mb-1 block text-xs font-bold uppercase tracking-wide text-ink-muted">City or ZIP *</label>
+          <input id={`${idPrefix}-city`} name="city" type="text" required autocomplete="postal-code" placeholder={`${site.primaryMarket} or ZIP`}
+            toolparamdescription="City or ZIP code of the property that needs service."
+            class="w-full rounded-sm border border-border min-h-11 px-3 py-2.5 text-sm outline-none transition focus:border-accent" />
+        </div>
+      </div>
+
+      <div>
+        <label for={`${idPrefix}-message`} class="mb-1 block text-xs font-bold uppercase tracking-wide text-ink-muted">Additional information (optional)</label>
+        <textarea id={`${idPrefix}-message`} name="message" rows="3" placeholder="Tell us what happened, if you have time…"
+          toolparamdescription="Optional: what happened, when, and anything urgent the crew should know."
+          class="w-full rounded-sm border border-border min-h-11 px-3 py-2.5 text-sm outline-none transition focus:border-accent"></textarea>
+      </div>
+
+      {/* Turnstile renders here only after the visitor first interacts with a lead form (loader in
+          BaseLayout, §11/§28). The live region below it carries the "Verifying…" / error messages
+          for a submit that is held until the token arrives; it stays empty (zero height) otherwise. */}
+      {router.turnstileSiteKey && (
+        <div>
+          <div class="cf-turnstile max-w-full overflow-hidden" data-sitekey={router.turnstileSiteKey} data-theme="light"></div>
+          <div data-turnstile-status role="status" aria-live="polite" class="[&>p]:mt-3"></div>
+        </div>
+      )}
+
+      <button type="submit" disabled={!routerReady}
+        class="w-full rounded-md bg-accent py-3.5 font-bold text-white shadow-md transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50">
+        Send Service Request →
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Lead-form wiring (page_url, idempotency key, attribution, City/ZIP fold, form_status message) is shared with the
+  // Careers and Partner forms, so the redirect-back message shows only in the form that was sent (CORE_CONTRACTS §11).
+  import '../scripts/lead-forms';
+</script>

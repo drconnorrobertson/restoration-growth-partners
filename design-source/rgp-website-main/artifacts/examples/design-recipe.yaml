@@ -1,0 +1,54 @@
+# VALID fixture — doubles as a worked example. Keep it passing.
+meta:
+  client: Example Restoration Co.
+  industry: restoration
+  archetype: emergency_split_hero
+  messaging_pack_ref: artifacts/examples/messaging-pack.yaml
+  status: Approved
+  rubric_result: Pass
+  approved_by: fixture
+variants:
+  header: utility_strip_sticky_header
+  hero: image_backed_split_form
+  proof_band: transition_strip
+  service_cards: image_overlay_grid
+  process: dark_timeline_cards
+  differentiator: dark_advantage_board
+  reviews: reserved_polished_state
+  service_area: map_with_county_accordions
+  faq: premium_cards_sticky_intro
+  final_cta: dark_phone_first_band
+  footer: full_nap_service_footer
+  mobile_sticky_cta: show_after_hero
+variant_options:
+  process_step_count: 3
+  post_body_sections:
+    process: auto    # render shared post-body process only when the page copy has none (§12 precedence)
+brand:
+  tokens:
+    primary: "#cc2a2a"
+    secondary: "#1b5e8a"
+    accent: "#cc2a2a"
+    dark: "#0c0f14"
+    surface: "#f5f2ee"
+    muted: "#5a534c"
+    border: "#e2ddd6"
+    white: "#ffffff"
+    primary_hover: "#a82020"
+  token_source: brand_guidelines
+  typography:
+    heading_font: Barlow Condensed
+    body_font: Barlow
+    hosting_plan: self_hosted_woff2
+    weights: [400, 500, 600, 700]
+assets:
+  open_needs: []
+third_party: []
+pages:
+  - url: /
+    page_type: homepage
+    schema_plan: [LocalBusiness, FAQPage]
+    navigation_inclusion: header
+    copy_source: messaging_pack
+exceptions: []
+open_blockers: []

@@ -1,0 +1,1157 @@
+{
+  "archive": "rgp-website-main.zip",
+  "archive_sha256": "7d815eab39d2e2a240212696ae9be2b3ac6cb53c7f4833ad1967e774cebaf653",
+  "file_count": 230,
+  "files": [
+    {
+      "path": "rgp-website-main/.github/workflows/publish-scheduled-posts.yml",
+      "bytes": 5935,
+      "sha256": "29be60b6836862e023e4905b4bf179cdc34474afba38a48466702ef0b8d5ed8f"
+    },
+    {
+      "path": "rgp-website-main/.github/workflows/search-notify.yml",
+      "bytes": 5688,
+      "sha256": "12d1cbd88db3de1a23ecab99cf3fdbb92e1888a1a190dca2b7556938a3836efa"
+    },
+    {
+      "path": "rgp-website-main/.github/workflows/site-alerts.yml",
+      "bytes": 4739,
+      "sha256": "392bf8464d8e0dc4677c3c4de9219c0674f68dab0717cfcb2346956b23ddd45b"
+    },
+    {
+      "path": "rgp-website-main/.gitignore",
+      "bytes": 137,
+      "sha256": "b8db3dad203cf5f360e82806ad4eab83417397dc5a8b6892cf6587edec680c67"
+    },
+    {
+      "path": "rgp-website-main/.vercelignore",
+      "bytes": 25,
+      "sha256": "2d5027fcddde117bd7f345016671dc7b27290bc194d7de5c0b34a132cfa1c279"
+    },
+    {
+      "path": "rgp-website-main/README.md",
+      "bytes": 5992,
+      "sha256": "ef5593359d45bc67a86b1d50bfa7ea4cb34f5241805e8899ddae7713f81bd9ef"
+    },
+    {
+      "path": "rgp-website-main/alerts.json",
+      "bytes": 1441,
+      "sha256": "d4d4daebb3443568a3290c1638321fe17a30655ca9173d64311bff1dc43e24b2"
+    },
+    {
+      "path": "rgp-website-main/artifacts/README.md",
+      "bytes": 627,
+      "sha256": "79885e357aff4b11230cae07fee41dc2953498098ba285bf6a8af71c92b155c6"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/active-page-map.yaml",
+      "bytes": 2277,
+      "sha256": "9f0678a34244a723e9fb12e5030c588d3704897eeed2cb95fd2536923c689b98"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/copy/water-damage-restoration.yaml",
+      "bytes": 1357,
+      "sha256": "1753f6709f5774e113673c2f14eab0d8770ac05c83b90026db6bedfdac3231c2"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/design-recipe.yaml",
+      "bytes": 1513,
+      "sha256": "a41309c754175e875303cc7d23d2d15018b2cc22769b2256542b8bcf7d0813a6"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/design/gate4/README.md",
+      "bytes": 638,
+      "sha256": "6f09dae62ec749f71d6202734a15892109587c581ea0841c6897b056cfbe3ec1"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/design/gate4/desktop.png",
+      "bytes": 74,
+      "sha256": "8c1eec46dfb40c3aee6015b6b319b9c0051a906393b6e53d1f24c885f4bcb73d"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/design/gate4/mobile-initial.png",
+      "bytes": 74,
+      "sha256": "8c1eec46dfb40c3aee6015b6b319b9c0051a906393b6e53d1f24c885f4bcb73d"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/design/gate4/mobile-scrolled.png",
+      "bytes": 74,
+      "sha256": "8c1eec46dfb40c3aee6015b6b319b9c0051a906393b6e53d1f24c885f4bcb73d"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/design/gate4/tablet.png",
+      "bytes": 74,
+      "sha256": "8c1eec46dfb40c3aee6015b6b319b9c0051a906393b6e53d1f24c885f4bcb73d"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/messaging-pack.yaml",
+      "bytes": 2835,
+      "sha256": "a7274d996d205c61b4754f6990aaf73b03ad91e8480b350b1020ea3f99599d2f"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/pipeline-state.yaml",
+      "bytes": 2123,
+      "sha256": "00f10f434523238ba3e3d3ad1dd60eea591a2e73e4c293251955ae20b445b8c8"
+    },
+    {
+      "path": "rgp-website-main/artifacts/examples/redirect-map.yaml",
+      "bytes": 891,
+      "sha256": "66ca216afa87cf0110b9d4eb68b6a27dee22826d1185acec4010cba1f8f5a827"
+    },
+    {
+      "path": "rgp-website-main/astro.config.mjs",
+      "bytes": 2560,
+      "sha256": "d427ed580b99ab9ac0e5c8fec94ecc6e499eddef2b21f45f4040505588ac9d5d"
+    },
+    {
+      "path": "rgp-website-main/docs/assets/brand/favicon-48.ico",
+      "bytes": 9662,
+      "sha256": "4c66f2aab6f1c834c595637c5cf19fe33d01ff9059d910aa90a0372592770ec8"
+    },
+    {
+      "path": "rgp-website-main/docs/assets/brand/founder-signature.png",
+      "bytes": 12379,
+      "sha256": "8add409b303c3060302ac8284c3ca8d8b4e91bfdae5fc361955708764cc7ddd4"
+    },
+    {
+      "path": "rgp-website-main/docs/assets/brand/rgp-logo-1086x451.png",
+      "bytes": 37911,
+      "sha256": "5f393ff7a033713fe2619008ba8b7a0b72b8973cb4c456244c22d6f688f422b3"
+    },
+    {
+      "path": "rgp-website-main/docs/assets/brand/rgp-logo-canvas-1920x1080.png",
+      "bytes": 24595,
+      "sha256": "d6060b84f4808acaff6dc23de48a90ab151a67b70871a28dbbda2db4f4c92082"
+    },
+    {
+      "path": "rgp-website-main/docs/assets/brand/rgp-mark-square.png",
+      "bytes": 28692,
+      "sha256": "0b4fbcd8d3c4d2cd008d4401c9f2b7b573f2b1f03db3fa3e87881a66f7a1c6b4"
+    },
+    {
+      "path": "rgp-website-main/docs/blog/qa/README.md",
+      "bytes": 1893,
+      "sha256": "e1bfdb8edbda324b110c098fdf3b8ab8fc6be2cc7369e209a0b701a21695d9f1"
+    },
+    {
+      "path": "rgp-website-main/hosting.json",
+      "bytes": 1413,
+      "sha256": "ce4a20fbebff026bdfe10532d45c95d2c7a73546dedb99e6865f5e964ff7ac29"
+    },
+    {
+      "path": "rgp-website-main/package-lock.json",
+      "bytes": 221766,
+      "sha256": "4804c94b0ad3a04afcb98eef7080697869d88ae64680f02bc9dab4043adbe5af"
+    },
+    {
+      "path": "rgp-website-main/package.json",
+      "bytes": 3507,
+      "sha256": "92346b57c1368b92df1a18505282d24eb91740d15d4ef8cb04ed2500156d09f0"
+    },
+    {
+      "path": "rgp-website-main/postbuild.mjs",
+      "bytes": 9345,
+      "sha256": "746d1f89b4eac78c1d852caeae09e56b1d3a3f75895d9fce51404ba58bc162be"
+    },
+    {
+      "path": "rgp-website-main/public/apple-touch-icon.png",
+      "bytes": 9584,
+      "sha256": "f611a4cc25587c2a12c95c5bf609caf75756933500eedd66288f24ee071ab068"
+    },
+    {
+      "path": "rgp-website-main/public/favicon-192.png",
+      "bytes": 10996,
+      "sha256": "79d42491dee9f951fe2d00a6ac914b31ca1435d8feac8479d5dfc780257cf7b3"
+    },
+    {
+      "path": "rgp-website-main/public/favicon-32.png",
+      "bytes": 1082,
+      "sha256": "b6648b23177418e3be5bf8ef04439d0a4edbf77e658b974efd1912ef6140003c"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/Allstate-Logo-2.svg",
+      "bytes": 7052,
+      "sha256": "389a3777446bd3722487ca5fa31930ffedc8f8bbbb6d865f9ea7eb5c7d06c399"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/Farmers-Insurance-Logo-1.svg",
+      "bytes": 4993,
+      "sha256": "8023b4179d31ce38af5afb6752ba9959b29d869eb3e6e7c9b902f316959de019"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/GEICO-Logo.wine.svg",
+      "bytes": 1878,
+      "sha256": "7944ff07e455b17876803c5e43b55ac6df93ce8b480b64e11facdbb75fc8a8bf"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/Liberty-Mutual-Logo.svg",
+      "bytes": 12563,
+      "sha256": "438a76a1dc92715c36d37659715ab138d7a10f9502c2e0085e8cf7acfed07df8"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/Mercury-Insurance.svg",
+      "bytes": 7850,
+      "sha256": "7966bf5f8d2e6cc4e85eb8de744b5d7b1b8ce8c58bff8ea177ddafb3fed83e7d"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/MetLife-Logo.svg.png",
+      "bytes": 14551,
+      "sha256": "df2f7484e932983079e2cb3722a10b25cf55204e9a9b5fb85b1ac6401067b69c"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/State-farm-logo-2.svg",
+      "bytes": 9721,
+      "sha256": "c3d628f54db97237fc7bc1a9c468006c1993973c19bf39649742eb8d4ece8779"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/aig-1-logo-svg-vector.svg",
+      "bytes": 2470,
+      "sha256": "da8f6f9c67d62db2629c4c6a905303e3955b505aa3dd07b630164bd0e59813a4"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/allied-insurance-water-damage-1.png",
+      "bytes": 3629,
+      "sha256": "e1cd19c338b5787b735b3a3da194bea729be48094bcbb7aaa7022d8f0fea4fe3"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/nationwide-insurance.svg",
+      "bytes": 11164,
+      "sha256": "bc12882138057b5758d60c18f76ffc2e23ad2d9f15acd54a2c86f79929856a76"
+    },
+    {
+      "path": "rgp-website-main/public/logos/insurance/the-travelers-companies-1.svg",
+      "bytes": 2696,
+      "sha256": "c475c5c7084db2251e518664d7a5e5896211d000b334c2b28cc3205401f0bc76"
+    },
+    {
+      "path": "rgp-website-main/public/og-default.png",
+      "bytes": 82373,
+      "sha256": "bd1b6c46286a26736e35198f0f4bf2a1639c7f7bf7c336f38f8cc7848ef6f49e"
+    },
+    {
+      "path": "rgp-website-main/public/site-identity.json",
+      "bytes": 205,
+      "sha256": "7dce383f2728ad030393e10a83a04c150be65a80d3144dc490f937adbbff520a"
+    },
+    {
+      "path": "rgp-website-main/scripts/bing-webmaster.mjs",
+      "bytes": 7656,
+      "sha256": "62ca4394d774cd35d21285d293066e86120214757fa7ced71b7b7e246a9055ea"
+    },
+    {
+      "path": "rgp-website-main/scripts/blog-review.mjs",
+      "bytes": 12938,
+      "sha256": "f8b701317c8a60139d0fa833912031d72a5a9b8d9107bfe9294777721607fdd2"
+    },
+    {
+      "path": "rgp-website-main/scripts/check-gh-workflow-scope.mjs",
+      "bytes": 1477,
+      "sha256": "cbb13cdb5e50ba7dc0a54cbae4998fa11b3c32e3f1e08c7635046381d0ed868e"
+    },
+    {
+      "path": "rgp-website-main/scripts/generate-favicons.mjs",
+      "bytes": 3423,
+      "sha256": "1015144f4cd061c192a70ade0edb7c07b872688d7e330a663d7cb32527d8e56d"
+    },
+    {
+      "path": "rgp-website-main/scripts/generate-redirects.mjs",
+      "bytes": 1607,
+      "sha256": "f26c913fab0f4ab0cbace83e9443f5cad5bad726807ae088ed8b6081e4df8fd5"
+    },
+    {
+      "path": "rgp-website-main/scripts/indexnow-submit.mjs",
+      "bytes": 2767,
+      "sha256": "ac5a47f83eb64861251e084cfe5586b965bb71f7fb9a51ea56e9dbc73f00800e"
+    },
+    {
+      "path": "rgp-website-main/scripts/leadrouter-setup.mjs",
+      "bytes": 12973,
+      "sha256": "50025b25494d61cb7557bfa8c5510f74446c65abce0dcec9a5d97b8173e8462d"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/agency-credit-checks.mjs",
+      "bytes": 3909,
+      "sha256": "39e549dda59c6202c5ddfea17bfd6afdb99916244242b34236e8b05a42c4bf5f"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/blog-checks.mjs",
+      "bytes": 12427,
+      "sha256": "822cd4153515b3bd80afc0a93eeb6e7ac9ebe08cf800be4499d5d203579641a0"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/blog-qa.mjs",
+      "bytes": 3249,
+      "sha256": "d153d4a439b3cffc7c5c4640d0708d47d8eac40bd6b0f82dd85c01fd7234a6fd"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/deploy-url.mjs",
+      "bytes": 4020,
+      "sha256": "8bf39b34663f43faf1a2c76b71e04a3d61f5f7dfe01d2dcb69703dda69fafdbe"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/form-checks.mjs",
+      "bytes": 5758,
+      "sha256": "a7b5361d07a26b927ecc069c8f9fb70ec6eaa91f71ae16e587293d7f01f7a1ea"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/gh-workflow-scope.mjs",
+      "bytes": 6954,
+      "sha256": "b5c255be6004156752b5cb90a86cef5419a66d7fc6c50009806236ce50aa77e4"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/google.mjs",
+      "bytes": 4578,
+      "sha256": "66ae5c0932312421d28445a6b3b5bcd0d59e605ea3e46d99a2b9fdb029cf6d6b"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/hidden-prompt.mjs",
+      "bytes": 6426,
+      "sha256": "507af6174cc1d25a5d19299385ddceb5607b42105363be0f03dc5a3286887b24"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/indexnow.mjs",
+      "bytes": 3774,
+      "sha256": "814cea672138130fbdf960ec919e900c527a5019bc5c41662fd9abc9e6b76c4d"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/llms-service-areas.mjs",
+      "bytes": 2223,
+      "sha256": "10cd670bde2a997c0006d75542f52610f55c872ae215b464b498b0761c937791"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/script-placement-checks.mjs",
+      "bytes": 11240,
+      "sha256": "aa6732ec4efbc5def994937a06e5be206f5a89697ca7c1fd6e0af5b1b8af2030"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/search-health.mjs",
+      "bytes": 9463,
+      "sha256": "06cc3dca526cf8fa6f2f46db5cec392ae0a90ea7dc351b8e743ebc47dd308642"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/search-manifest.mjs",
+      "bytes": 8726,
+      "sha256": "8a68250b91a072fd4fccaded47d8ce92e49b80817946f081122ed05a8f6a05ad"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/search-remote.mjs",
+      "bytes": 10210,
+      "sha256": "eff95d37ac8787f3dd8e5a83fd927137b9af949f88ebb9402778eb42b13d4098"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/site-alert.mjs",
+      "bytes": 28228,
+      "sha256": "c9fc9b649c19e059fe99af84af11c6a9a43b6520d4c15ee33b051b1c548f88ee"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/turnstile-checks.mjs",
+      "bytes": 2579,
+      "sha256": "5217800b0eda480d2ed7b0cb791c9bd5fdda53f0578501d041f93a163ad03ab1"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/us-english.mjs",
+      "bytes": 5027,
+      "sha256": "f851286eac4746399040f61ab1b30a5bd9ab496dd71640c0822baaad7e3d4f87"
+    },
+    {
+      "path": "rgp-website-main/scripts/lib/vercel-hook.mjs",
+      "bytes": 11850,
+      "sha256": "b6b77ff82a2ab769234e2a6a001394c4e32957426059dc75f92626a7b1815813"
+    },
+    {
+      "path": "rgp-website-main/scripts/perf-check.mjs",
+      "bytes": 15945,
+      "sha256": "b37d3201705b8bb850bef25ff077d9a62738d0f2202d844a58f45abec3456253"
+    },
+    {
+      "path": "rgp-website-main/scripts/probe-lead-router.mjs",
+      "bytes": 3973,
+      "sha256": "e67e6105bc1e6d62b934f462d64d969967f6a38b6124124f0dadd4d6bf47f11d"
+    },
+    {
+      "path": "rgp-website-main/scripts/publish-due-posts.mjs",
+      "bytes": 15563,
+      "sha256": "aa6ca6c53c9791be889b3f7a25fce7684f57250c55dc2a419b0a5a2e649cf31a"
+    },
+    {
+      "path": "rgp-website-main/scripts/repo-setup.sh",
+      "bytes": 4092,
+      "sha256": "68485274e543ba2998186259521b6f4189b28a1a06a6cebdcd6015e2acdc9907"
+    },
+    {
+      "path": "rgp-website-main/scripts/search-connect.mjs",
+      "bytes": 10940,
+      "sha256": "83fc2885937be46c8392eba2a4b2cd4fdef77aaef61842027e45d92e8fdfaf63"
+    },
+    {
+      "path": "rgp-website-main/scripts/search-console.mjs",
+      "bytes": 10604,
+      "sha256": "e5d1b9a289f2cdc00f1c124e06d8c6f4ad40f72f5363af94d97f392b8e9e3e4e"
+    },
+    {
+      "path": "rgp-website-main/scripts/search-engines-ci.mjs",
+      "bytes": 7796,
+      "sha256": "4414804b16f02f9cdd1e49d29dbaacf8bfd74ae14fff99c2cf158db87ae3f6e2"
+    },
+    {
+      "path": "rgp-website-main/scripts/search-notify.mjs",
+      "bytes": 18270,
+      "sha256": "2314092ab362f5380656d2e2925bd2fd3e54aae026823011e789a50630e1c095"
+    },
+    {
+      "path": "rgp-website-main/scripts/search-setup.mjs",
+      "bytes": 1103,
+      "sha256": "6df360b8d7c3a0c951a90c0b2d27d7fecf8ce11bfd89c6f682b68b9ac5d39e4f"
+    },
+    {
+      "path": "rgp-website-main/scripts/site-alert.mjs",
+      "bytes": 11045,
+      "sha256": "84e2ebbb6560675a45b09fbb0dc2d7f700f12857cc41bb852282e8256f0c9924"
+    },
+    {
+      "path": "rgp-website-main/scripts/validate-artifacts.mjs",
+      "bytes": 26763,
+      "sha256": "5be122fc04a644208327f85988f3fa8587cff70dabe2065384130c116358df40"
+    },
+    {
+      "path": "rgp-website-main/scripts/validate-blog-qa.mjs",
+      "bytes": 1512,
+      "sha256": "77bda45ec1c2cd3b6080aa069f94d3a185205ab556a7f7cf07c29ed2eed4b48e"
+    },
+    {
+      "path": "rgp-website-main/scripts/validate-built-html.mjs",
+      "bytes": 55167,
+      "sha256": "4a63d48377a7ae80d1997b2546823c62a34dc3673381753793bd619e6bac5d1b"
+    },
+    {
+      "path": "rgp-website-main/scripts/validate-contrast.mjs",
+      "bytes": 6499,
+      "sha256": "39e62a15f75a9005de1df0b9b8875afa48f306d066a059d58499fa4a4d10a6bb"
+    },
+    {
+      "path": "rgp-website-main/scripts/validate-pipeline-state.mjs",
+      "bytes": 9243,
+      "sha256": "0482918af738127e54b044d981be86436829c62a65a80125a2d2533327ac5b1e"
+    },
+    {
+      "path": "rgp-website-main/scripts/validate-spacing.mjs",
+      "bytes": 16260,
+      "sha256": "e86b1f6fa802d9622af18080d5973ca93f54b302028fe292c85c90188648de47"
+    },
+    {
+      "path": "rgp-website-main/scripts/validate-spacing.test.mjs",
+      "bytes": 7502,
+      "sha256": "7f79deb04de1b171a79ab16fac5e7491521ede93b0614674feef921c6270af0f"
+    },
+    {
+      "path": "rgp-website-main/scripts/vercel-hook-setup.mjs",
+      "bytes": 3954,
+      "sha256": "a0d77cc3e566a7c431e52ae1098bbf0192cb9e1efc6308e9be04635f9195a36a"
+    },
+    {
+      "path": "rgp-website-main/scripts/vercel-setup.sh",
+      "bytes": 3470,
+      "sha256": "84239c2d9b126f6168bf022ac357113f12b9a3dc2f378c6998283ab3d4a9bc36"
+    },
+    {
+      "path": "rgp-website-main/scripts/verify-deploy.mjs",
+      "bytes": 7938,
+      "sha256": "a38289dfc956bd85d5341a2850db8e0b7155549190fa97ee1d054c443735560b"
+    },
+    {
+      "path": "rgp-website-main/src/assets/brand/logo.png",
+      "bytes": 37911,
+      "sha256": "5f393ff7a033713fe2619008ba8b7a0b72b8973cb4c456244c22d6f688f422b3"
+    },
+    {
+      "path": "rgp-website-main/src/assets/fonts/cover/OFL.txt",
+      "bytes": 6014,
+      "sha256": "4877e0c1b66f0b16cc3ebc4801c4def24c06252f618b9229428b20c7387aa0c0"
+    },
+    {
+      "path": "rgp-website-main/src/assets/fonts/cover/barlow-condensed-latin-900-normal.woff",
+      "bytes": 17720,
+      "sha256": "bb2719be3327a19413573903e43e11e493b865b6bebdaee3e5ece9ee89aa2d02"
+    },
+    {
+      "path": "rgp-website-main/src/assets/fonts/cover/barlow-latin-600-normal.woff",
+      "bytes": 19884,
+      "sha256": "cb76adc8642e8980cd4bdb0e63658aa818696f3289f38400e7154ed3992bbeb6"
+    },
+    {
+      "path": "rgp-website-main/src/assets/fonts/cover/barlow-latin-700-normal.woff",
+      "bytes": 19768,
+      "sha256": "b21c675715a7badab4a3c49242b777119fc6c3b08848a879526126be5adf4976"
+    },
+    {
+      "path": "rgp-website-main/src/assets/photos/README.md",
+      "bytes": 796,
+      "sha256": "5dc684fc0787f4a6b59e4289e9dd1c159810be5ee394264ac65c9465bde97fc7"
+    },
+    {
+      "path": "rgp-website-main/src/assets/photos/placeholder-hero.jpg",
+      "bytes": 267106,
+      "sha256": "50e82cba679dc5e532c48c67aedc29c2d0ea5ee580356d8e1c636edf600635cb"
+    },
+    {
+      "path": "rgp-website-main/src/assets/photos/placeholder-intro.jpg",
+      "bytes": 229420,
+      "sha256": "4d8408ffb83fd17513f8f8d6ee0320255701c2ed4112db49d46d26f5ec8702bd"
+    },
+    {
+      "path": "rgp-website-main/src/assets/photos/placeholder-process.jpg",
+      "bytes": 154187,
+      "sha256": "8341b84398e13cfbd693fff796e17b788e25cb8ebe355ad19ece588b1b2c455e"
+    },
+    {
+      "path": "rgp-website-main/src/assets/photos/placeholder-service-1.jpg",
+      "bytes": 238464,
+      "sha256": "9aaf31c9d04348818a6614eb9191493d6f617f605edb9d44c64d2b023129d983"
+    },
+    {
+      "path": "rgp-website-main/src/assets/photos/placeholder-service-2.jpg",
+      "bytes": 113055,
+      "sha256": "d55f5915350a917bdb0861911ce49ff5507f7b4009173974616153d712409fe4"
+    },
+    {
+      "path": "rgp-website-main/src/assets/photos/placeholder-service-3.jpg",
+      "bytes": 83997,
+      "sha256": "9c68a41bb3048b6f7fc13c4b66cbf94b5fb7c9eff7c54835e149f183270b38d9"
+    },
+    {
+      "path": "rgp-website-main/src/components/CareersForm.astro",
+      "bytes": 14167,
+      "sha256": "dce81ae78ad4cd60969bc7b7bdde864cc042264ff8286ebb0b8b9b68f1414b46"
+    },
+    {
+      "path": "rgp-website-main/src/components/ContactLocations.astro",
+      "bytes": 3585,
+      "sha256": "189ec6f3111a06519ce9cbdcf3a8cf9a99f95d83c270528cd83b7adaafa5bb5c"
+    },
+    {
+      "path": "rgp-website-main/src/components/ContentAlertList.astro",
+      "bytes": 1232,
+      "sha256": "1d47a2029c752b6fff0f67bd91c97026df12cff69cf379acc9fab07363bdcdd1"
+    },
+    {
+      "path": "rgp-website-main/src/components/DifferentiatorVS.astro",
+      "bytes": 3046,
+      "sha256": "42633f92ca48f80877883aaea53e9bae134757ae666677b13932d797bb67288b"
+    },
+    {
+      "path": "rgp-website-main/src/components/EmergencyCTABand.astro",
+      "bytes": 1650,
+      "sha256": "1190d4787787c3248f856dab696c410ef75526cc329827cc92acb66cc5cf0f56"
+    },
+    {
+      "path": "rgp-website-main/src/components/FAQSection.astro",
+      "bytes": 2699,
+      "sha256": "b7859b00caecf0eed4931290709e8cdd3b5399a019d86b0267a77533c74bbc19"
+    },
+    {
+      "path": "rgp-website-main/src/components/FinalCTA.astro",
+      "bytes": 1830,
+      "sha256": "9fb01f816e56e1c670e32e491e261d5619c15c556c60cf77b4fc6e5b4f8c7de1"
+    },
+    {
+      "path": "rgp-website-main/src/components/GalleryImage.astro",
+      "bytes": 1667,
+      "sha256": "a98caa912f8e8c064510aba5d0c70df3115a78c651e4377707a29fe7089f5fa0"
+    },
+    {
+      "path": "rgp-website-main/src/components/Hero.astro",
+      "bytes": 6724,
+      "sha256": "1240e2de9997be76c34e0bd3f63291c67551c003f6746bff52bd224e7f4e30c2"
+    },
+    {
+      "path": "rgp-website-main/src/components/HeroFullBleed.astro",
+      "bytes": 5522,
+      "sha256": "9f4d4cbeee252077e44c57ba5201e4f2231311bc0f4757af7a7fe02fe616023d"
+    },
+    {
+      "path": "rgp-website-main/src/components/HeroImage.astro",
+      "bytes": 1328,
+      "sha256": "c14238717787514c51cdf887e0205f54c19c81d1adea85f7af3e42d12bf131bc"
+    },
+    {
+      "path": "rgp-website-main/src/components/IncludedPanel.astro",
+      "bytes": 855,
+      "sha256": "6df303edb0e7506678e2293f19e6649fd70a6f38821bedad4a2552a3b9f0e0bc"
+    },
+    {
+      "path": "rgp-website-main/src/components/InlineCTA.astro",
+      "bytes": 2328,
+      "sha256": "8fea4c198ebb27daca1e8008397810da719b536cba3d0a1c9588450b95b42574"
+    },
+    {
+      "path": "rgp-website-main/src/components/InnerSubsections.astro",
+      "bytes": 1191,
+      "sha256": "28fa254c6eaba7ef0a18ed4d87b0301f8ffbc6ca6543c11fdbf6724cf1a84964"
+    },
+    {
+      "path": "rgp-website-main/src/components/InsuranceBand.astro",
+      "bytes": 2719,
+      "sha256": "195073f08410eba8291ae3307daa293cfa8253eaefcc574dc19cd7b72d36ae31"
+    },
+    {
+      "path": "rgp-website-main/src/components/IntroSection.astro",
+      "bytes": 4413,
+      "sha256": "1048b954d0aecf3f07d6fc2978e9707098defe63153debae50ed104e582dde79"
+    },
+    {
+      "path": "rgp-website-main/src/components/MegaMenuHeader.astro",
+      "bytes": 16376,
+      "sha256": "0216c55e579f6a5888a576dd76888f8e5f1ae2c4d812af22d51886bbadca2c17"
+    },
+    {
+      "path": "rgp-website-main/src/components/OptimizedImage.astro",
+      "bytes": 1146,
+      "sha256": "4cd1e259e27fc70c82c8460da69c5b579a5061a9a3a0f6641a5cef774adbef8c"
+    },
+    {
+      "path": "rgp-website-main/src/components/PageHero.astro",
+      "bytes": 2010,
+      "sha256": "8d998609fabc27e08840464dab472fb9bf0de59be5ad96cba0c1e98525818062"
+    },
+    {
+      "path": "rgp-website-main/src/components/PartnerForm.astro",
+      "bytes": 8964,
+      "sha256": "0c80990f2efb86944e88f87de5131951d224cc2c4e6ceef2e2d1b195cffc7684"
+    },
+    {
+      "path": "rgp-website-main/src/components/ProcessSection.astro",
+      "bytes": 2808,
+      "sha256": "430f43d3c25a7ce097aa5ff6f725a880d734f13fd1f0bb27dd7758755ac7d4fd"
+    },
+    {
+      "path": "rgp-website-main/src/components/ProcessStepper.astro",
+      "bytes": 2737,
+      "sha256": "869b02a2132f2c306fc4bf240f0453b537e5b269a45e960b38b068d8ce3fa8f6"
+    },
+    {
+      "path": "rgp-website-main/src/components/RegionalServiceExplorer.astro",
+      "bytes": 8741,
+      "sha256": "eeaed0870c9909e3a4aa969c1f1bd9925245eca034e53a00d02697acef18459c"
+    },
+    {
+      "path": "rgp-website-main/src/components/RequestServicePanel.astro",
+      "bytes": 9436,
+      "sha256": "c90d2f4beaba816fa8d11a1b91bc76ee3e4986530c111b9879382e1ee4225cb1"
+    },
+    {
+      "path": "rgp-website-main/src/components/ReviewSection.astro",
+      "bytes": 3505,
+      "sha256": "5a3419266887a5c1632e9463f9c1f4f9b75ae4b57eb11936c4757e1101c60219"
+    },
+    {
+      "path": "rgp-website-main/src/components/SchemaOrg.astro",
+      "bytes": 10348,
+      "sha256": "cc34cb9191605520431f652051870637f97bd6cc910341e7db15bed562002f0d"
+    },
+    {
+      "path": "rgp-website-main/src/components/ServiceAreaMap.astro",
+      "bytes": 9059,
+      "sha256": "ed9e8363f6971aa48b4412f7338ec68ddf2333aa534678d8ce01fbd80b6d98ce"
+    },
+    {
+      "path": "rgp-website-main/src/components/ServiceGrid.astro",
+      "bytes": 3210,
+      "sha256": "b20486f34c99462dfd32c275b026e54292241256192941a9bd4d8498ea51ff9a"
+    },
+    {
+      "path": "rgp-website-main/src/components/ServiceGridIcons.astro",
+      "bytes": 2555,
+      "sha256": "0e42c598189d924e921dc2b06f512f291aa0ffc09177695f613b672cc9bf9229"
+    },
+    {
+      "path": "rgp-website-main/src/components/SidebarNav.astro",
+      "bytes": 2304,
+      "sha256": "0584b9f04d30529501037ff95b3733f131369c0765f4976c58effa8a46f00104"
+    },
+    {
+      "path": "rgp-website-main/src/components/SiteFooter.astro",
+      "bytes": 9296,
+      "sha256": "53e454e76b1ea92371230c6cb2bd8a4d7893fb5018a4233385008434c63cc8f1"
+    },
+    {
+      "path": "rgp-website-main/src/components/SiteHeader.astro",
+      "bytes": 4601,
+      "sha256": "bdb866b1fe024ecc472e3da6a48bd3857ae73ffb67c798b6d11211d53cdc576b"
+    },
+    {
+      "path": "rgp-website-main/src/components/StickyMobileCTA.astro",
+      "bytes": 4320,
+      "sha256": "179808104429e5bc0217867292e29304a21c38d469c960a0398f946de898c36a"
+    },
+    {
+      "path": "rgp-website-main/src/components/templates/BlogIndexTemplate.astro",
+      "bytes": 3467,
+      "sha256": "b8a93c37f089935e5de8ef610f39f16b9effc25b871899aa23ce445b1c5e2e17"
+    },
+    {
+      "path": "rgp-website-main/src/components/templates/BlogPostTemplate.astro",
+      "bytes": 6919,
+      "sha256": "93866da9b07970e03003c6159fd1f865191aa2c28ba72d7c679cefe296cebe4e"
+    },
+    {
+      "path": "rgp-website-main/src/components/templates/ContactPageTemplate.astro",
+      "bytes": 4097,
+      "sha256": "0ee4c144f459506c23fe471cd5c0bbb155cdc609a1a94b053d753319be286f51"
+    },
+    {
+      "path": "rgp-website-main/src/components/templates/FormPageTemplate.astro",
+      "bytes": 2878,
+      "sha256": "8353e06322955e9845ead61467596d1c14a3efa916ca5ec53f847f61f99613e7"
+    },
+    {
+      "path": "rgp-website-main/src/components/templates/InnerPageTemplate.astro",
+      "bytes": 5026,
+      "sha256": "a67b7d09953e8f0ba2d55d68f19aa742687048c09408bc01ed41e9418013308e"
+    },
+    {
+      "path": "rgp-website-main/src/components/templates/LegalPageTemplate.astro",
+      "bytes": 1489,
+      "sha256": "131c589bb9981427a21f164dd39941efff8f2e72cc47fb144afa39b698ccf56a"
+    },
+    {
+      "path": "rgp-website-main/src/components/templates/ReviewsPageTemplate.astro",
+      "bytes": 1348,
+      "sha256": "45e87aff4ba196d39ef8bbb057a465c8a45459c3294a198775543a2fa0a057f0"
+    },
+    {
+      "path": "rgp-website-main/src/components/templates/ServiceAreaIndexTemplate.astro",
+      "bytes": 1392,
+      "sha256": "5f10805f44ffa2142345241599d5e3366f377c527bf2b1f2d17d7fe55165b4ff"
+    },
+    {
+      "path": "rgp-website-main/src/content.config.ts",
+      "bytes": 4170,
+      "sha256": "9125ae5566e1b738b87d4e405641f9d348a40f309e834dd0cf62d4666da9123b"
+    },
+    {
+      "path": "rgp-website-main/src/content/posts/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "rgp-website-main/src/data/agency-credit.mjs",
+      "bytes": 902,
+      "sha256": "388df2786fbefbb59b009a77ad14979dbfc272a17e2e1980774c811cf81f1c73"
+    },
+    {
+      "path": "rgp-website-main/src/data/cities.ts",
+      "bytes": 325,
+      "sha256": "ca385e221f41514cf15f96c033547bf7b7bd080ba5474087ade6c5d5ecabba7a"
+    },
+    {
+      "path": "rgp-website-main/src/data/megaNav.ts",
+      "bytes": 2084,
+      "sha256": "b693942f30d7cf10fc5a5fd4a9e11e8c69a8d3bc98cb3164e80b0014dc3e8c07"
+    },
+    {
+      "path": "rgp-website-main/src/data/site.ts",
+      "bytes": 18703,
+      "sha256": "2213345cf72681ec195dce9174bacb683f4c8d8ace9d8d430741965ab978c1a7"
+    },
+    {
+      "path": "rgp-website-main/src/integrations/blog-schedule.mjs",
+      "bytes": 1479,
+      "sha256": "baf40c7ec0982de21221ed47af33baa02eddf0627176b3e473a280675a12889a"
+    },
+    {
+      "path": "rgp-website-main/src/layouts/BaseLayout.astro",
+      "bytes": 19001,
+      "sha256": "cce10c13713f96e4d60773cd58078a41ae2ae4c2102e039247b1de365663181a"
+    },
+    {
+      "path": "rgp-website-main/src/pages/404.astro",
+      "bytes": 1668,
+      "sha256": "a5099a7eb3f06034e421c697336db388d776d468b5edb47603b71d264d6ede36"
+    },
+    {
+      "path": "rgp-website-main/src/pages/blog/[...page].astro",
+      "bytes": 2182,
+      "sha256": "b66628bcf5f3f90274ffc6206364a19b778f77ac8baaad340ba97d450e15a42d"
+    },
+    {
+      "path": "rgp-website-main/src/pages/blog/[feed].xml.ts",
+      "bytes": 936,
+      "sha256": "abaf8ea29d6a1d94a3ee67677ec0ebedbfb1bdad8e6a40c2a99ecc66bcf189e6"
+    },
+    {
+      "path": "rgp-website-main/src/pages/blog/[slug].astro",
+      "bytes": 2845,
+      "sha256": "0833e4c4428a5353a856900ee8b68a567e366f72d93206096fc8274b668c8701"
+    },
+    {
+      "path": "rgp-website-main/src/pages/blog/[slug]/[file].ts",
+      "bytes": 1353,
+      "sha256": "555a6ae088b1c0204c2f932a766f2a7f80413b5d819b12ac521d5ce3c3bd3d2a"
+    },
+    {
+      "path": "rgp-website-main/src/pages/index.astro",
+      "bytes": 3224,
+      "sha256": "23137d83f66d63dea28b04ccfbab3b11959dcbeb5c957e385fd05eee2219c9be"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/about.astro",
+      "bytes": 2631,
+      "sha256": "d64dcad5e40714c39d08a1a29603b093423a5c85e49acf8bbfd5e500238c0445"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/blog-post.astro",
+      "bytes": 1305,
+      "sha256": "f8c3f884616122007e7ddcb0bdec6d888339fce674ac1907120c9511fa189fff"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/blog.astro",
+      "bytes": 1182,
+      "sha256": "bcf770d3156918e029bfe120b0baa71391dc797f3f2a43ab79d4cd04824246fc"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/careers.astro",
+      "bytes": 1367,
+      "sha256": "b109d3f960021ec02dd9b48c7a094982c62e942ba226c96b87d433f359afaeea"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/contact-page.astro",
+      "bytes": 1431,
+      "sha256": "1b14ed2c306773dcee1d2cc89690b78a9b0c70cba80f1c0e69674f8c5d82a5b6"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/homepage.astro",
+      "bytes": 8130,
+      "sha256": "35465033fd2dea96a3e2fe93ea64682ec76eda150022ec023b27caf79b9a1b81"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/inner-page.astro",
+      "bytes": 7055,
+      "sha256": "294524ae7594e6b9239bcda7b6d3b6a74ec4f66dc90358221c78d51be20752ec"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/legal.astro",
+      "bytes": 1265,
+      "sha256": "81b591e73c67ef3f1967beb9d1ea3a02a4a6be597d58c0d4c03f6f3ffb7c065a"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/mega-menu.astro",
+      "bytes": 1504,
+      "sha256": "730edf9ab59d21c2fc8316b1dccfb041d63b50febf8173b7550a162212fbdf67"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/partners.astro",
+      "bytes": 1163,
+      "sha256": "0ae8e25fe2484ab27cb343b42fddafb16136a5d3df52534a25329326b3081db9"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/reviews.astro",
+      "bytes": 1240,
+      "sha256": "5655cb5192957165e7e94fbd0bdfa05cbe87b13daf2061814a1a8f54d00e2157"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/sections-a.astro",
+      "bytes": 3673,
+      "sha256": "36e36802ec3b6ec7783fb39d9b42aceaceb1fcdcd1caee94b43a94f97da1fb77"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/sections-b.astro",
+      "bytes": 938,
+      "sha256": "2f5539d96187262f6bf30b2f62a1d1dbada49d98e62323ecd2df5c96ca9e112e"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/sections-c.astro",
+      "bytes": 1868,
+      "sha256": "da25c3bb530963868c973553465019c15f8bafe14e6b93ee5eb493628c3271fb"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/sections-d.astro",
+      "bytes": 800,
+      "sha256": "e8219432b3eb6bf3b082f3601ef14fd46d501a577eea08e2eff8e7f289f36001"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/service-area.astro",
+      "bytes": 838,
+      "sha256": "313f45d7edd3633f34bc142614e18832cc277b7e06f8d02cd93758050d05c5ff"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/sticky-cta-options.astro",
+      "bytes": 6201,
+      "sha256": "eb0aaf3bc0cbc5910011d80119096bccd3b529d7952e7b11a817c8a656dd21e9"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/variants-b1.astro",
+      "bytes": 2749,
+      "sha256": "6db689919e2a651e1c41cfa3b097a409e51cfb737c4a8de6fff57bf283264b2a"
+    },
+    {
+      "path": "rgp-website-main/src/pages/templates/variants-b2.astro",
+      "bytes": 1454,
+      "sha256": "667a0e8e9f670466b186454e8d09dd8ae9adbf91d26b53a3e457b330148e99b5"
+    },
+    {
+      "path": "rgp-website-main/src/scripts/lead-forms.ts",
+      "bytes": 7084,
+      "sha256": "24a5d6fc01c0425c5cd585e68ab60a74c9285bc2479c14b03658a4a0a1c67195"
+    },
+    {
+      "path": "rgp-website-main/src/scripts/leaflet.ts",
+      "bytes": 826,
+      "sha256": "8db9013a923e0be8da5f3fdd20398d36d6629117182f848b11b22a34e24ac0bc"
+    },
+    {
+      "path": "rgp-website-main/src/scripts/load-on-approach.ts",
+      "bytes": 2571,
+      "sha256": "13caf6b75c1e872e84828e83c7880b48b835078732ffa3d417de019aab5fd476"
+    },
+    {
+      "path": "rgp-website-main/src/scripts/posthog-init.ts",
+      "bytes": 1435,
+      "sha256": "c496afbd331cce238a4e604f961a96cea0e06dfc63a36ae3dfd80d15bbd9fd81"
+    },
+    {
+      "path": "rgp-website-main/src/scripts/posthog-loader.ts",
+      "bytes": 1500,
+      "sha256": "47bc6317c011242cf7f9b27b475ec7e352327c430b9dd3bd6f66e9b7fcc8158e"
+    },
+    {
+      "path": "rgp-website-main/src/styles/global.css",
+      "bytes": 1475,
+      "sha256": "5f373bd7ea6608b55d15b1c970b8e2d51391c6458ffc333cbff11c6402466d7d"
+    },
+    {
+      "path": "rgp-website-main/src/styles/theme.css",
+      "bytes": 2167,
+      "sha256": "6e602532225fda68a96f3393636fb40d281c2aeb7ecf53f41f5e055043392c56"
+    },
+    {
+      "path": "rgp-website-main/src/utils/blog-cover.mjs",
+      "bytes": 24550,
+      "sha256": "4417804fd2653ff7991abeeea335744a36b294129339d721044fd9157659ac6a"
+    },
+    {
+      "path": "rgp-website-main/src/utils/blog-related.mjs",
+      "bytes": 1715,
+      "sha256": "e197278ea3cbf6b35487802a32276b361fe06598f456fc984b9e0865d08b16ed"
+    },
+    {
+      "path": "rgp-website-main/src/utils/blog-schedule.mjs",
+      "bytes": 8729,
+      "sha256": "62f7e2d8d14f1a37d5c8f571d1b0c69a4b829dbfeaa015f333cf66aee5fb77f4"
+    },
+    {
+      "path": "rgp-website-main/src/utils/blog-toc.mjs",
+      "bytes": 3722,
+      "sha256": "2d6dd2b34423bf0da5a53205b908dfbc99ea836d6bbd0f9ee19c40cb2819a977"
+    },
+    {
+      "path": "rgp-website-main/src/utils/blog.ts",
+      "bytes": 4995,
+      "sha256": "52a63cf40c061aab3c18d5b685cfa040e32ac4de94e0c91e22fbc4fceb98cd36"
+    },
+    {
+      "path": "rgp-website-main/src/utils/phone.ts",
+      "bytes": 631,
+      "sha256": "abddc706bc5a87c99b6ec0cf96d053d9b7261fac9e92e149281c3c1c0fae53ca"
+    },
+    {
+      "path": "rgp-website-main/src/utils/seo.mjs",
+      "bytes": 8738,
+      "sha256": "e1110e075999f668b12c1703f4bc6eb8d204339b193df8075d17f1d70b10a2e8"
+    },
+    {
+      "path": "rgp-website-main/src/webmcp.d.ts",
+      "bytes": 603,
+      "sha256": "3f6d3899aa54b7d98a5f03c4a42c86b579fff0b6f2f34bc1586b3b814304bb58"
+    },
+    {
+      "path": "rgp-website-main/tests/alerts/site-alert.test.mjs",
+      "bytes": 17652,
+      "sha256": "ac758e825780ed765748d013187ecd4fd8c38b13b9f1eede9cfb482234c6d4c6"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/astro-test.config.mjs",
+      "bytes": 1449,
+      "sha256": "6a67eecf7f006a5c763adda74cb66d7598be074116ebf2ec4bb5d8a37bb1b7cb"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/build.test.mjs",
+      "bytes": 21519,
+      "sha256": "f16a87c6449e73bdf24590da7e9ea883fde2003091e6223c7e4d4fc9b99fd874"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/cover.test.mjs",
+      "bytes": 10251,
+      "sha256": "b00076176127e72e7da20fc41fc13328f9864c0d43f9204d6c09c8dcb2a28fc7"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/fixtures/HubStub.astro",
+      "bytes": 864,
+      "sha256": "76e58952c9189fd68e9225e1e5d45932d4ec98c89439f42e17e25e9c214c7700"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/fixtures/posts/ceiling-leak-what-to-do.json",
+      "bytes": 485,
+      "sha256": "ed779838065295858a14bff58b834ce30b5eee82c9b0d55f5b27fd5dd5352ff9"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/fixtures/posts/how-long-does-structural-drying-take.json",
+      "bytes": 919,
+      "sha256": "935349a2ec14c5dd4ee9734e34c2c7aa6cb5b44036e9087e76643dfb424413dc"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/fixtures/posts/what-to-do-after-a-burst-pipe.json",
+      "bytes": 2130,
+      "sha256": "c247adadeda95e6cfbb3715986cb0f27202d9d667dcb747354d290fc80240fa6"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/fixtures/posts/when-to-replace-wet-drywall.json",
+      "bytes": 677,
+      "sha256": "f7a0ec84980cedaf964b84d0b109e9163363f933ff447709e82a5444e681496c"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/fixtures/qa/how-long-does-structural-drying-take.md",
+      "bytes": 377,
+      "sha256": "8a0e22a9ea8ea8f82f4c457a2a3af43a19993a9e4cbf7eb04580543c7e75228e"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/fixtures/qa/what-to-do-after-a-burst-pipe.md",
+      "bytes": 371,
+      "sha256": "daf8280b74375e693afb9ea25b2d04dcb56fa3c96e5e7349b7fe8e665bfc928f"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/fixtures/qa/when-to-replace-wet-drywall.md",
+      "bytes": 370,
+      "sha256": "8adf7f923b442a50edabbe0bcb61e6f40d99bae3a801628ecbb419596f73673a"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/publish.test.mjs",
+      "bytes": 11603,
+      "sha256": "e06a5a12d9a7685f55c937ffd0b6d71ee9814c9e22fec95db432631b2bb8b8a3"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/qa-record.test.mjs",
+      "bytes": 4989,
+      "sha256": "5a91901840770ae2eea836da042099219b8a494990d43e50bb382078f8a825e0"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/related.test.mjs",
+      "bytes": 2204,
+      "sha256": "b07d8884815ba28e432f062a0a35fb016403d04585d921fa3f2d9438334b2bd4"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/review.test.mjs",
+      "bytes": 2665,
+      "sha256": "d6e816fdd61ab66b6bac43bb30472f23a26995a69ff16c7c78bbee3f40bafa91"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/schedule.test.mjs",
+      "bytes": 6403,
+      "sha256": "b4ac33c72d6b0cbc18cfab29c77d80ce5c48c121fde8bc02ca87957aaa726d06"
+    },
+    {
+      "path": "rgp-website-main/tests/blog/toc.test.mjs",
+      "bytes": 3940,
+      "sha256": "ad774089c7d5adf60b760920602775476a6427fd33d392ba509aa650eeb038a5"
+    },
+    {
+      "path": "rgp-website-main/tests/footer/agency-credit.test.mjs",
+      "bytes": 2740,
+      "sha256": "e3e2a40a3d7553f62f4d1581727d36fd76c8ebadcdef5393445dfde6436c2f56"
+    },
+    {
+      "path": "rgp-website-main/tests/forms/astro-test.config.mjs",
+      "bytes": 2197,
+      "sha256": "66088c75b2c1dfdd4d7968f35804ded215017a92264f0837aaf902fd0dfc26c6"
+    },
+    {
+      "path": "rgp-website-main/tests/forms/build.mjs",
+      "bytes": 2299,
+      "sha256": "cda4dd0f87bd4f04d80af9efc04e5a7e9e32e3219bece3efb26b4a0cc06c1ba9"
+    },
+    {
+      "path": "rgp-website-main/tests/forms/leadrouter-setup.test.mjs",
+      "bytes": 6585,
+      "sha256": "0ee4ed43773e179e3f85b1ebc8ca09f3219c3651f3c6206d71ad99fd649e4d6b"
+    },
+    {
+      "path": "rgp-website-main/tests/forms/standard-forms.test.mjs",
+      "bytes": 13580,
+      "sha256": "4e063f2e959db6d7a7a82f1298e68192d0b02f5ea2fdbdd67c6a948abcce84c4"
+    },
+    {
+      "path": "rgp-website-main/tests/forms/turnstile.test.mjs",
+      "bytes": 7120,
+      "sha256": "f1baa6c0ce3df1c177509f2f9e771461970dace6be36362bee5744491cfa1ab5"
+    },
+    {
+      "path": "rgp-website-main/tests/hosting/deploy-url.test.mjs",
+      "bytes": 5386,
+      "sha256": "9a773caf010304d13bce06f3aefa8d19f23bed0073cf21c0e66e66484c8fb435"
+    },
+    {
+      "path": "rgp-website-main/tests/hosting/gh-workflow-scope.test.mjs",
+      "bytes": 7041,
+      "sha256": "91ae2ffaefc9949baf805795964d7024fa025606cb840141f2bee9350a738fe1"
+    },
+    {
+      "path": "rgp-website-main/tests/hosting/vercel-hook.test.mjs",
+      "bytes": 12296,
+      "sha256": "78e039a632b82483ac3b930ad89382207fa01a05cd997c42d2d707cd163b250b"
+    },
+    {
+      "path": "rgp-website-main/tests/scripts/astro-gtm-test.config.mjs",
+      "bytes": 1309,
+      "sha256": "29a754f382ba63da9ca297dd3c7d3087e567879bad9c832100e5a6bb08078fe8"
+    },
+    {
+      "path": "rgp-website-main/tests/scripts/gtm-build.test.mjs",
+      "bytes": 4301,
+      "sha256": "a322068c003840fc03bbaa8cf4dd48bf677ccd0614d46f974b384a23d6e503f1"
+    },
+    {
+      "path": "rgp-website-main/tests/scripts/script-placement.test.mjs",
+      "bytes": 7626,
+      "sha256": "715422f242f47a300b0414d7718e5e42c6fd0b8aa62c32750184a5f595173d1e"
+    },
+    {
+      "path": "rgp-website-main/tests/scripts/us-english.test.mjs",
+      "bytes": 1415,
+      "sha256": "78337969572d8aef8965b2e1edd4613fb31fc479f49f8fc15b5e7f73ed8cf170"
+    },
+    {
+      "path": "rgp-website-main/tests/search/hidden-prompt.test.mjs",
+      "bytes": 4801,
+      "sha256": "91c36344e577dc7fd61a70cf01335271793732e91216e6fdac469f65e1adcac2"
+    },
+    {
+      "path": "rgp-website-main/tests/search/llms-service-areas.test.mjs",
+      "bytes": 3609,
+      "sha256": "c3b5c8b02fdd3019b269ff751b6d38690de98ad1f68447ae819f5ea6acf95064"
+    },
+    {
+      "path": "rgp-website-main/tests/search/search-engines.test.mjs",
+      "bytes": 7772,
+      "sha256": "bec3bac47532b989b11c094b357a0b4a5012260902bf9e3ed25ddd4b1b094d9e"
+    },
+    {
+      "path": "rgp-website-main/tests/search/search-health.test.mjs",
+      "bytes": 6848,
+      "sha256": "abfaddd8bd98eaae16d78cd913f425f9dcaa8f364a1e46fe9cab0663936067bb"
+    },
+    {
+      "path": "rgp-website-main/tests/search/search-notify.test.mjs",
+      "bytes": 19159,
+      "sha256": "b9a854920655cc31f7141fcf658a58f34c5e326b0ce98063a410fd386ca79772"
+    },
+    {
+      "path": "rgp-website-main/tsconfig.json",
+      "bytes": 107,
+      "sha256": "177858db86fd922531b9993c061e456474930c764342309fa25ed087e2ca3a24"
+    },
+    {
+      "path": "rgp-website-main/vercel.json",
+      "bytes": 194,
+      "sha256": "631a52add31a1594a9a6530c4d7f1efefffeeac4ba410aea6894e599f8ff81df"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+# Worked example of a Copy Sprint output (schemas/final-page-copy.yaml).
+# One file per page in artifacts/copy/ — validate:artifacts checks every one.
+meta:
+  page_id: water-damage-restoration
+  page_url: /water-damage-restoration/
+  page_type: parent_hub
+  brief_used: https://docs.google.com/document/d/EXAMPLE-water-hub   # must equal the page map's brief_ref
+  primary_service_page_target_area: Example City
+  status: Approved
+  reviewed_by: James LaRosa
+seo:                                   # §28 — title BUILT by src/utils/seo.mjs from the page map keyword + "{City}, {ST}"
+  title: "#1 Water Damage Restoration Company in Example City, ST"
+  meta_description: "Water damage restoration in Example City, ST: extraction, structural drying, moisture checks, and documentation. Call any time."
+copy:
+  h1: Water Damage Restoration in Example City, ST
+  hero_intro: We extract standing water, dry the structure, and document every step.
+  body:
+    - h2: Emergency Water Damage Restoration in Example City, ST
+      content: Extraction, structural drying, moisture verification, and documentation.
+  cta_blocks:
+    - Call now for same-day water damage response.
+  internal_links:
+    - /water-damage-restoration/
+claims_used:
+  - text: IICRC-certified technicians
+    state: launch_proof_required
+claims_avoided_or_needs_approval: []
+blockers: []

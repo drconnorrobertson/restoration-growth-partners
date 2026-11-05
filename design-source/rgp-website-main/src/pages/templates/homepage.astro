@@ -1,0 +1,135 @@
+---
+/**
+ * Full homepage assembly preview — noindex (§17). Every section of the
+ * emergency_split_hero archetype rendered with realistic service-shaped
+ * placeholder data standing in for a real client's Messaging Pack.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import EmergencyCTABand from '../../components/EmergencyCTABand.astro';
+import IntroSection from '../../components/IntroSection.astro';
+import InsuranceBand from '../../components/InsuranceBand.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
+import DifferentiatorVS from '../../components/DifferentiatorVS.astro';
+import ProcessSection from '../../components/ProcessSection.astro';
+import ReviewSection from '../../components/ReviewSection.astro';
+import ServiceAreaMap from '../../components/ServiceAreaMap.astro';
+import FAQSection from '../../components/FAQSection.astro';
+import { site } from '../../data/site';
+
+/* PREVIEW-ONLY placeholder photography — replace with client photos per build.
+   See src/assets/photos/README.md (shipping these is a build blocker). */
+import heroPhoto from '../../assets/photos/placeholder-hero.jpg';
+import introPhoto from '../../assets/photos/placeholder-intro.jpg';
+import processPhoto from '../../assets/photos/placeholder-process.jpg';
+import svc1 from '../../assets/photos/placeholder-service-1.jpg';
+import svc2 from '../../assets/photos/placeholder-service-2.jpg';
+import svc3 from '../../assets/photos/placeholder-service-3.jpg';
+---
+
+<BaseLayout
+  noindex
+  title={`${site.name} — Starter Preview`}
+  description="Agency restoration starter — full homepage assembly preview."
+>
+  <Hero
+    eyebrow={`#1 ${site.primaryMarket} Restoration Contractor · Residential & Commercial`}
+    h1Lines={[
+      { text: `${site.primaryMarket}'s` },
+      { text: 'Most Trusted' },
+      { text: 'Restoration', accent: true },
+      { text: 'Company' },
+    ]}
+    serviceList={['Water', 'Fire', 'Mold', 'Storm', 'Reconstruction']}
+    trustBullets={[
+      '24/7 Emergency Service',
+      'Fast Emergency Response',
+      'Licensed & Insured',
+      'Homes & Businesses',
+    ]}
+    backgroundImage={heroPhoto}
+  />
+
+  <EmergencyCTABand
+    heading="Experiencing an Emergency Right Now?"
+    support="Our team is standing by 24/7 — call now and we can start dispatch right away."
+  />
+
+  <IntroSection
+    eyebrow="Who we are"
+    heading="One call for urgent cleanup, mitigation, and a clear restoration plan"
+    paragraphs={[
+      "When your property has been damaged, the last thing you need is three different contractors pointing at each other. We handle the whole recovery — emergency response, cleanup, drying, and reconstruction — with one local team and one point of contact.",
+      "Every job is documented from the first visit: photos, moisture readings, and scope notes that keep your insurance claim supported and your questions answered.",
+    ]}
+    benefits={['One team, start to finish', 'Insurance-ready documentation', 'Local crews, fast response', 'Clear communication at every step']}
+    image={introPhoto}
+    imageAlt="Our crew arriving on site"
+  />
+
+  <ServiceGrid
+    eyebrow="What we do"
+    heading="Our Restoration Services"
+    intro="From residential emergencies to commercial property losses and complete reconstruction — certified technicians and a commitment to getting you back to normal fast."
+    services={[
+      { title: 'Water Damage Restoration', description: 'Extraction, structural drying, and moisture documentation after floods, burst pipes, and appliance leaks.', url: '/water-damage-restoration/', chips: ['Residential', 'Commercial'], image: svc1, imageAlt: 'Water damage restoration work' },
+      { title: 'Fire Damage Restoration', description: 'Smoke and soot cleanup, odor removal, and full recovery after a fire — from first response to rebuild.', url: '/fire-damage-restoration/', chips: ['Residential', 'Commercial'], image: svc2, imageAlt: 'Fire damage restoration work' },
+      { title: 'Mold Remediation', description: 'Containment, safe removal, and clearance-ready remediation with clear documentation at every step.', url: '/mold-remediation/', chips: ['Residential', 'Commercial'], image: svc3, imageAlt: 'Mold remediation work' },
+      { title: 'Storm Damage Restoration', description: 'Emergency board-up, roof tarping, debris removal, and full property recovery after any storm.', url: '/storm-damage-restoration/' },
+      { title: 'Reconstruction', description: 'Once restoration is complete, we rebuild. One contractor from disaster to done — no hand-offs, no gaps.', url: '/reconstruction/' },
+      { title: 'Commercial Restoration', description: 'Fast containment, cleanup, and rebuild coordination for offices, retail, industrial, and managed facilities.', url: '/commercial-restoration/', chips: ['Commercial'] },
+    ]}
+  />
+
+  <DifferentiatorVS
+    leftEyebrow="Many restoration companies"
+    leftHeading="What property owners often run into"
+    rightHeading="What makes the response different"
+    problems={[
+      { title: 'Missed calls after hours', text: 'Emergency messages can sit until the next business day.' },
+      { title: 'Limited claim support', text: 'Customers are left piecing together photos, notes, and paperwork.' },
+      { title: 'Handoffs between vendors', text: 'Mitigation, cleanup, and rebuild may become separate jobs.' },
+      { title: 'One narrow specialty', text: 'Some companies handle one part of the process, then leave the rest to you.' },
+    ]}
+    answers={[
+      { title: 'Live human answering 24/7', text: 'A real person answers emergency calls and can start dispatch right away.' },
+      { title: 'Fast emergency response', text: 'Emergency dispatch is prioritized so damage can be contained before it spreads.' },
+      { title: 'Clear claim documentation', text: 'Photos, moisture readings, and scope notes documented from the first visit.' },
+      { title: 'Mitigation through rebuild', text: 'Homes, businesses, and facilities are covered from first response to final walkthrough.' },
+    ]}
+  />
+
+  <!-- Shared section: same content/variant as every inner page (site.process) -->
+  <ProcessSection {...site.process} backgroundImage={processPhoto} />
+
+  <InsuranceBand
+    heading="We Work With All Major Insurance Companies"
+    support="We handle the claims process so you don't have to — all insurers accepted, zero hassle for you."
+  />
+
+  <ReviewSection
+    eyebrow="What our customers say"
+    heading={`Property owners trust ${site.name}`}
+    intro="Every review comes straight from the platforms our customers use — nothing is edited or hand-picked."
+  />
+
+  <!-- Shared section: same content/variant as every inner page (site.serviceArea) -->
+  <ServiceAreaMap {...site.serviceArea} mapCaption={site.serviceArea.caption} />
+
+  <FAQSection
+    eyebrow="Common questions"
+    heading="Frequently Asked Questions"
+    support="Everything you need to know before you call. Still have questions? We're available 24/7."
+    faqs={[
+      { question: 'Are you available 24/7?', answer: `Yes — we're available 24/7/365 for emergency restoration. Disasters don't keep business hours, and neither do we. Call <a href="${site.phoneHref}" class="font-bold text-accent">${site.phoneDisplay}</a> any time.` },
+      { question: 'How fast can you get to my property?', answer: 'Emergency dispatch is prioritized across our core service area. Call and we can usually give you an arrival window on the phone.' },
+      { question: 'Do you work with my insurance company?', answer: 'We document the damage thoroughly — photos, moisture readings, and scope notes — so your claim is supported from day one.' },
+      { question: 'Can I request service online?', answer: 'Yes — use the request form and we\'ll respond within one business day. For active damage, calling is always fastest.' },
+    ]}
+  />
+
+  <!--
+    No FinalCTA here: the footer's conversion band is the page's closing CTA.
+    Rendering both produced two near-identical closes (rejected 2026-08-25).
+  -->
+</BaseLayout>

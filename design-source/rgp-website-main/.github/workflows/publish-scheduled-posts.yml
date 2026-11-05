@@ -1,0 +1,94 @@
+# Weekly blog publisher (CORE_CONTRACTS §29). Copied into every client repo with the starter; inert in the
+# system repo (GitHub only runs workflows from the repository root's .github/).
+#
+# ONCE A WEEK, Wednesday 06:00 UTC — the same slot for every client (§29; owner decision 2026-10-14) — it runs
+# scripts/publish-due-posts.mjs: due posts that are not live → Vercel deploy hook → wait until each returns
+# 200 and is in the live sitemap → start the workflow "Tell search engines" (search-notify.yml, §28: IndexNow for
+# the pages that changed, the sitemap to Bing and Google) and wait for it. A deploy-hook build reports no deployment
+# to GitHub, so that workflow would not start on its own; this is the ONE announcing path. Wednesday leaves Wednesday
+# plus two business days to fix a failure. GitHub runs scheduled workflows in UTC and can start a top-of-the-
+# hour run several minutes late under load; that is acceptable (the post is due from 06:00 and goes live
+# when the run gets to it).
+#
+# A failed run raises a website alert (CORE_CONTRACTS §32, workflow "Site alerts": ClickUp task, Slack post tagging the
+# team, GitHub issue); GitHub also emails it to the person who last changed the `cron:` line below, and it shows red.
+# Re-run after fixing: Actions → "Publish scheduled blog posts" → Run workflow → untick "Dry run".
+# While site.previewMode is true (before launch) it exits without doing anything.
+#
+# Do not change the schedule per client (the script fails unless it is exactly this one weekly run).
+# Secrets (GitHub Actions only): VERCEL_DEPLOY_HOOK_URL (repo secret, per client, required — created and stored by
+# npm run vercel:setup / vercel:hook, nobody sees it; without it a launched site with scheduled posts fails every run,
+# dry runs included), the job's own GITHUB_TOKEN
+# (actions: write, to start "Tell search engines" — no secret to set), and for the dry-run key check
+# GOOGLE_OAUTH_CLIENT_ID + GOOGLE_OAUTH_CLIENT_SECRET + GOOGLE_TOKEN_JSON — ORGANIZATION secrets shared by every
+# client repo and the "Search engines" workflow (one copy of each key), written only by the owner's
+# `npm run search:connect` (§28). The OAuth client file is built from the ID + secret inside the step below.
+# Nothing Google-related is set per client; never add repo copies (a repo secret would hide the organization
+# one and go stale when the owner re-connects).
+# Every dry run also proves the Google keys work: a token refresh + the read-only `npm run gsc -- submit --check`
+# (reads the sitemap status; submits nothing).
+name: Publish scheduled blog posts
+
+on:
+  schedule:
+    - cron: '0 6 * * 3'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run: check and report only (no deploy, no "Tell search engines" run; read-only Google key check). Untick to publish.'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  actions: write   # start "Tell search engines" (search-notify.yml) once the posts are live
+
+concurrency:
+  group: publish-scheduled-posts
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      # The publisher and the IndexNow/Search Console scripts use only Node built-ins: no npm install.
+      - name: Search Console credentials (agency Google account)
+        env:
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          GOOGLE_TOKEN_JSON: ${{ secrets.GOOGLE_TOKEN_JSON }}
+        run: |
+          umask 077
+          missing=''
+          for name in GOOGLE_OAUTH_CLIENT_ID GOOGLE_OAUTH_CLIENT_SECRET GOOGLE_TOKEN_JSON; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ -z "$missing" ]; then
+            # The client file is built from the two secrets read from the environment (never argv, never printed); mode 600.
+            node -e 'const e = process.env; require("node:fs").writeFileSync(process.argv[1], JSON.stringify({ installed: { client_id: e.GOOGLE_OAUTH_CLIENT_ID.trim(), client_secret: e.GOOGLE_OAUTH_CLIENT_SECRET.trim() } }), { mode: 0o600 });' "$RUNNER_TEMP/google-oauth-client.json"
+            printf '%s' "$GOOGLE_TOKEN_JSON" > "$RUNNER_TEMP/google-token.json"
+            echo "GOOGLE_OAUTH_CLIENT_FILE=$RUNNER_TEMP/google-oauth-client.json" >> "$GITHUB_ENV"
+            echo "GOOGLE_TOKEN_FILE=$RUNNER_TEMP/google-token.json" >> "$GITHUB_ENV"
+            echo "Search Console keys: organization secrets GOOGLE_OAUTH_CLIENT_ID + GOOGLE_OAUTH_CLIENT_SECRET + GOOGLE_TOKEN_JSON found."
+          else
+            echo "::warning::Organization secret(s)${missing} not available to this repo — the dry-run key check and the \"Tell search engines\" Google step will fail. Owner: npm run search:connect."
+          fi
+      # Dry runs only: prove the Google keys work (token refresh + read-only sitemap status). Submits nothing.
+      - name: Check Search Console keys (dry run, read-only)
+        if: github.event_name == 'workflow_dispatch' && inputs.dry_run
+        run: |
+          if node --experimental-strip-types --input-type=module -e "const { site } = await import('./src/data/site.ts'); process.exit(site.previewMode ? 0 : 1);"; then
+            echo "site.previewMode is true — not launched; Search Console key check skipped."
+          else
+            node --experimental-strip-types scripts/search-console.mjs submit --check
+          fi
+      - name: Publish due posts
+        env:
+          VERCEL_DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+          GH_TOKEN: ${{ github.token }}
+        run: node --experimental-strip-types scripts/publish-due-posts.mjs ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '--dry-run' || '' }}

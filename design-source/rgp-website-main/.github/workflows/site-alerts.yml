@@ -1,0 +1,78 @@
+# Website alerts for this client repo (CORE_CONTRACTS §32 "Website Alerts"). Copied UNCHANGED into every client repo
+# with the starter; inert in the system repo (GitHub only runs workflows from the repository root's .github/).
+#
+# WHEN / WHAT (scripts/site-alert.mjs event → scripts/lib/site-alert.mjs):
+#   - Any listed workflow of this repo finishes FAILED, TIMED OUT or could not start → alert "workflow:<file>".
+#     The same workflow succeeding later (a job really ran) → recovery. EVERY other workflow in .github/workflows must be
+#     listed under `workflows:` below — `npm run test:alerts` fails when one is missing.
+#   - Vercel reports a FAILED / ERRORED Production deployment (deployment_status) → alert "vercel-production-deploy";
+#     the next successful Production deployment → recovery. Preview deployments are ignored.
+#   - Run workflow with "alert test" ticked → a clearly labelled TEST alert, then its recovery.
+# An alert is, in order: ClickUp task (Software Error Logs list) → Slack post tagging the people in alerts.json with the
+# ClickUp link → GitHub issue in this repo (label site-alert). One open alert per site + check: a repeat failure comments
+# on the existing task + issue and does not post to Slack again (one reminder after 24 h). Recovery closes both and posts
+# "✅ resolved" to Slack.
+# A failed workflow stays red: this is a separate run that only reports it. This run itself never fails because an
+# alert could not be sent (it shows a warning naming the skipped channel instead).
+#
+# Settings: alerts.json (non-secret, copied unchanged from the starter). Secrets — GitHub ORGANIZATION secrets, never
+# repo copies: SLACK_ALERT_WEBHOOK_URL, CLICKUP_API_TOKEN. Not set yet → that channel is skipped and logged; the GitHub
+# issue is still opened (the job's own GITHUB_TOKEN, issues: write).
+name: Site alerts
+run-name: "Site alerts: ${{ github.event_name == 'workflow_run' && format('{0} {1}', github.event.workflow_run.name, github.event.workflow_run.conclusion) || github.event_name == 'deployment_status' && format('{0} deploy {1}', github.event.deployment.environment, github.event.deployment_status.state) || 'alert test' }}"
+
+on:
+  workflow_run:
+    workflows:
+      - Publish scheduled blog posts
+      - Tell search engines
+    types: [completed]
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      alert_test:
+        description: 'Send a clearly labelled TEST alert (ClickUp + Slack + GitHub issue), then its recovery'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+  actions: read
+
+# One run at a time PER CHECK, so two events never race to open two alerts for the same check. If several queue up,
+# GitHub keeps only the newest waiting one — the latest final state of that check, which is the one that matters.
+# Events that report nothing (Preview deploys, non-final states, skipped/cancelled runs) get their own group, so they can
+# never replace a waiting alert.
+concurrency:
+  group: >-
+    ${{ (github.event_name == 'workflow_run' && contains(fromJSON('["failure","timed_out","startup_failure","success"]'), github.event.workflow_run.conclusion)) && format('site-alerts-{0}', github.event.workflow_run.path)
+    || (github.event_name == 'deployment_status' && github.event.deployment.environment == 'Production' && contains(fromJSON('["failure","error","success"]'), github.event.deployment_status.state)) && 'site-alerts-production-deploy'
+    || format('site-alerts-{0}', github.run_id) }}
+  cancel-in-progress: false
+
+jobs:
+  alert:
+    # Final states only. GitHub compares these strings case-insensitively.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && contains(fromJSON('["failure","timed_out","startup_failure","success"]'), github.event.workflow_run.conclusion)) ||
+      (github.event_name == 'deployment_status' && github.event.deployment.environment == 'Production' && contains(fromJSON('["failure","error","success"]'), github.event.deployment_status.state))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      # site-alert.mjs uses only Node built-ins: no npm install.
+      - name: Send / resolve the alert
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERT_TEST: ${{ inputs.alert_test }}
+          CLICKUP_API_TOKEN: ${{ secrets.CLICKUP_API_TOKEN }}
+          SLACK_ALERT_WEBHOOK_URL: ${{ secrets.SLACK_ALERT_WEBHOOK_URL }}
+        run: node --experimental-strip-types scripts/site-alert.mjs event

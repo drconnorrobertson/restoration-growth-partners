@@ -1,0 +1,30 @@
+---
+/** Variant preview (§17): regional service explorer, Client B tokens. noindex. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import RegionalServiceExplorer from '../../components/RegionalServiceExplorer.astro';
+---
+
+<BaseLayout title="Variant preview — regional explorer" description="Internal variant preview." noindex>
+  <RegionalServiceExplorer
+    eyebrow="Service area"
+    heading="Crews Across the Puget Sound"
+    intro="Search your city or browse by county. Response times vary by crew availability during major storm events."
+    counties={[
+      { name: 'King County', cities: [{ name: 'Seattle' }, { name: 'Bellevue' }, { name: 'Kent' }, { name: 'Renton' }, { name: 'Redmond' }, { name: 'Auburn' }] },
+      { name: 'Snohomish County', cities: [{ name: 'Everett' }, { name: 'Lynnwood' }, { name: 'Marysville' }, { name: 'Arlington' }, { name: 'Edmonds' }] },
+      { name: 'Skagit County', cities: [{ name: 'Mount Vernon' }, { name: 'Burlington' }, { name: 'Anacortes' }, { name: 'Sedro-Woolley' }] },
+      { name: 'Whatcom County', cities: [{ name: 'Bellingham' }, { name: 'Ferndale' }, { name: 'Lynden' }, { name: 'Blaine' }] },
+    ]}
+    mapCenter={[47.9, -122.2]}
+    mapZoom={8}
+    polygon={[
+      [48.9, -122.7],
+      [48.9, -121.8],
+      [47.9, -121.6],
+      [47.3, -121.9],
+      [47.3, -122.6],
+      [48.2, -122.9],
+    ]}
+    mapCaption="Shaded service area — Puget Sound region"
+  />
+</BaseLayout>

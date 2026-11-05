@@ -1,0 +1,53 @@
+# VALID fixture — doubles as a worked example. Keep it passing.
+meta:
+  client: Example Restoration Co.
+  industry: restoration
+  primary_service_page_target_area: Example City
+  primary_service_page_target_state: ST
+  source_snapshot: "fixture — no sheet"
+  status: Approved
+  approved_by: fixture
+seo:                                     # §28 — homepage title <=60, meta <=160, both carry the target area
+  title: "#1 Restoration Company in Example City, ST"
+  meta_description: "Water, fire, and mold restoration in Example City, ST: one local crew from emergency mitigation through the rebuild. Call any time."
+hero:
+  h1: "Example City's Most Trusted Restoration Company"
+  h1_line_groups:
+    - "Example City's"
+    - "Most Trusted"
+    - "Restoration Company"
+  subhead: "One local crew handles the whole recovery — mitigation, cleanup, and the rebuild."
+  primary_cta_label: "Call Now — (555) 000-1234"
+  secondary_cta_label: "Request Service"
+  trust_bullets:
+    - { text: "24/7 Emergency Service", claim_state: visible_preview_allowed }
+    - { text: "Free Estimates", claim_state: visible_preview_allowed }
+    - { text: "Locally Owned & Operated", claim_state: visible_preview_allowed }
+    - { text: "Homes & Businesses", claim_state: visible_preview_allowed }
+proof_band:
+  items:
+    - { text: "24/7 emergency response", claim_state: visible_preview_allowed, proof_source: intake }
+sections:
+  intro_heading: "One call for urgent cleanup and restoration in Example City"
+  intro_copy: "When your property has been damaged, one local team handles the whole recovery."
+  services_heading: "Our Restoration Services"
+  services_intro: "From emergencies to complete reconstruction."
+  process_heading: "What happens after you call"
+  process_steps: []
+  differentiator_heading: "What makes the response different"
+  differentiator_points: []
+  review_heading: "What property owners say"
+  review_intro: "Every review comes straight from the platforms our customers use."
+  service_area_heading: "Serving Example City and Surrounding Communities"
+  service_area_intro: "Fast emergency response across our core service area."
+  faq_heading: "Frequently Asked Questions"
+  final_cta_heading: "Don't Wait — Damage Gets Worse Every Hour"
+  final_cta_copy: "The sooner mitigation starts, the more we can save."
+  footer_summary: "Emergency restoration for homes and businesses across the Example City area."
+form:
+  emergency_notice: "Emergency service is available 24/7 by phone. Online requests are returned within one business day."
+  service_options: ["Water damage restoration", "Fire damage restoration", "Mold remediation"]
+claims_register:
+  - { claim: "24/7 Emergency Service", claim_state: visible_preview_allowed, proof_source: intake, used_in: [hero.trust_bullets] }
+banned_confirmed: true
+blockers: []

@@ -1,0 +1,49 @@
+---
+/**
+ * Above-the-fold hero / LCP imagery (§18).
+ *
+ * Hard rules this component exists to enforce:
+ *   - NEVER a CSS background (a CSS bg can't be prioritized or served responsively)
+ *   - responsive AVIF + WebP with a JPG fallback
+ *   - explicit width/height (no layout shift), correct alt
+ *   - eager loading + fetchpriority="high" — an LCP image must never lazy-load
+ *
+ * Pass an imported image (ImageMetadata) so Astro can optimize it; a raw string
+ * path bypasses the pipeline and is rejected by §18.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  /** Empty string only for purely decorative backdrops behind text — then the image is also marked
+   *  aria-hidden, which §18 (validate:built) requires of an empty alt. */
+  alt: string;
+  /** Rendered widths for the responsive srcset. */
+  widths?: number[];
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  widths = [768, 1200, 1600, 2000],
+  sizes = '100vw',
+  class: className = '',
+} = Astro.props;
+---
+
+<Picture
+  src={src}
+  alt={alt}
+  formats={['avif', 'webp']}
+  fallbackFormat="jpg"
+  widths={widths}
+  sizes={sizes}
+  loading="eager"
+  decoding="async"
+  fetchpriority="high"
+  aria-hidden={alt === '' ? 'true' : undefined}
+  class={className}
+/>

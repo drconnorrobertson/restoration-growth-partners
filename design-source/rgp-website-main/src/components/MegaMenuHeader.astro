@@ -1,0 +1,384 @@
+---
+/**
+ * Grouped mega-menu header — REQUIRED for multi-service restoration sites.
+ * Spec: agency-website-design-builder, "Mega-Menu Requirement For Multi-Service Restoration Sites".
+ * Recipe enum: header: mega_menu_grouped_services
+ *
+ * Layout: dark intro rail (left) + scrollable column grid (right).
+ * Columns SCROLL rather than truncate, so every approved page stays header-reachable.
+ */
+import { site } from '../data/site';
+import { megaMenus } from '../data/megaNav';
+import { Icon } from 'astro-icon/components';
+
+interface Props { chips?: string[] }
+const {
+  chips = site.claims.filter((c) => c.state === 'visible_preview_allowed').map((c) => c.text),
+} = Astro.props;
+/**
+ * BaseLayout always forwards a `logo` slot, so a page that passes no logo still "has" one — empty.
+ * Render it and fall back to the site name, or the home link has no accessible name (link-name, §28).
+ */
+const logoHtml = Astro.slots.has('logo') ? (await Astro.slots.render('logo')).trim() : '';
+---
+
+{chips.length > 0 && (
+  <div class="bg-dark text-on-dark/90">
+    <div class="mx-auto flex max-w-7xl items-center justify-center gap-6 px-6 py-2 text-xs font-bold tracking-wide">
+      {chips.map((chip) => (
+        <span class="hidden items-center gap-2 first:flex sm:flex">
+          <span class="size-1.5 rounded-full bg-accent-bright" aria-hidden="true"></span>{chip}
+        </span>
+      ))}
+    </div>
+  </div>
+)}
+
+<header class="sticky top-0 z-40 bg-white shadow-md" data-mega-header>
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:h-20 md:px-6">
+    <a href={site.phoneHref}
+       class="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-accent text-white transition hover:bg-accent-hover md:hidden"
+       aria-label={`Call ${site.phoneDisplay}`}>
+      <Icon name="lucide:phone" class="size-5" aria-hidden="true" />
+    </a>
+
+    <a href="/" class="min-w-0 font-display text-2xl font-bold leading-none text-ink md:text-3xl">
+      {logoHtml ? <Fragment set:html={logoHtml} /> : site.name}
+    </a>
+
+    {/*
+      Breakpoints: logo + top-level items + call button need ~880px, so the desktop nav starts at lg
+      (768–1023 keeps the drawer + compact call button) and the large call button waits for xl —
+      otherwise the row is wider than the viewport at 768/1024 and the call button is pushed off the
+      right edge (hidden, not scrollable, because of html { overflow-x: clip }). The logo is min-w-0
+      so a long text name wraps at 320px instead of pushing the menu button off-screen.
+    */}
+    <nav class="hidden items-center gap-0 lg:flex lg:gap-0.5" aria-label="Main">
+      <a href="/" class="nav-top">Home</a>
+
+      {megaMenus.map((menu) => (
+        <div class="mega" data-mega>
+          <button type="button" class="nav-top nav-top--btn" aria-expanded="false"
+                  aria-controls={`mega-${menu.id}`} data-mega-trigger>
+            {menu.label}
+            <Icon name="lucide:chevron-down" class="mega-chev size-3.5" aria-hidden="true" />
+          </button>
+
+          <div id={`mega-${menu.id}`} class="mega-panel" data-mega-panel hidden>
+            <div class="mega-inner mx-auto max-w-7xl">
+              <!-- Dark intro rail -->
+              <aside class="mega-intro">
+                <p class="font-display text-xl font-bold leading-tight">{menu.intro.title}</p>
+                <p class="mt-2 text-sm leading-relaxed text-on-dark/70">{menu.intro.body}</p>
+                <a href={menu.intro.ctaUrl} class="mega-intro__cta">{menu.intro.ctaLabel} →</a>
+                <a href={site.phoneHref} class="mega-intro__phone">
+                  <span class="block text-[0.65rem] font-bold uppercase tracking-widest text-on-dark/60">Call {site.emergencyAvailability}</span>
+                  <span class="block font-display text-lg font-bold">{site.phoneDisplay}</span>
+                </a>
+              </aside>
+
+              <!-- Scrollable column grid -->
+              <div class="mega-cols">
+                {menu.columns.map((col) => (
+                  <div class="mega-col">
+                    <a href={col.url} class="mega-col__head">{col.label}</a>
+                    <ul class="mega-col__list" data-scroll-list>
+                      {col.children.map((leaf) => (
+                        <li><a href={leaf.url} class="mega-link">{leaf.label}</a></li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {site.utilityNav.map((l) => <a href={l.url} class="nav-top">{l.label}</a>)}
+    </nav>
+
+    <div class="hidden items-center gap-3 md:ml-auto md:flex lg:ml-0">
+      <a
+        href={site.phoneHref}
+        class="flex items-center gap-2.5 rounded-md bg-accent px-4 py-2.5 text-white shadow-md transition hover:bg-accent-hover xl:gap-3 xl:px-7 xl:py-3"
+      >
+        <Icon name="lucide:phone" class="hidden size-6 shrink-0 xl:block" aria-hidden="true" />
+        <span class="leading-none">
+          <span class="block text-[0.6rem] font-bold uppercase tracking-[0.12em] opacity-90 xl:text-[0.65rem] xl:tracking-[0.15em]">Call {site.emergencyAvailability}</span>
+          <span class="mt-0.5 block whitespace-nowrap font-display text-base font-bold leading-none xl:mt-1 xl:text-xl">{site.phoneDisplay}</span>
+        </span>
+      </a>
+    </div>
+
+    <button type="button" class="inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-border text-ink lg:hidden"
+            aria-expanded="false" aria-controls="mobile-drawer" data-drawer-trigger aria-label="Open menu">
+      <Icon name="lucide:menu" class="size-6" aria-hidden="true" />
+    </button>
+  </div>
+
+  <!-- Mobile drawer — THREE levels: menu → county/category → cities/services -->
+  <div id="mobile-drawer" class="border-t border-border bg-white lg:hidden" data-drawer hidden>
+    <nav class="max-h-[75vh] overflow-y-auto px-4 py-2" aria-label="Mobile">
+      <a href="/" class="m-row">Home</a>
+
+      {megaMenus.map((menu) => (
+        <div class="border-b border-border">
+          <button type="button" class="m-row m-row--btn" aria-expanded="false" data-acc-trigger>
+            {menu.label}
+            <Icon name="lucide:chevron-down" class="acc-chev size-4 shrink-0 text-ink-muted" aria-hidden="true" />
+          </button>
+          <!--
+            Level 2 uses the SAME row treatment as level 1 — the drawer is one consistent list,
+            not a desktop panel bolted into a phone. Tapping a group reveals ALL its children,
+            never a truncated set.
+          -->
+          <div data-acc-panel hidden>
+            {menu.columns.map((col) => (
+              <div class="m-sub">
+                <button type="button" class="m-row m-row--sub" aria-expanded="false" data-acc-trigger>
+                  {col.label}
+                  <Icon name="lucide:chevron-down" class="acc-chev size-4 shrink-0 text-ink-muted" aria-hidden="true" />
+                </button>
+                <div data-acc-panel hidden>
+                  {col.children.map((leaf) => (
+                    <a href={leaf.url} class="m-leaf">{leaf.label}</a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {site.utilityNav.map((l) => <a href={l.url} class="m-row">{l.label}</a>)}
+    </nav>
+  </div>
+</header>
+
+<style>
+  /* ---- Top-level nav items ---- */
+  .nav-top {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.5rem 0.5rem; border-radius: var(--radius-sm);
+    font-size: 0.8125rem; font-weight: 600; color: var(--color-ink);
+    white-space: nowrap;
+    transition: color var(--transition-base), background-color var(--transition-base);
+  }
+  @media (min-width: 1024px) { .nav-top { padding: 0.5rem 0.75rem; font-size: 0.875rem; } }
+  .nav-top:hover { color: var(--color-accent); background: var(--color-surface-2); }
+  .nav-top--btn[aria-expanded='true'] { color: var(--color-accent); background: var(--color-surface-2); }
+
+  /* ---- Panel ---- */
+  .mega { position: static; }
+  .mega-panel {
+    position: absolute; left: 0; right: 0; top: 100%;
+    background: #fff;
+    border-top: 3px solid var(--color-accent);
+    box-shadow: var(--shadow-xl);
+  }
+  .mega-inner {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+
+  /* ---- Dark intro rail ---- */
+  .mega-intro {
+    background: var(--color-dark);
+    color: var(--color-on-dark);
+    padding: 1.75rem 1.5rem;
+    display: flex; flex-direction: column;
+  }
+  .mega-intro__cta {
+    margin-top: 1.25rem; align-self: flex-start;
+    font-size: 0.8125rem; font-weight: 700;
+    color: var(--color-accent-bright);
+    transition: color var(--transition-base);
+  }
+  .mega-intro__cta:hover { color: #fff; }
+  .mega-intro__phone {
+    margin-top: auto; padding-top: 1.5rem;
+    border-top: 1px solid var(--color-dark-3);
+    color: var(--color-on-dark);
+    transition: color var(--transition-base);
+  }
+  .mega-intro__phone:hover { color: var(--color-accent-bright); }
+
+  /* ---- Column grid ---- */
+  .mega-cols {
+    display: grid; gap: 0 1.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    padding: 1.75rem 2rem;
+    max-height: 70vh; overflow-y: auto;
+  }
+  .mega-col__head {
+    display: block; padding-bottom: 0.5rem; margin-bottom: 0.6rem;
+    border-bottom: 2px solid var(--color-accent);
+    font-family: var(--font-display);
+    font-size: 0.9375rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--color-ink);
+    transition: color var(--transition-base);
+  }
+  .mega-col__head:hover { color: var(--color-accent); }
+
+  /* Per-column scroll — a long county cannot take over the panel. */
+  .mega-col__list {
+    max-height: 15.5rem; overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+  .mega-col__list::-webkit-scrollbar { width: 6px; }
+  .mega-col__list::-webkit-scrollbar-thumb {
+    background: var(--color-border); border-radius: 3px;
+  }
+
+  .mega-link {
+    display: block; padding: 0.3rem 0.5rem; margin-left: -0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem; line-height: 1.35;
+    color: var(--color-ink-muted);
+    transition: color var(--transition-base), background-color var(--transition-base);
+  }
+  .mega-link:hover {
+    color: var(--color-accent);
+    background: var(--color-surface-2);
+  }
+
+  .mega-chev, .acc-chev { transition: transform 0.18s ease; }
+  [aria-expanded='true'] .mega-chev, [aria-expanded='true'] .acc-chev { transform: rotate(180deg); }
+
+  /* ---- Mobile rows ---- */
+  .m-row {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; padding: 0.85rem 0.25rem; text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    font-weight: 600; color: var(--color-ink);
+  }
+  .m-row--btn { border-bottom: none; }
+
+  /* Level 2 — same row, one step in. Deliberately NOT the desktop column heading:
+     the drawer should read as one consistent list at every depth. */
+  .m-sub { border-top: 1px solid var(--color-border); }
+  .m-sub:first-child { border-top: none; }
+  .m-row--sub {
+    padding-left: 0.9rem;
+    font-size: 0.9375rem;
+    border-bottom: none;
+  }
+  .m-row--sub[aria-expanded='true'] { color: var(--color-accent); }
+
+  /* Level 3 — indented one step further, single column, same rhythm as the rows above. */
+  .m-leaf {
+    display: block;
+    padding: 0.6rem 0.25rem 0.6rem 1.75rem;
+    font-size: 0.875rem; line-height: 1.3;
+    color: var(--color-ink-muted);
+  }
+  .m-leaf:active { color: var(--color-accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mega-chev, .acc-chev, .nav-top, .mega-link { transition: none; }
+  }
+</style>
+
+<script>
+  const header = document.querySelector('[data-mega-header]') as HTMLElement | null;
+  if (header) {
+    const megas = Array.from(header.querySelectorAll('[data-mega]')) as HTMLElement[];
+    /**
+     * Grace period on close. Without it, moving the pointer from the trigger DOWN toward the
+     * panel crosses the gap between them, fires mouseleave, and the menu vanishes mid-reach.
+     */
+    const CLOSE_DELAY = 220;
+
+    const state = megas.map((mega) => {
+      const trigger = mega.querySelector('[data-mega-trigger]') as HTMLElement;
+      const panel = mega.querySelector('[data-mega-panel]') as HTMLElement;
+      return {
+        mega, trigger, panel,
+        timer: 0 as number | ReturnType<typeof setTimeout>,
+        pinned: false,
+        scheduleClose: undefined as (() => void) | undefined,
+        cancelClose: undefined as (() => void) | undefined,
+        lastLeave: undefined as unknown,
+      };
+    });
+
+    const hardClose = (s: typeof state[number]) => {
+      clearTimeout(s.timer as number);
+      s.pinned = false;
+      s.trigger.setAttribute('aria-expanded', 'false');
+      s.panel.setAttribute('hidden', '');
+    };
+    const closeAll = (except?: unknown) => state.forEach((s) => { if (s !== except) hardClose(s); });
+
+    state.forEach((s) => {
+      const open = () => {
+        clearTimeout(s.timer as number);
+        closeAll(s);
+        s.trigger.setAttribute('aria-expanded', 'true');
+        s.panel.removeAttribute('hidden');
+      };
+      const scheduleClose = () => {
+        clearTimeout(s.timer as number);
+        s.timer = setTimeout(() => { if (!s.pinned) hardClose(s); }, CLOSE_DELAY);
+      };
+      const cancelClose = () => clearTimeout(s.timer as number);
+
+      const hoverable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+      s.trigger.addEventListener('click', () => {
+        const isOpen = s.trigger.getAttribute('aria-expanded') === 'true';
+        if (isOpen && hoverable && !s.pinned) { s.pinned = true; return; }
+        if (isOpen) hardClose(s); else { open(); s.pinned = true; }
+      });
+
+      if (hoverable) {
+        /**
+         * Open on trigger hover. Do NOT close on trigger mouseleave — the vertical gap between
+         * the trigger and the panel sits INSIDE <header>, so leaving the trigger to reach the
+         * panel would close the menu mid-reach. Closing is owned by the header-level mouseleave
+         * below, which only fires when the pointer leaves the whole header + panel region.
+         */
+        s.trigger.addEventListener('mouseenter', () => { cancelClose(); if (!s.pinned) open(); });
+        s.panel.addEventListener('mouseenter', cancelClose);
+        s.trigger.addEventListener('mouseleave', () => { s.lastLeave = scheduleClose; });
+      }
+
+      s.mega.addEventListener('focusout', (e) => {
+        if (!s.mega.contains(e.relatedTarget as Node)) hardClose(s);
+      });
+      s.scheduleClose = scheduleClose;
+      s.cancelClose = cancelClose;
+    });
+
+    // Single close authority: pointer left the header (panel included, it is a descendant).
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      header.addEventListener('mouseleave', () => state.forEach((s) => s.scheduleClose?.()));
+      header.addEventListener('mouseenter', () => state.forEach((s) => s.cancelClose?.()));
+    }
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+    document.addEventListener('click', (e) => { if (!header.contains(e.target as Node)) closeAll(); });
+
+    const drawerTrigger = header.querySelector('[data-drawer-trigger]');
+    const drawer = header.querySelector('[data-drawer]') as HTMLElement | null;
+    drawerTrigger?.addEventListener('click', () => {
+      const openNow = drawerTrigger.getAttribute('aria-expanded') === 'true';
+      drawerTrigger.setAttribute('aria-expanded', String(!openNow));
+      if (openNow) drawer?.setAttribute('hidden', ''); else drawer?.removeAttribute('hidden');
+    });
+
+    // Nested accordions — each trigger toggles its immediate next sibling panel.
+    header.querySelectorAll('[data-acc-trigger]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const p = btn.nextElementSibling as HTMLElement | null;
+        const openNow = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!openNow));
+        if (openNow) p?.setAttribute('hidden', ''); else p?.removeAttribute('hidden');
+      });
+    });
+  }
+</script>

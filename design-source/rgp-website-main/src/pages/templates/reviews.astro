@@ -1,0 +1,21 @@
+---
+/** Template preview route (§17): reviews page — widget at full width (reserved state until a real widget ID exists). noindex. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ReviewsPageTemplate from '../../components/templates/ReviewsPageTemplate.astro';
+import { site } from '../../data/site';
+---
+<BaseLayout title="Reviews — Template preview" description="Internal reviews page template preview." noindex>
+  <ReviewsPageTemplate
+    eyebrow="Reviews"
+    h1={`What ${site.primaryMarket} Customers Say About ${site.name}`}
+    intro="Every review below is pulled live from our public profiles. We do not edit or curate them."
+    reviewsEyebrow="Verified reviews"
+    reviewsHeading="Recent reviews"
+    reviewsIntro="Most of our work comes from referrals and repeat customers."
+    ctaHeading="Ready when you are"
+    ctaSupport={`A real person answers ${site.emergencyAvailability}.`}
+  >
+    <h2 class="font-display text-2xl font-bold text-ink">How we work</h2>
+    <p class="mt-3 leading-relaxed text-ink-muted">We document every job from the first visit and give you a written scope before work starts. If something is not right, tell us and we will come back.</p>
+  </ReviewsPageTemplate>
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+/** Template preview route (§17): services grid + differentiator. noindex, excluded from nav/sitemaps. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
+import DifferentiatorVS from '../../components/DifferentiatorVS.astro';
+
+/* PREVIEW-ONLY placeholder photography — see src/assets/photos/README.md */
+import svc1 from '../../assets/photos/placeholder-service-1.jpg';
+import svc2 from '../../assets/photos/placeholder-service-2.jpg';
+import svc3 from '../../assets/photos/placeholder-service-3.jpg';
+---
+
+<BaseLayout title="Template preview — services + differentiator" description="Internal template preview." noindex>
+  <ServiceGrid
+    eyebrow="What we do"
+    heading="Our Restoration Services"
+    intro="From residential emergencies to commercial property losses and complete reconstruction — certified technicians and a commitment to getting you back to normal fast."
+    services={[
+      { title: 'Water Damage Restoration', description: 'Extraction, structural drying, and moisture documentation after floods, burst pipes, and appliance leaks.', url: '/water-damage-restoration/', chips: ['Residential', 'Commercial'], image: svc1, imageAlt: 'Water damage restoration work' },
+      { title: 'Fire Damage Restoration', description: 'Smoke and soot cleanup, odor removal, and full recovery after a fire — from first response to rebuild.', url: '/fire-damage-restoration/', chips: ['Residential', 'Commercial'], image: svc2, imageAlt: 'Fire damage restoration work' },
+      { title: 'Mold Remediation', description: 'Containment, safe removal, and clearance-ready remediation with clear documentation at every step.', url: '/mold-remediation/', chips: ['Residential', 'Commercial'], image: svc3, imageAlt: 'Mold remediation work' },
+      { title: 'Storm Damage Restoration', description: 'Emergency board-up, roof tarping, debris removal, and full property recovery after any storm.', url: '/storm-damage-restoration/' },
+      { title: 'Reconstruction', description: 'Once restoration is complete, we rebuild. One contractor from disaster to done — no hand-offs, no gaps.', url: '/reconstruction/' },
+      { title: 'Commercial Restoration', description: 'Fast containment, cleanup, and rebuild coordination for offices, retail, industrial, and managed facilities.', url: '/commercial-restoration/', chips: ['Commercial'] },
+    ]}
+  />
+  <DifferentiatorVS
+    leftEyebrow="Many restoration companies"
+    leftHeading="What property owners often run into"
+    rightHeading="What makes the response different"
+    problems={[
+      { title: 'Missed calls after hours', text: 'Emergency messages can sit until the next business day.' },
+      { title: 'Limited claim support', text: 'Customers are left piecing together photos, notes, and paperwork.' },
+      { title: 'Handoffs between vendors', text: 'Mitigation, cleanup, and rebuild may become separate jobs.' },
+      { title: 'One narrow specialty', text: 'Some companies handle one part of the process, then leave the rest to you.' },
+    ]}
+    answers={[
+      { title: 'Live human answering 24/7', text: 'A real person answers emergency calls and can start dispatch right away.' },
+      { title: 'Fast emergency response', text: 'Emergency dispatch is prioritized so damage can be contained before it spreads.' },
+      { title: 'Clear claim documentation', text: 'Photos, moisture readings, and scope notes documented from the first visit.' },
+      { title: 'Mitigation through rebuild', text: 'Homes, businesses, and facilities are covered from first response to final walkthrough.' },
+    ]}
+  />
+</BaseLayout>

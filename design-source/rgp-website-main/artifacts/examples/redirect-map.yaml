@@ -1,0 +1,20 @@
+# Worked example of a Stage 2 Redirect Map (schemas/redirect-map.yaml). Destinations exist in
+# artifacts/examples/active-page-map.yaml, so validate:artifacts cross-checks them.
+meta:
+  client: Example Restoration Co.
+  source_site: https://www.example-restoration-old.com
+  crawled_at: 2026-09-01
+  status: Approved
+  approved_by: James LaRosa
+redirects:
+  - from: /services/water-damage-restoration-example-city/
+    to: /water-damage-restoration/
+    status: 301
+    reason: ranking page merged into the service hub
+    evidence: { sessions_12mo: 1840, backlinks: 6, ranking_keywords: 22 }
+  - from: /blog/2019-holiday-party/
+    status: 410
+    reason: off-topic post with no traffic or links; no equivalent page
+    evidence: { sessions_12mo: 0, backlinks: 0, ranking_keywords: 0 }
+unmapped_old_urls:
+  - { url: /tag/misc/, reason: "WordPress tag archive; thin, no traffic, no links" }

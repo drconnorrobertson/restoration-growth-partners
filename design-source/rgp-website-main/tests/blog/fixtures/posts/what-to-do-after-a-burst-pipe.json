@@ -1,0 +1,18 @@
+{
+  "title": "What to Do After a Burst Pipe: The First Hour",
+  "description": "What to do after a burst pipe: shut off the water, cut power to wet areas, and photograph the damage before cleanup starts.",
+  "slug": "what-to-do-after-a-burst-pipe",
+  "publishDate": "2026-01-07T06:00:00Z",
+  "author": "Example Restoration Co.",
+  "parent": "water-damage-restoration",
+  "cluster": "Burst pipes",
+  "related": ["how-long-does-structural-drying-take", "when-to-replace-wet-drywall"],
+  "faqs": [
+    { "question": "Should I turn off the electricity after a burst pipe?", "answer": "Turn off power to any room where water has reached outlets, cords, or appliances, but only if you can reach the panel without standing in water." },
+    { "question": "Do I need to photograph the damage before cleanup?", "answer": "Yes. Photos of the source, the standing water, and the affected belongings help your insurer understand what happened." }
+  ],
+  "heroImage": "../../../../src/assets/photos/placeholder-service-1.jpg",
+  "heroImageAlt": "Water spreading across a kitchen floor from under a sink cabinet",
+  "intro": "Shut the water off, make the area safe, then document before anything is moved.",
+  "html": "<h2>What to Do After a Burst Pipe, Step by Step</h2><p>The first hour after a burst pipe decides how far the water travels. Find the main shutoff and close it before anything else.</p><h3>Make the area safe</h3><p>Cut power to rooms where water has reached outlets or cords. Keep children and pets away from wet floors.</p><h2>Document Before You Clean</h2><p>Photograph the source and every wet room. Our <a href=\"/water-damage-restoration/\">water damage restoration</a> crews start from those photos too.</p><p>Drying takes longer than it looks; see <a href=\"/blog/how-long-does-structural-drying-take/\">how long structural drying takes</a>. Wet drywall is its own decision: <a href=\"/blog/when-to-replace-wet-drywall/\">when to replace wet drywall</a>.</p><h2>Insurance &amp; What&#8217;s Covered</h2><p>Your policy wording decides what is covered, and your adjuster confirms it. Keep every photo and receipt.</p>"
+}

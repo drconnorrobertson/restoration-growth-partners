@@ -1,0 +1,20 @@
+---
+/**
+ * Template preview route (§17): footer in isolation — the conversion band
+ * (tap-to-call + shared form), nav/locations band, and legal bar, all mounted
+ * from the shared layout. noindex.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Template preview — footer" description="Internal footer preview." noindex>
+  <section class="bg-surface py-10">
+    <div class="mx-auto max-w-7xl px-4 md:px-6">
+      <p class="text-xs font-bold uppercase tracking-eyebrow text-accent">Template preview</p>
+      <h1 class="mt-2 font-display text-3xl font-bold text-ink">Footer</h1>
+      <p class="mt-2 text-sm text-ink-muted">
+        Conversion band (call action first in DOM), nav + locations band, legal bar.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,38 @@
+---
+/**
+ * 404 — the same header, top navigation and footer as every page; only the content is different,
+ * and it is deliberately minimal (owner decision 2026-10-21): a heading, one line, and one button
+ * back to the homepage. The footer's conversion band still carries the phone number and the
+ * request form, so a visitor mid-emergency loses nothing.
+ *
+ * `notFound`: noindex (a 404 must never be indexed, also after launch — not left to site.previewMode)
+ * and no canonical (it has no URL of its own). validate:built requires both (§17, §31).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo.png';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title={`Page Not Found | ${site.name}`}
+  description="That page could not be found. Head back to the homepage, or call us any hour."
+  header="mega_menu_grouped_services"
+  notFound
+>
+  <Image slot="logo" src={logo} alt={site.name} class="h-9 w-auto md:h-11" loading="eager" />
+
+  <section class="px-4 py-20 sm:py-28">
+    <div class="mx-auto max-w-xl text-center">
+      <p class="text-xs font-bold uppercase tracking-eyebrow text-accent">Error 404</p>
+      <h1 class="mt-3 font-display text-4xl font-bold leading-none text-ink sm:text-5xl">Page not found</h1>
+      <p class="mt-4 text-lg text-ink-muted">Sorry, we couldn't find the page you're looking for.</p>
+      <a
+        href="/"
+        class="mt-8 inline-flex items-center rounded-md bg-accent px-6 py-3 text-sm font-bold text-white transition hover:bg-accent-hover"
+      >
+        Back to homepage
+      </a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,67 @@
+---
+/**
+ * Capped smart sidebar navigation (§12). Never a full sibling dump:
+ * parent hub link + current page (highlighted) + up to 8 closest related pages
+ * + up to 7 core service hubs. Hard cap enforced in code, deterministic order
+ * (renders exactly the arrays given — no shuffling). Only approved active
+ * pages should be passed in.
+ */
+interface NavLink {
+  label: string;
+  url: string;
+}
+
+interface Props {
+  parentHub?: NavLink;
+  current: NavLink;
+  related?: NavLink[];
+  coreHubs?: NavLink[];
+}
+
+const { parentHub, current, related = [], coreHubs = [] } = Astro.props;
+
+// Hard caps from §12 — enforced here so no build can exceed them.
+const seen = new Set<string>([current.url, parentHub?.url ?? '']);
+const relatedCapped = related.filter((l) => !seen.has(l.url) && (seen.add(l.url), true)).slice(0, 8);
+const hubsCapped = coreHubs.filter((l) => !seen.has(l.url) && (seen.add(l.url), true)).slice(0, 7);
+---
+
+<nav class="rounded-md border border-border bg-white shadow-sm" aria-label="Related pages">
+  <ul class="p-2">
+    {parentHub && (
+      <li>
+        <a href={parentHub.url} class="flex items-center gap-2 rounded-sm px-3 py-2.5 text-sm font-bold text-accent transition hover:bg-surface">
+          <span aria-hidden="true">←</span>{' '}
+          View all {parentHub.label}
+        </a>
+      </li>
+    )}
+    <li>
+      <span class="flex items-center gap-2 rounded-sm border-l-2 border-accent bg-surface px-3 py-2.5 text-sm font-bold text-ink" aria-current="page">
+        {current.label}
+      </span>
+    </li>
+    {relatedCapped.map((link) => (
+      <li>
+        <a href={link.url} class="block rounded-sm px-3 py-2.5 text-sm font-semibold text-ink-muted transition hover:bg-surface hover:text-ink">
+          {link.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  {hubsCapped.length > 0 && (
+    <div class="border-t border-border p-2">
+      <p class="px-3 pb-1 pt-2 text-xs font-bold uppercase tracking-eyebrow text-ink-muted">All services</p>
+      <ul>
+        {hubsCapped.map((link) => (
+          <li>
+            <a href={link.url} class="block rounded-sm px-3 py-2 text-sm font-semibold text-ink-muted transition hover:bg-surface hover:text-ink">
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</nav>

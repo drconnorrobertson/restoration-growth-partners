@@ -1,0 +1,170 @@
+---
+/**
+ * Emergency Split Hero — variant `image_backed_split_form` (archetype §3).
+ * Left: eyebrow badge, display H1 with explicit line groups (§24), letterspaced service
+ * list, 2x2 trust bullets, phone-first dual CTA (§9). Right: request-service panel.
+ * All visible copy arrives via props from the Messaging Pack — no copy lives here.
+ */
+import type { ImageMetadata } from 'astro';
+import { site } from '../data/site';
+import RequestServicePanel from './RequestServicePanel.astro';
+import HeroImage from './HeroImage.astro';
+import { Icon } from 'astro-icon/components';
+
+interface H1Line {
+  text: string;
+  accent?: boolean;
+}
+
+interface Props {
+  eyebrow: string;
+  h1Lines: H1Line[];
+  serviceList: string[];
+  trustBullets: string[];
+  secondaryCtaLabel?: string;
+  /**
+   * Client hero photo (imported image). Strongly recommended — a real photo
+   * behind the overlay is the single biggest difference between this reading as
+   * a template and reading as a finished site. Falls back to the grid texture.
+   */
+  backgroundImage?: ImageMetadata;
+  /**
+   * Optional background video (§18/§28). The `poster` (an imported image) is the LCP element and
+   * renders through the optimized pipeline; the video file is fetched only after the page has
+   * loaded, and never for visitors with prefers-reduced-motion, Save-Data, or a 2G connection.
+   * PageSpeed on client sites flagged early 2 MB hero videos and 137 KB raw JPEG posters.
+   * Keep the file short and compressed (aim ≤ 1.5 MB, 720p, no audio track).
+   */
+  backgroundVideo?: { src: string; type?: string; poster: ImageMetadata };
+}
+
+const {
+  eyebrow,
+  h1Lines,
+  serviceList,
+  trustBullets,
+  secondaryCtaLabel = 'Request Service',
+  backgroundImage,
+  backgroundVideo,
+} = Astro.props;
+const heroImage = backgroundVideo?.poster ?? backgroundImage;
+---
+
+<section class="relative overflow-hidden bg-dark text-on-dark" data-page-hero>
+  {heroImage ? (
+    <>
+      {/* Real photo as an <img> (never a CSS background, §18). The photo renders
+          at full opacity; contrast comes from the scrim above it, graded darkest
+          on the left where the headline sits. Dimming the photo AND stacking an
+          opaque gradient makes the image invisible — grade the scrim instead. */}
+      <HeroImage
+        src={heroImage}
+        alt=""
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+      {backgroundVideo && (
+        <video
+          class="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700"
+          muted
+          loop
+          playsinline
+          preload="none"
+          aria-hidden="true"
+          tabindex="-1"
+          data-hero-video
+          data-src={backgroundVideo.src}
+          data-type={backgroundVideo.type ?? 'video/mp4'}
+        ></video>
+      )}
+      <div class="absolute inset-0 bg-gradient-to-r from-dark/95 via-dark/80 to-dark/55" aria-hidden="true"></div>
+    </>
+  ) : (
+    <div
+      class="absolute inset-0 opacity-5"
+      style="background-image: linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px); background-size: 56px 56px;"
+      aria-hidden="true"
+    >
+    </div>
+  )}
+
+  <div class="relative mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 px-4 py-12 md:px-6 md:py-16 lg:grid-cols-[minmax(0,1fr)_420px] lg:gap-14">
+    <div>
+      <p class="inline-flex items-center gap-2 rounded-full border border-dark-3 bg-dark-2 px-4 py-2 text-xs font-bold uppercase tracking-eyebrow text-on-dark/90">
+        <Icon name="lucide:star" class="size-3.5 text-accent-bright" fill="currentColor" aria-hidden="true" />
+        {eyebrow}
+      </p>
+
+      <h1 class="mt-6 font-display text-5xl font-bold leading-none sm:text-6xl xl:text-7xl">
+        {h1Lines.map((line) => (
+          <span class:list={['block md:whitespace-nowrap', { 'text-accent-bright': line.accent }]}>{line.text}{' '}</span>
+        ))}
+      </h1>
+
+      <p class="mt-5 text-xs font-bold uppercase tracking-display text-on-dark/50 sm:text-sm">
+        {serviceList.join(' · ')}
+      </p>
+
+      <ul class="mt-8 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+        {trustBullets.map((bullet) => (
+          <li class="flex items-center gap-3 text-sm font-semibold sm:text-base">
+            <span class="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-accent" aria-hidden="true">
+              <Icon name="lucide:check" class="size-3 text-white" stroke-width={3} aria-hidden="true" />
+            </span>
+            {bullet}
+          </li>
+        ))}
+      </ul>
+
+      <div class="mt-9 flex flex-wrap gap-4">
+        <a
+          href={site.phoneHref}
+          class="inline-flex items-center gap-3 rounded-md bg-accent px-7 py-4 text-lg font-bold text-white shadow-lg transition hover:bg-accent-hover"
+        >
+          <Icon name="lucide:phone" class="size-5" aria-hidden="true" />
+          <span class="hidden sm:inline">Call Now — {site.phoneDisplay}</span>
+          <span class="sm:hidden">Call Now</span>
+        </a>
+        <a
+          href="#request-service"
+          class="inline-flex items-center rounded-md border-2 border-on-dark/30 px-7 py-4 text-lg font-bold text-on-dark transition hover:border-on-dark/70"
+        >
+          {secondaryCtaLabel}
+        </a>
+      </div>
+
+      <slot name="badges" />
+    </div>
+
+    <div id="request-service" class="w-full scroll-mt-24">
+      <slot name="panel">
+        <RequestServicePanel />
+      </slot>
+    </div>
+  </div>
+</section>
+
+<script>
+  /**
+   * Hero video (§28): attach the source only after `load`, so the poster stays the LCP element and
+   * the video never competes with first paint. Skipped entirely for reduced motion, Save-Data and
+   * 2G connections — those visitors keep the poster.
+   */
+  const video = document.querySelector<HTMLVideoElement>('[data-hero-video]');
+  if (video) {
+    const conn = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    const skip = matchMedia('(prefers-reduced-motion: reduce)').matches || conn?.saveData || /(^|-)2g$/.test(conn?.effectiveType ?? '');
+    const start = () => {
+      const source = document.createElement('source');
+      source.src = video.dataset.src ?? '';
+      source.type = video.dataset.type ?? 'video/mp4';
+      video.appendChild(source);
+      video.addEventListener('playing', () => video.classList.remove('opacity-0'), { once: true });
+      video.load();
+      video.play().catch(() => {});
+    };
+    if (!skip) {
+      if (document.readyState === 'complete') start();
+      else addEventListener('load', start, { once: true });
+    }
+  }
+</script>

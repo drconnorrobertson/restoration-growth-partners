@@ -1,0 +1,68 @@
+# Worked example of the pipeline checklist (schemas/pipeline-state.yaml), consistent with the
+# other fixtures here: copy artifacts exist, the design recipe is Approved with its Gate 4 packet.
+meta:
+  client: Example Restoration Co.
+  repo: /Users/jameslarosa/Documents/example-restoration-website
+  started_at: 2026-09-01
+  current_stage: 6_build
+stages:
+  1_intake:
+    gate: Gate 1
+    status: approved
+    evidence: [artifacts/examples/active-page-map.yaml, artifacts/examples/redirect-map.yaml]
+    approved_by: James LaRosa
+    approved_at: 2026-09-02
+    approval_quote: "Gate 1 approved — page map and redirect map look right, proceed."
+    blocked_by: ""
+  3_briefs:
+    gate: Gate 2
+    status: approved
+    evidence: [artifacts/examples/active-page-map.yaml]
+    approved_by: James LaRosa
+    approved_at: 2026-09-03
+    approval_quote: "briefs assigned correctly, gate 2 approved"
+    blocked_by: ""
+  4_copy:
+    gate: Gate 3
+    status: approved
+    evidence: [artifacts/examples/messaging-pack.yaml, artifacts/examples/copy/]
+    approved_by: James LaRosa
+    approved_at: 2026-09-05
+    approval_quote: "messaging pack approved, spot-checked three pages, go"
+    blocked_by: ""
+  5_design:
+    gate: Gate 4
+    status: approved
+    evidence: [artifacts/examples/design-recipe.yaml, artifacts/examples/design/gate4/, https://example-preview.vercel.app/]
+    approved_by: James LaRosa
+    approved_at: 2026-09-08
+    approval_quote: "looked at all four screenshots and the preview — tokens and direction approved, gate 4 done"
+    blocked_by: ""
+  6_build:
+    gate: none
+    status: in_progress
+    evidence: []
+    blocked_by: ""
+  6b_linking:
+    gate: none
+    status: not_started
+    evidence: []
+    blocked_by: ""
+  7_review:
+    gate: Gate 5
+    status: not_started
+    evidence: []
+    approved_by: ""
+    approved_at: ""
+    approval_quote: ""
+    blocked_by: ""
+  8_launch:
+    gate: Gate 6
+    status: not_started
+    evidence: []
+    approved_by: ""
+    approved_at: ""
+    approval_quote: ""
+    blocked_by: ""
+notes:
+  - "2026-09-08 — Gate 4 preview: https://example-preview.vercel.app/"

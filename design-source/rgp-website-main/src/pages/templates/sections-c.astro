@@ -1,0 +1,39 @@
+---
+/** Template preview route (§17): service area + FAQ. noindex. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceAreaMap from '../../components/ServiceAreaMap.astro';
+import FAQSection from '../../components/FAQSection.astro';
+import { site } from '../../data/site';
+---
+
+<BaseLayout title="Template preview — service area + FAQ" description="Internal template preview." noindex>
+  <ServiceAreaMap
+    eyebrow="Where we work"
+    heading={`Serving ${site.primaryMarket} and Surrounding Communities`}
+    intro="Fast emergency response across our core service area. Click any city to explore dedicated service pages."
+    counties={[
+      { name: 'Example County', cities: [{ name: 'Example City' }, { name: 'Northtown' }, { name: 'Southville' }] },
+      { name: 'Neighbor County', cities: [{ name: 'Easton' }, { name: 'Westfield' }, { name: 'Lakeside' }] },
+    ]}
+    mapCenter={[41.85, -87.75]}
+    mapZoom={9}
+    polygon={[
+      [42.15, -88.2],
+      [42.2, -87.7],
+      [41.85, -87.55],
+      [41.5, -87.8],
+      [41.6, -88.25],
+    ]}
+    mapCaption="Shaded service area — Example City metro"
+  />
+  <FAQSection
+    eyebrow="Common questions"
+    heading="Frequently Asked Questions"
+    support="Everything you need to know before you call. Still have questions? We're available 24/7."
+    faqs={[
+      { question: 'Are you available 24/7?', answer: `Yes — we're available 24/7/365 for emergency restoration. Call <a href="${site.phoneHref}" class="font-bold text-accent">${site.phoneDisplay}</a> any time.` },
+      { question: 'How fast can you get to my property?', answer: 'Emergency dispatch is prioritized across our core service area.' },
+      { question: 'Do you work with my insurance company?', answer: 'We document the damage thoroughly so your claim is supported from day one.' },
+    ]}
+  />
+</BaseLayout>

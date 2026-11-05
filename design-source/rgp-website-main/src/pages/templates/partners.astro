@@ -1,0 +1,23 @@
+---
+/**
+ * Template preview route (§17): the Partner page (FormPageTemplate + PartnerForm) with neutral example copy.
+ * `preview` shows the form even though site.forms.partner is off in the starter; until leadrouter:setup has
+ * connected the partner workflow it shows "not connected" and is disabled. noindex; excluded from nav and sitemaps.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormPageTemplate from '../../components/templates/FormPageTemplate.astro';
+import { site } from '../../data/site';
+---
+
+<BaseLayout title={`Partner With ${site.name} — Template preview`} description="Internal partner page template preview." noindex>
+  <FormPageTemplate
+    form="partner"
+    preview
+    heroEyebrow="Partners"
+    h1={`Partner With ${site.name}`}
+    heroIntro="Example intro: one sentence on who the partner program is for. Replace with the client's approved copy."
+  >
+    <h2>Who we work with</h2>
+    <p>Example copy block. The client's approved partner copy goes here: the agents, adjusters, property managers and trades they work with, and what a partner can expect after a referral.</p>
+  </FormPageTemplate>
+</BaseLayout>

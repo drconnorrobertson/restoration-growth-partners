@@ -1,0 +1,58 @@
+/*
+ * Client theme — the ONLY file that changes per client.
+ * Slot contract: docs/agency-website-system/design-system/DESIGN_TOKENS.md
+ * RGP brand, from the logo: blue #04A9EB→#1058A7, orange #EF4A38→#FB993E. Accent is a deeper
+ * brand orange so white button text and orange text on light sections pass 4.5:1. First draft — set in design review.
+ */
+@theme {
+  /* Brand accent — conversion color */
+  --color-accent: #b83a18;
+  --color-accent-hover: #9c3013;
+  /* Text on dark backgrounds: must pass 4.5:1 on dark, dark-2 AND dark-3 (validate:contrast).
+     The earlier #e03535 measured 3.47:1 on dark-3. */
+  --color-accent-bright: #fb993e;
+
+  /* Secondary brand color */
+  --color-brand-2: #0f5fa6;
+  /* AA-safe variant of brand-2 for links/small UI on light surfaces.
+     Some logo colors fail WCAG AA as text — this slot keeps the hue and passes. */
+  --color-brand-2-text: #0f5fa6;
+
+  /* Dark scale — tint toward brand temperature, never flat black */
+  --color-dark: #0a1a2f;
+  --color-dark-2: #0d1f35;
+  --color-dark-3: #0f2238;
+
+  /* Light surfaces — tinted, never pure gray */
+  --color-surface: #f4f7fb;
+  --color-surface-2: #eaf0f7;
+  --color-border: #d6e0eb;
+
+  /* Text */
+  --color-ink: #13202e;
+  --color-ink-muted: #4a5869;
+  --color-on-dark: #f5f8fc;
+
+  /* Type — condensed display over readable sans is the house pairing (§20) */
+  /* The faces themselves (family, files, fallbacks) live in astro.config.mjs `fonts`. */
+  --font-display: var(--font-display-face);
+  --font-body: var(--font-body-face);
+
+  /* Depth and shape */
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.12);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 0.14);
+  --shadow-lg: 0 8px 32px rgb(0 0 0 / 0.18);
+  --shadow-xl: 0 16px 60px rgb(0 0 0 / 0.25);
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  /* Semantic — not brand: ✓ rows, success states. Stays green on every client. */
+  --color-success: #1e9e4a;
+
+  /* Letterspacing tokens for the house display treatments */
+  --tracking-eyebrow: 0.18em;   /* eyebrow badges, small-caps labels */
+  --tracking-display: 0.3em;    /* letterspaced service list under the H1 */
+
+  /* Motion */
+  --transition-base: 0.22s ease;
+}

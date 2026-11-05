@@ -1,0 +1,71 @@
+---
+/**
+ * Process — variant `dark_timeline_cards` (archetype §8).
+ * Dark section, optional dimmed real-photo background, 3 numbered cards with
+ * desktop connector arrows (hidden on mobile; animation obeys reduced motion
+ * via the global media rule).
+ */
+import type { ImageMetadata } from 'astro';
+import OptimizedImage from './OptimizedImage.astro';
+import { Icon } from 'astro-icon/components';
+
+interface Step {
+  title: string;
+  text: string;
+}
+
+interface Props {
+  eyebrow: string;
+  heading: string;
+  support?: string;
+  steps: Step[];
+  /** Client photo (branded truck/crew) behind the section — dimmed automatically. */
+  backgroundImage?: ImageMetadata;
+}
+
+const { eyebrow, heading, support, steps, backgroundImage } = Astro.props;
+---
+
+<section data-section="process" class="relative overflow-hidden border-t-2 border-accent bg-dark py-16 text-on-dark md:py-24">
+  {backgroundImage && (
+    /* Rendered as an optimized <img>, not a CSS background, so it goes through
+       the image pipeline and serves responsive AVIF/WebP (§18). */
+    <OptimizedImage
+      src={backgroundImage}
+      alt=""
+      widths={[1200, 1600, 2000]}
+      sizes="100vw"
+      class="absolute inset-0 h-full w-full object-cover opacity-40"
+    />
+  )}
+  <!-- Vertical scrim: protects the heading and card text without flattening the
+       photo to invisibility (photo sits at 40%, not 20%). -->
+  <div class="absolute inset-0 bg-gradient-to-b from-dark/85 via-dark/60 to-dark/85" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-7xl px-4 md:px-6">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="text-xs font-bold uppercase tracking-eyebrow text-on-dark/50">{eyebrow}</p>
+      <h2 class="mt-3 font-display text-4xl font-bold md:text-5xl">{heading}</h2>
+      {support && <p class="mt-4 text-on-dark/75">{support}</p>}
+    </div>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-3 md:gap-4 lg:gap-6">
+      {steps.map((step, i) => (
+        <div class="relative">
+          <article class="h-full rounded-md border border-dark-3 bg-dark-2/80 p-7 backdrop-blur-sm">
+            <span class="font-display text-5xl font-bold text-accent-bright">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3 class="mt-3 font-display text-2xl font-bold">{step.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-on-dark/70">{step.text}</p>
+          </article>
+          {i < steps.length - 1 && (
+            <span class="absolute -right-4 top-1/2 z-10 hidden -translate-y-1/2 text-accent-bright md:block lg:-right-5" aria-hidden="true">
+              <Icon name="lucide:chevron-right" class="size-6 animate-pulse" stroke-width={3} aria-hidden="true" />
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

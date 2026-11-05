@@ -1,0 +1,52 @@
+---
+/**
+ * Gallery / project-photo imagery (§18). Use for before-after grids, job galleries, team
+ * photos — anything that renders many images in a grid below the fold.
+ *
+ * Differences from OptimizedImage: a fixed aspect ratio reserves layout space so grids never
+ * shift while loading; widths are thumbnail-sized (a 3-up grid never needs 900px); always lazy;
+ * optional visible caption. Emits responsive AVIF/WebP with explicit dimensions.
+ * Requires an imported image (ImageMetadata) — raw string paths bypass the pipeline (§18).
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+  aspect?: '4/3' | '3/2' | '1/1' | '16/9';
+  widths?: number[];
+  sizes?: string;
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  caption,
+  aspect = '4/3',
+  widths = [320, 480, 720],
+  sizes = '(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw',
+  class: className = '',
+} = Astro.props;
+const aspectClass = { '4/3': 'aspect-[4/3]', '3/2': 'aspect-[3/2]', '1/1': 'aspect-square', '16/9': 'aspect-video' }[aspect];
+---
+
+<figure class={`overflow-hidden rounded-md border border-border bg-surface-2 ${className}`}>
+  <div class={`${aspectClass} w-full`}>
+    <Picture
+      src={src}
+      alt={alt}
+      formats={['avif', 'webp']}
+      fallbackFormat="jpg"
+      widths={widths}
+      sizes={sizes}
+      loading="lazy"
+      decoding="async"
+      aria-hidden={alt === '' ? 'true' : undefined}
+      class="h-full w-full object-cover"
+    />
+  </div>
+  {caption && <figcaption class="px-4 py-3 text-sm text-ink-muted">{caption}</figcaption>}
+</figure>
