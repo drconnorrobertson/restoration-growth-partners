@@ -68,3 +68,9 @@ Approval requires agency copy and approved assets applied in an adaptation, real
 ## GitHub draft import limitation
 
 GitHub push protection accepted the original ZIP but rejected the extracted `tests/search/hidden-prompt.test.mjs` file because its two synthetic OAuth strings match credential patterns. The draft PR therefore contains the unchanged complete ZIP and 229 extracted original files; this one extracted fixture is pending the repository owner’s GitHub exception. Nothing has been removed from the ZIP. The manifest describes all 230 archive files, including the pending extraction. The local committed import retains all 230 extracted files. This draft must not be described as a fully verified extracted tree until that fixture is restored and rechecked.
+
+## James’s current campaign context
+
+Source: James’s November 5, 2026 8:59 AM DM in the Restoration Growth Partners workspace, https://restorationgr-sdf6484.slack.com/archives/D09A7127XAR/p1793887154363909 . James supplied this ZIP and described a substantial content list plus advertising work. Proposed campaign angles include multi-GBP, AI SEO, a slower industry year associated with storms and insurance issues, and a blended search approach. These are planning themes from James, not independently verified market claims or approved public copy. Connor asked to merge the ZIP site into his GitHub site; James agreed in the subsequent DM.
+
+Release status: PR #7 merged into main on November 5, 2026; Vercel production deployment dpl_85LzPZPVrTZ5id4fPSHm2MzqtyE5 reached READY for merge commit fdd37852bb20135f8b68f639fd64a7dd284ce0f4. This publishes the preserved design source alongside the existing static site; it does not apply the Astro design to the public homepage. The full ZIP remains intact. One extracted synthetic-credential test fixture remains pending GitHub’s exception as documented above.
