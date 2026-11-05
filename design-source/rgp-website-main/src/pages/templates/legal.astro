@@ -1,0 +1,18 @@
+---
+/** Template preview route (§17): legal page template with example privacy text. noindex. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LegalPageTemplate from '../../components/templates/LegalPageTemplate.astro';
+import { site } from '../../data/site';
+---
+<BaseLayout title="Privacy Policy — Template preview" description="Internal legal page template preview." noindex>
+  <LegalPageTemplate eyebrow="Legal" h1="Privacy Policy" effective="Effective January 1, 2026">
+    <h2>Information We Collect</h2>
+    <p>When you request service through this site we collect the details you enter — name, phone, email, property address, and a description of the damage — so {site.name} can respond.</p>
+    <h2>How We Use It</h2>
+    <p>To schedule and perform the service you requested, to follow up on that request, and to keep required records of the work. We do not sell personal information.</p>
+    <h2>Call Tracking</h2>
+    <p>Phone numbers on this site may be tracking numbers that route to our dispatch line. Calls may be recorded for quality and training.</p>
+    <h2>Contact</h2>
+    <p>Questions about this policy: <a href={`mailto:${site.email}`}>{site.email}</a> or {site.phoneDisplay}.</p>
+  </LegalPageTemplate>
+</BaseLayout>

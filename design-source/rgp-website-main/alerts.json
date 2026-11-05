@@ -1,0 +1,32 @@
+{
+  "$comment": "Website alerts (CORE_CONTRACTS §32). Non-secret alert settings, copied UNCHANGED into every repo that sends alerts (every client site repo with the starter, agent-website-builder reads starter/alerts.json, rgp-lead-router). Change them here (owner approval) and re-copy; never per repo. The two secrets are GitHub ORGANIZATION secrets, never in a file: SLACK_ALERT_WEBHOOK_URL (Slack incoming webhook bound to the channel below) and CLICKUP_API_TOKEN (ClickUp personal API token, pk_…). A missing secret skips that channel and the GitHub issue is still opened. Read by scripts/lib/site-alert.mjs.",
+  "slack": {
+    "channel": "C09M21R8U8H",
+    "webhookSecret": "SLACK_ALERT_WEBHOOK_URL",
+    "mentionOnNewAlert": [
+      { "name": "Michelle", "slackId": "U08FYV2PA4C" },
+      { "name": "John Afolabi", "slackId": "U0A6MC0SE84" },
+      { "name": "James LaRosa", "slackId": "U02P5FDUR8W" }
+    ]
+  },
+  "clickup": {
+    "tokenSecret": "CLICKUP_API_TOKEN",
+    "listId": "901820755955",
+    "listName": "Software Error Logs (Operations space)",
+    "openStatus": "new error",
+    "closedStatus": "resolved",
+    "assignees": [
+      { "name": "John Afolabi", "clickupId": 107572892 },
+      { "name": "Michelle Snyman", "clickupId": 95483966 }
+    ],
+    "priority": 2,
+    "testPriority": 4
+  },
+  "github": {
+    "label": "site-alert"
+  },
+  "timing": {
+    "repeatCommentHours": 6,
+    "slackReminderHours": 24
+  }
+}

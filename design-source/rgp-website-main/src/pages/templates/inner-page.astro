@@ -1,0 +1,145 @@
+---
+/**
+ * Template preview route (§17): the inner-page template with realistic
+ * service-shaped placeholder content — long headings, H3 cards, bullets,
+ * both required inline CTAs, alert list, included panel, post-body sections.
+ * noindex; excluded from nav and sitemaps. Never Lorem Ipsum.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerPageTemplate from '../../components/templates/InnerPageTemplate.astro';
+import InlineCTA from '../../components/InlineCTA.astro';
+import ContentAlertList from '../../components/ContentAlertList.astro';
+import IncludedPanel from '../../components/IncludedPanel.astro';
+import InnerSubsections from '../../components/InnerSubsections.astro';
+import ProcessSection from '../../components/ProcessSection.astro';
+import ReviewSection from '../../components/ReviewSection.astro';
+import ServiceAreaMap from '../../components/ServiceAreaMap.astro';
+import { site } from '../../data/site';
+---
+
+<BaseLayout
+  title="Template preview — inner page"
+  description="Internal inner-page template preview."
+  noindex
+>
+  <InnerPageTemplate
+    heroEyebrow="Water Damage Restoration"
+    h1="Water Damage Cleanup and Structural Drying in Example City"
+    heroIntro="Standing water spreads into walls, flooring, and framing within hours. Our crews extract, dry, and document the damage — and stay with you through the rebuild."
+    parentHub={{ label: 'Water Damage Services', url: '/water-damage-restoration/' }}
+    current={{ label: 'Water Damage Cleanup', url: '/water-damage-restoration/water-damage-cleanup/' }}
+    relatedNav={[
+      { label: 'Flood Damage Restoration', url: '/water-damage-restoration/flood-damage/' },
+      { label: 'Sewage Cleanup', url: '/water-damage-restoration/sewage-cleanup/' },
+      { label: 'Burst Pipe Cleanup', url: '/water-damage-restoration/burst-pipe/' },
+      { label: 'Basement Flooding', url: '/water-damage-restoration/basement-flooding/' },
+      { label: 'Structural Drying', url: '/water-damage-restoration/structural-drying/' },
+      { label: 'Appliance Leak Cleanup', url: '/water-damage-restoration/appliance-leak/' },
+    ]}
+    coreHubs={[
+      { label: 'Water Damage Restoration', url: '/water-damage-restoration/' },
+      { label: 'Fire Damage Restoration', url: '/fire-damage-restoration/' },
+      { label: 'Mold Remediation', url: '/mold-remediation/' },
+      { label: 'Storm Damage Restoration', url: '/storm-damage-restoration/' },
+      { label: 'Reconstruction', url: '/reconstruction/' },
+    ]}
+  >
+    <h2>Emergency water damage cleanup for homes and businesses</h2>
+    <p>
+      When water gets where it shouldn't be, the first hours decide how much of your property can
+      be saved. Drywall wicks moisture upward, subfloors swell, and hidden cavities stay wet long
+      after the surface looks dry. Our certified technicians respond {site.emergencyAvailability},
+      extract standing water fast, and set up professional drying equipment the same visit.
+    </p>
+    <p>
+      Every step is documented — moisture readings, photos, and scope notes — so your insurance
+      claim is supported from day one and nothing gets argued about later.
+    </p>
+
+    <InlineCTA
+      heading="Standing water right now?"
+      support="Call immediately — extraction within hours is the difference between drying and demolition."
+    />
+
+    <h2>Signs you need professional water damage cleanup</h2>
+    <p>
+      Not all water damage announces itself. If you notice any of the following, the damage is
+      usually further along than it looks:
+    </p>
+
+    <ContentAlertList
+      alerts={[
+        { title: 'Buckling or cupping floors', text: 'Moisture trapped in or under the flooring.' },
+        { title: 'Musty smell that returns', text: 'Often the first sign of hidden moisture or early mold.' },
+        { title: 'Stains spreading on walls or ceilings', text: 'Active leaks travel along framing before they show.' },
+        { title: 'Peeling paint or bubbling drywall', text: 'Wall cavities holding water behind the surface.' },
+      ]}
+    />
+
+    <h2>What our water damage cleanup service includes</h2>
+    <p>
+      One crew, one scope, start to finish. A typical cleanup engagement covers everything from
+      the first extraction through verified dry-out:
+    </p>
+
+    <IncludedPanel
+      heading="Included in every cleanup"
+      items={[
+        'Emergency water extraction',
+        'Moisture mapping and readings',
+        'Commercial dehumidification',
+        'Antimicrobial treatment',
+        'Contents protection and packout',
+        'Daily drying checks',
+        'Insurance-ready documentation',
+        'Rebuild coordination',
+      ]}
+    />
+
+    <h3>How long does drying take?</h3>
+    <p>
+      Most structures dry in three to five days with professional equipment — far faster than the
+      weeks an untreated space can take, and without the mold risk. We verify with moisture meters
+      rather than guessing by look or feel, and we don't pull equipment until the numbers say dry.
+    </p>
+
+    <h2>Related water damage services</h2>
+
+    <InnerSubsections
+      items={[
+        { title: 'Sewage Cleanup', text: 'Category 3 water needs containment and disinfection, not just drying.', url: '/water-damage-restoration/sewage-cleanup/' },
+        { title: 'Basement Flooding', text: 'Below-grade water brings its own extraction and drying challenges.', url: '/water-damage-restoration/basement-flooding/' },
+        { title: 'Burst Pipe Cleanup', text: 'Supply-line failures can release hundreds of gallons in minutes.', url: '/water-damage-restoration/burst-pipe/' },
+        { title: 'Structural Drying', text: 'Verified dry-out for framing, subfloors, and wall cavities.', url: '/water-damage-restoration/structural-drying/' },
+      ]}
+    />
+
+    <p>
+      Whatever the source — storm, plumbing failure, appliance leak, or flood — the goal is the
+      same: stop the spread, dry the structure, prove it with documentation, and put your property
+      back the way it was.
+    </p>
+
+    <InlineCTA
+      heading="Need water damage cleanup help now?"
+      support="One call starts extraction, drying, and documentation — we handle the rest."
+    />
+
+    <!--
+      Post-body sections reuse the SAME shared sections as the homepage, from the
+      same data (owner decision 2026-08-25) — identical process section, and the
+      service-area module (counties → city hubs → city-service links) placed
+      directly below reviews. Reusing site.process / site.serviceArea guarantees
+      they cannot drift out of sync with the homepage.
+    -->
+    <Fragment slot="post-body">
+      <ProcessSection {...site.process} />
+      <ReviewSection
+        eyebrow="What our customers say"
+        heading={`Property owners trust ${site.name}`}
+        intro="Every review comes straight from the platforms our customers use."
+      />
+      <ServiceAreaMap {...site.serviceArea} mapCaption={site.serviceArea.caption} />
+    </Fragment>
+  </InnerPageTemplate>
+</BaseLayout>

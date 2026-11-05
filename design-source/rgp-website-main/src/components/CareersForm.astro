@@ -1,0 +1,232 @@
+---
+/// <reference path="../webmcp.d.ts" />
+/**
+ * Standard Careers application form (§11, §27). Same machinery as RequestServicePanel: posts to the ONE agency
+ * router with the client's id, Turnstile on first interaction (BaseLayout loader: held submit, "Verifying…",
+ * auto-send, 15 s error that keeps every field and file), the result shown from ?form_status (src/scripts/lead-forms.ts),
+ * a WebMCP tool. The router sends it to the client's CAREERS workflow in GoHighLevel — never the lead workflow — and
+ * stores the résumé (+ optional cover letter) in the client's GHL Media folder.
+ *
+ * Configured in site.forms.careers (positions, which optional fields and Yes/No questions show). Renders NOTHING
+ * unless site.forms.careers.enabled (template previews pass `preview`), and stays disabled with a visible notice
+ * until `npm run leadrouter:setup` has connected the careers workflow (site.leadRouter.careersReady).
+ * Never asks for sensitive data: no licence / permit number, SSN, date of birth or bank details — a question whose
+ * id or label looks like one fails the build here, and validate:built checks the rendered page too.
+ */
+import { site } from '../data/site';
+import { isSensitiveField } from '../../scripts/lib/form-checks.mjs';
+
+interface Props {
+  /** Sent as form_location; the success/error message shows in this form only. */
+  formLocation?: string;
+  /** Unique id prefix when more than one form is on a page. */
+  idPrefix?: string;
+  /** Visible card title (a UI label, not a heading — §11). */
+  title?: string;
+  /** Template previews only: render even while site.forms.careers.enabled is false. */
+  preview?: boolean;
+}
+const { formLocation = 'careers', idPrefix = 'careers', title = 'Apply Now', preview = false } = Astro.props;
+
+const cfg = site.forms.careers;
+const router = site.leadRouter;
+const show = cfg.enabled || preview;
+/** Never post to a router that has no careers workflow for this client: the router would refuse the application. */
+const ready = Boolean(router.submitUrl && router.clientId && router.careersReady);
+const resume = cfg.resumeUpload;
+
+for (const q of cfg.questions) {
+  if (!/^[a-z0-9_]{1,34}$/.test(q.id)) throw new Error(`site.forms.careers.questions: id "${q.id}" must be lowercase letters, digits and underscores (≤ 34 characters)`);
+  if (isSensitiveField(q.id) || isSensitiveField(q.label) || (q.followUp && isSensitiveField(q.followUp)))
+    throw new Error(`site.forms.careers.questions: "${q.label}" asks for sensitive personal data — agency forms never collect licence/permit numbers, SSNs, dates of birth or bank details (CORE_CONTRACTS §11)`);
+}
+
+const toolName = idPrefix === 'careers' ? 'apply_for_job' : `apply_for_job_${idPrefix.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
+const fileTypes = '.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+const labelCls = 'mb-1 block text-xs font-bold uppercase tracking-wide text-ink-muted';
+const fieldCls = 'w-full rounded-sm border border-border min-h-11 px-3 py-2.5 text-sm outline-none transition focus:border-accent';
+const fileCls = 'block w-full rounded-sm border border-border bg-white text-sm file:mr-3 file:min-h-11 file:cursor-pointer file:border-0 file:bg-surface file:px-4 file:font-bold file:text-ink';
+const id = (name: string) => `${idPrefix}-${name}`;
+---
+
+{show && (
+  <div class="overflow-hidden rounded-md bg-white text-ink shadow-xl" data-component="careers-form">
+    <div class="bg-accent px-5 py-5 text-white sm:px-6">
+      <p id={id('title')} class="font-display text-3xl font-bold">{title}</p>
+      <p class="mt-1 text-sm text-white/90">Questions about a position? Call <a href={site.phoneHref} class="font-bold text-white underline whitespace-nowrap">{site.phoneDisplay}</a>.</p>
+    </div>
+
+    <div class="space-y-4 p-5 sm:p-6">
+      <div data-form-status="career_application" data-form-location={formLocation} hidden role="status"
+        data-success-text={cfg.successMessage}
+        data-error-text={`Something went wrong sending your application. Please try again, or call ${site.phoneDisplay}.`}
+        class="rounded-sm border-l-4 px-4 py-3 text-sm leading-snug"></div>
+
+      {!ready && (
+        <p class="rounded-sm border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-sm leading-snug text-amber-900">
+          <strong>Careers form not connected yet.</strong> Run <code>npm run leadrouter:setup</code> with the client's careers
+          workflow before launch (skill agency-lead-delivery-setup). Applications are disabled rather than lost.
+        </p>
+      )}
+
+      <form
+        class="space-y-4"
+        method="post"
+        enctype="multipart/form-data"
+        action={ready ? router.submitUrl : undefined}
+        data-lead-form
+        data-form-type="career_application"
+        aria-labelledby={id('title')}
+        toolname={toolName}
+        tooldescription={`Apply for a job at ${site.name}. Sends the applicant's name, phone, email and the position${cfg.address ? ', their address (optional)' : ''}${cfg.questions.length ? ' and answers to short Yes/No questions' : ''}${resume ? '; a résumé file is required, so a person has to attach it' : ''}. The hiring team follows up.`}
+      >
+        {/* Router contract — required on every submission. */}
+        <input type="hidden" name="client_id" value={router.clientId} />
+        <input type="hidden" name="site_id" value={router.siteId} />
+        <input type="hidden" name="form_type" value="career_application" />
+        <input type="hidden" name="form_location" value={formLocation} />
+        <input type="hidden" name="page_url" data-page-url value="" />
+        <input type="hidden" name="idempotency_key" data-idempotency value="" />
+        <input type="hidden" name="utm_source" data-utm="utm_source" value="" />
+        <input type="hidden" name="utm_medium" data-utm="utm_medium" value="" />
+        <input type="hidden" name="utm_campaign" data-utm="utm_campaign" value="" />
+        <input type="hidden" name="gclid" data-utm="gclid" value="" />
+        <input type="hidden" name="fbclid" data-utm="fbclid" value="" />
+        {/* Honeypot — the router treats a filled `company_website` as spam and silently drops it. */}
+        <div class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+          <label>Company website<input type="text" name="company_website" tabindex="-1" autocomplete="off" toolparamdescription="Always leave empty. Spam trap: any value here discards the application." /></label>
+        </div>
+
+        <div>
+          <label for={id('name')} class={labelCls}>Full name *</label>
+          <input id={id('name')} name="name" type="text" required autocomplete="name" toolparamdescription="Applicant's full name." class={fieldCls} />
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label for={id('phone')} class={labelCls}>Phone *</label>
+            <input id={id('phone')} name="phone" type="tel" required autocomplete="tel" placeholder="(555) 000-0000" toolparamdescription="Applicant's phone number, including area code." class={fieldCls} />
+          </div>
+          <div>
+            <label for={id('email')} class={labelCls}>Email *</label>
+            <input id={id('email')} name="email" type="email" required autocomplete="email" toolparamdescription="Applicant's email address; the hiring team replies here." class={fieldCls} />
+          </div>
+        </div>
+
+        <div>
+          <label for={id('position')} class={labelCls}>Position applying for *</label>
+          {cfg.positions.length ? (
+            <select id={id('position')} name="position" required toolparamdescription="The position applied for: one of the listed option values." class={`${fieldCls} bg-white`}>
+              <option value="" selected disabled>Select a position…</option>
+              {cfg.positions.map((p) => <option value={p}>{p}</option>)}
+              <option value="Other / general application">Other / general application</option>
+            </select>
+          ) : (
+            <input id={id('position')} name="position" type="text" required toolparamdescription="The position applied for, in the applicant's words." class={fieldCls} />
+          )}
+        </div>
+
+        {cfg.linkedin && (
+          <div>
+            <label for={id('linkedin')} class={labelCls}>LinkedIn profile (optional)</label>
+            <input id={id('linkedin')} name="linkedin_url" type="url" placeholder="https://www.linkedin.com/in/…" toolparamdescription="Optional: the applicant's LinkedIn profile URL (https://…)." class={fieldCls} />
+          </div>
+        )}
+
+        {cfg.address && (
+          <fieldset class="space-y-4">
+            <legend class={labelCls}>Address (optional)</legend>
+            <div>
+              <label for={id('street')} class="sr-only">Street address</label>
+              <input id={id('street')} name="street_address" type="text" autocomplete="street-address" placeholder="Street address" toolparamdescription="Optional: applicant's street address." class={fieldCls} />
+            </div>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]">
+              <div>
+                <label for={id('city')} class="sr-only">City</label>
+                <input id={id('city')} name="city" type="text" autocomplete="address-level2" placeholder="City" toolparamdescription="Optional: applicant's city." class={fieldCls} />
+              </div>
+              <div>
+                <label for={id('state')} class="sr-only">State</label>
+                <input id={id('state')} name="state" type="text" autocomplete="address-level1" maxlength="30" placeholder="State" toolparamdescription="Optional: applicant's state." class={fieldCls} />
+              </div>
+              <div>
+                <label for={id('zip')} class="sr-only">ZIP</label>
+                <input id={id('zip')} name="postal_code" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="10" placeholder="ZIP" toolparamdescription="Optional: applicant's ZIP code." class={fieldCls} />
+              </div>
+            </div>
+          </fieldset>
+        )}
+
+        {cfg.questions.map((q) => (
+          <fieldset>
+            <legend class={labelCls}>{q.label}{q.required ? ' *' : ''}</legend>
+            <div class="flex gap-6">
+              {['Yes', 'No'].map((v) => (
+                <label class="inline-flex min-h-11 cursor-pointer items-center gap-2 text-sm">
+                  <input type="radio" name={`q_${q.id}`} value={v} required={q.required} class="size-5 accent-accent"
+                    toolparamdescription={`Answer "${v}" to: ${q.label}`} />
+                  {v}
+                </label>
+              ))}
+            </div>
+            {q.followUp && (
+              <div data-follow-up={`q_${q.id}`} hidden class="mt-2">
+                <label for={id(`q-${q.id}-count`)} class={labelCls}>{q.followUp}</label>
+                <input id={id(`q-${q.id}-count`)} name={`q_${q.id}_count`} type="number" min="0" max="99" inputmode="numeric"
+                  toolparamdescription={`${q.followUp} (a number; only when the answer above is Yes).`} class={`${fieldCls} max-w-32`} />
+              </div>
+            )}
+          </fieldset>
+        ))}
+
+        {cfg.experience && (
+          <div>
+            <label for={id('experience')} class={labelCls}>Relevant experience (optional)</label>
+            <textarea id={id('experience')} name="experience" rows="3" toolparamdescription="Optional: the applicant's relevant work experience." class={fieldCls}></textarea>
+          </div>
+        )}
+
+        {resume && (
+          <div>
+            <label for={id('resume')} class={labelCls}>Résumé *</label>
+            <input id={id('resume')} name="resume" type="file" required accept={fileTypes} data-document="résumé"
+              aria-describedby={`${id('resume')}-help ${id('resume')}-status`}
+              toolparamdescription="Résumé file: one PDF, DOC or DOCX, up to 10 MB. A person must attach it." class={fileCls} />
+            <p id={`${id('resume')}-help`} class="mt-1 text-xs text-ink-muted">One PDF, DOC, or DOCX file, up to 10 MB.</p>
+            <p id={`${id('resume')}-status`} class="mt-1 text-xs text-ink-muted" aria-live="polite">No file selected.</p>
+          </div>
+        )}
+        {resume && cfg.coverLetter && (
+          <div>
+            <label for={id('cover')} class={labelCls}>Cover letter (optional)</label>
+            <input id={id('cover')} name="cover_letter" type="file" accept={fileTypes} data-document="cover letter"
+              aria-describedby={`${id('cover')}-help ${id('cover')}-status`}
+              toolparamdescription="Optional cover letter file: one PDF, DOC or DOCX, up to 10 MB." class={fileCls} />
+            <p id={`${id('cover')}-help`} class="mt-1 text-xs text-ink-muted">One PDF, DOC, or DOCX file, up to 10 MB.</p>
+            <p id={`${id('cover')}-status`} class="mt-1 text-xs text-ink-muted" aria-live="polite">Optional — no file selected.</p>
+          </div>
+        )}
+
+        <div>
+          <label for={id('message')} class={labelCls}>Additional information (optional)</label>
+          <textarea id={id('message')} name="message" rows="3" toolparamdescription="Optional: availability, certifications, or anything else for the hiring team." class={fieldCls}></textarea>
+        </div>
+
+        {router.turnstileSiteKey && (
+          <div>
+            <div class="cf-turnstile max-w-full overflow-hidden" data-sitekey={router.turnstileSiteKey} data-theme="light"></div>
+            <div data-turnstile-status role="status" aria-live="polite" class="[&>p]:mt-3"></div>
+          </div>
+        )}
+
+        <button type="submit" disabled={!ready}
+          class="w-full rounded-md bg-accent py-3.5 font-bold text-white shadow-md transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50">
+          Submit Application →
+        </button>
+      </form>
+    </div>
+  </div>
+)}
+
+<script>
+  import '../scripts/lead-forms';
+</script>

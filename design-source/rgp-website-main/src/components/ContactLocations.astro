@@ -1,0 +1,87 @@
+---
+/**
+ * Location / NAP cards (§13). Renders EVERY approved GBP location from shared
+ * site data — name, legal entity, address, phone, hours, and a directions link —
+ * with each location visually segmented so visitors understand they are separate offices.
+ *
+ * Layout (owner decision 2026-09-30): office sections two to a row, one location per
+ * column, repeated for as many locations as the client has; an odd last office sits
+ * half width on the left. One location renders as a single card.
+ *
+ * NAP values must match the Google Business Profile exactly; they come from
+ * site.locations (verified intake) and are never retyped per page.
+ */
+import { site } from '../data/site';
+import { telHref } from '../utils/phone';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  eyebrow?: string;
+  heading: string;
+  intro?: string;
+}
+
+const { eyebrow = 'Our locations', heading, intro } = Astro.props;
+const multiple = site.locations.length > 1;
+---
+
+<section class="bg-surface-2 py-16 md:py-20" id="locations">
+  <div class="mx-auto max-w-6xl px-4 md:px-6">
+    <p class="text-xs font-bold uppercase tracking-eyebrow text-accent">{eyebrow}</p>
+    <h2 class="mt-3 max-w-2xl font-display text-4xl font-bold text-ink md:text-5xl">{heading}</h2>
+    {intro && <p class="mt-4 max-w-2xl text-ink-muted">{intro}</p>}
+
+    <div class:list={['mt-10 grid gap-5', multiple ? 'md:grid-cols-2' : 'max-w-md']}>
+      {site.locations.map((loc) => (
+        <article class="flex flex-col rounded-md border border-border bg-white p-6 shadow-sm">
+          <h3 class="font-display text-xl font-bold leading-snug text-ink">{loc.name}</h3>
+          {loc.legalName && loc.legalName !== loc.name && (
+            <p class="mt-1 text-xs text-ink-muted">{loc.legalName}</p>
+          )}
+
+          <!--
+            Information block, then an actions row. An earlier draft put the call
+            button between the address and hours rows, which broke the icon
+            column alignment and the vertical rhythm of the card.
+          -->
+          <address class="mt-3 flex-1 space-y-2.5 text-sm not-italic text-ink-muted">
+            <p class="flex items-start gap-2.5">
+              <Icon name="lucide:map-pin" class="mt-0.5 size-4 shrink-0 text-accent" aria-hidden="true" />
+              {loc.address}
+            </p>
+
+            {loc.hours && (
+              <p class="flex items-center gap-2.5">
+                <Icon name="lucide:clock" class="size-4 shrink-0 text-accent" aria-hidden="true" />
+                {loc.hours}
+              </p>
+            )}
+          </address>
+
+          <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <!-- Real tap target (§10): a bare inline phone link measured ~20px tall. -->
+            <a
+              href={telHref(loc.phone)}
+              class="inline-flex min-h-11 items-center gap-2.5 rounded-md bg-accent px-4 py-2 font-bold text-white shadow-sm transition hover:bg-accent-hover"
+            >
+              <Icon name="lucide:phone" class="size-4 shrink-0" aria-hidden="true" />
+              {loc.phone}
+            </a>
+
+            {loc.gbpUrl && (
+              <a
+                href={loc.gbpUrl}
+                rel="noopener noreferrer"
+                target="_blank"
+                class="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-accent"
+              >
+                Get directions{' '}
+                <span aria-hidden="true">→</span>
+              </a>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

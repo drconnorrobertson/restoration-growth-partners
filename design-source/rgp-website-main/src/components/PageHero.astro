@@ -1,0 +1,48 @@
+---
+/**
+ * Inner-page hero (§12): compact dark hero — eyebrow, display H1 (smaller scale
+ * than homepage), one-line intro, phone-first CTA + request anchor. Marks
+ * [data-page-hero] so the shared sticky CTA logic works on every page type.
+ */
+import { site } from '../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  eyebrow: string;
+  h1: string;
+  intro?: string;
+}
+
+const { eyebrow, h1, intro } = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-dark text-on-dark" data-page-hero>
+  <div
+    class="absolute inset-0 opacity-5"
+    style="background-image: linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px); background-size: 56px 56px;"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="relative mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
+    <p class="inline-flex items-center gap-2 rounded-full border border-dark-3 bg-dark-2 px-4 py-2 text-xs font-bold uppercase tracking-eyebrow text-on-dark/90">
+      <span class="size-1.5 rounded-full bg-accent-bright" aria-hidden="true"></span>
+      {eyebrow}
+    </p>
+
+    <h1 class="mt-5 max-w-3xl break-words font-display text-4xl font-bold leading-none sm:text-5xl lg:text-6xl">{h1}</h1>
+
+    {intro && <p class="mt-4 max-w-2xl text-lg text-on-dark/80">{intro}</p>}
+
+    <div class="mt-7 flex flex-wrap gap-4">
+      <a href={site.phoneHref} class="inline-flex items-center gap-2.5 rounded-md bg-accent px-6 py-3.5 font-bold text-white shadow-lg transition hover:bg-accent-hover">
+        <Icon name="lucide:phone" class="size-4.5" aria-hidden="true" />
+        <span class="hidden sm:inline">Call Now — {site.phoneDisplay}</span>
+        <span class="sm:hidden">Call Now</span>
+      </a>
+      <a href="#request-service" class="inline-flex items-center rounded-md border-2 border-on-dark/30 px-6 py-3.5 font-bold text-on-dark transition hover:border-on-dark/70">
+        Request Service
+      </a>
+    </div>
+  </div>
+</section>

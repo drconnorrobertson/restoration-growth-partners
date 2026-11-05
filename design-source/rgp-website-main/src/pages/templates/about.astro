@@ -1,0 +1,42 @@
+---
+/** Template preview route (§17): About page — inner-page template + a GalleryImage grid in the article. noindex. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InnerPageTemplate from '../../components/templates/InnerPageTemplate.astro';
+import GalleryImage from '../../components/GalleryImage.astro';
+import InlineCTA from '../../components/InlineCTA.astro';
+import ProcessSection from '../../components/ProcessSection.astro';
+import ReviewSection from '../../components/ReviewSection.astro';
+import ServiceAreaMap from '../../components/ServiceAreaMap.astro';
+import { site } from '../../data/site';
+import p1 from '../../assets/photos/placeholder-service-1.jpg';
+import p2 from '../../assets/photos/placeholder-service-2.jpg';
+import p3 from '../../assets/photos/placeholder-service-3.jpg';
+---
+<BaseLayout title={`About ${site.name} — Template preview`} description="Internal About page template preview." noindex>
+  <InnerPageTemplate
+    heroEyebrow="About us"
+    h1={`About ${site.name}`}
+    heroIntro={`Locally owned, serving ${site.primaryMarket} and the surrounding area.`}
+    current={{ label: 'About', url: '/about/' }}
+    coreHubs={site.services.map((s) => ({ label: s.label, url: s.url }))}
+  >
+    <h2>Who We Are</h2>
+    <p>Example copy: {site.name} is a locally owned restoration company. This paragraph comes from the approved About copy artifact — the template never writes it.</p>
+    <InlineCTA heading="Talk to a real person" support={`We answer ${site.emergencyAvailability}.`} />
+    <h2>Our Work</h2>
+    <p>Project photography renders through GalleryImage — fixed aspect ratio, thumbnail-sized AVIF/WebP, lazy-loaded.</p>
+    <div class="not-article my-6 grid gap-4 sm:grid-cols-3">
+      <GalleryImage src={p1} alt="Example project photo one" caption="Water extraction in progress" />
+      <GalleryImage src={p2} alt="Example project photo two" caption="Structural drying" />
+      <GalleryImage src={p3} alt="Example project photo three" caption="Rebuild complete" />
+    </div>
+    <h2>How We Work</h2>
+    <p>Documentation from the first visit, a written scope before work starts, and one point of contact through the rebuild.</p>
+    <InlineCTA heading="Book an inspection" support="Call now, or send the form and we will respond within one business day." />
+    <Fragment slot="post-body">
+      <ProcessSection {...site.process} />
+      <ReviewSection eyebrow="What our customers say" heading="What our customers say" />
+      <ServiceAreaMap {...site.serviceArea} mapCaption={site.serviceArea.caption} />
+    </Fragment>
+  </InnerPageTemplate>
+</BaseLayout>

@@ -1,0 +1,15 @@
+---
+/** TEST FIXTURE (tests/blog only): a minimal hub/shell page so fixture posts link only to pages that exist. */
+import BaseLayout from '../../../src/layouts/BaseLayout.astro';
+import InnerPageTemplate from '../../../src/components/templates/InnerPageTemplate.astro';
+import { site } from '../../../src/data/site';
+
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const svc = [...site.services, ...site.utilityNav, ...site.legalLinks].find((s) => s.url === path)!;
+---
+<BaseLayout title={`${svc.label} | ${site.name}`} description={`Fixture hub page for ${svc.label}, used only by the blog tests.`}>
+  <InnerPageTemplate heroEyebrow="Service" h1={svc.label} current={{ label: svc.label, url: svc.url }}>
+    <h2>{svc.label}</h2>
+    <p>Fixture hub body for the blog tests.</p>
+  </InnerPageTemplate>
+</BaseLayout>

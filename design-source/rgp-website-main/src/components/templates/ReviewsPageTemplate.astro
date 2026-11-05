@@ -1,0 +1,37 @@
+---
+/**
+ * Reviews page (/reviews/) — the real review widget at full width (§16), framed by a compact
+ * hero and an honest "how we work" note. Never fabricates ratings or counts: the widget is the
+ * only source of review content; the reserved state renders until a real widget ID exists.
+ */
+import PageHero from '../PageHero.astro';
+import ReviewSection from '../ReviewSection.astro';
+import InlineCTA from '../InlineCTA.astro';
+
+interface Props {
+  eyebrow: string;
+  h1: string;
+  intro?: string;
+  reviewsEyebrow: string;
+  reviewsHeading: string;
+  reviewsIntro?: string;
+  /** Approved external reviews URL (Google profile) for the reserved state's outbound link. */
+  reviewsUrl?: string;
+  ctaHeading: string;
+  ctaSupport: string;
+}
+const { eyebrow, h1, intro, reviewsEyebrow, reviewsHeading, reviewsIntro, reviewsUrl, ctaHeading, ctaSupport } = Astro.props;
+---
+
+<PageHero eyebrow={eyebrow} h1={h1} intro={intro} />
+
+<ReviewSection eyebrow={reviewsEyebrow} heading={reviewsHeading} intro={reviewsIntro} reviewsUrl={reviewsUrl} variant="reviewsPage" id="all-reviews">
+  <slot name="widget" slot="widget" />
+</ReviewSection>
+
+<section class="bg-surface py-12 md:py-16">
+  <div class="mx-auto max-w-4xl px-4 md:px-6">
+    <slot />
+    <div class="mt-10"><InlineCTA heading={ctaHeading} support={ctaSupport} /></div>
+  </div>
+</section>

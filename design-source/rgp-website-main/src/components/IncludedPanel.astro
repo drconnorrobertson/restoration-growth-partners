@@ -1,0 +1,27 @@
+---
+import { Icon } from 'astro-icon/components';
+/**
+ * Body module `included-panel` (§12): scoped "what this service includes" list.
+ * One restrained panel — not a card grid.
+ */
+interface Props {
+  heading: string;
+  items: string[];
+}
+
+const { heading, items } = Astro.props;
+---
+
+<div class="not-article my-8 rounded-md bg-surface-2 p-6 sm:p-7">
+  <h3 class="font-display text-xl font-bold text-ink">{heading}</h3>
+  <ul class="mt-4 grid gap-2.5 sm:grid-cols-2">
+    {items.map((item) => (
+      <li class="flex items-start gap-2.5 text-sm text-ink">
+        <span class="mt-0.5 inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-accent" aria-hidden="true">
+          <Icon name="lucide:check" class="size-3 text-white" stroke-width={3} aria-hidden="true" />
+        </span>
+        {item}
+      </li>
+    ))}
+  </ul>
+</div>

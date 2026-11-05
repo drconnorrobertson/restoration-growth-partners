@@ -1,0 +1,34 @@
+---
+/** Variant preview (§17): icon service cards + 5-step stepper, Client B tokens. noindex. */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceGridIcons from '../../components/ServiceGridIcons.astro';
+import ProcessStepper from '../../components/ProcessStepper.astro';
+---
+
+<BaseLayout title="Variant preview — icon cards + stepper" description="Internal variant preview." noindex>
+  <ServiceGridIcons
+    eyebrow="How we help"
+    heading="Restoration Built Around the Damage"
+    intro="Every job starts with stopping the damage, then documenting it properly, then putting the property back together."
+    services={[
+      { title: 'Water Damage Recovery', description: 'Extraction, structural drying, and moisture verification after floods, burst pipes, and appliance failures.', url: '/water-damage-restoration/', icon: 'water' },
+      { title: 'Storm & Wind Damage', description: 'Emergency tarping, board-up, debris clearing, and full exterior recovery after Pacific storms.', url: '/storm-damage-restoration/', icon: 'storm' },
+      { title: 'Fire & Smoke Cleanup', description: 'Soot removal, odor neutralization, contents handling, and rebuild coordination after a fire.', url: '/fire-damage-restoration/', icon: 'fire' },
+      { title: 'Mold Remediation', description: 'Containment, safe removal, and clearance-ready documentation for homes and rentals.', url: '/mold-remediation/', icon: 'mold' },
+      { title: 'Reconstruction', description: 'Drywall, flooring, paint, and finish carpentry — the same crew that dried it out puts it back.', url: '/reconstruction/', icon: 'rebuild' },
+      { title: 'Commercial Property', description: 'Occupied-space containment and after-hours scheduling for offices, retail, and multifamily.', url: '/commercial-restoration/', icon: 'commercial' },
+    ]}
+  />
+  <ProcessStepper
+    eyebrow="What to expect"
+    heading="Our 5-Step Recovery Process"
+    support="No mystery, no surprise invoices. Here is exactly how a job runs from your first call to the final walkthrough."
+    steps={[
+      { title: 'Call & dispatch', text: 'A local person answers, gathers the details, and routes the nearest available crew.' },
+      { title: 'On-site assessment', text: 'We find the full extent of the damage — including what is behind walls and under floors.' },
+      { title: 'Stabilize & dry', text: 'Water out, containment up, drying equipment set, daily moisture readings logged.' },
+      { title: 'Document the claim', text: 'Photos, readings, and a written scope your adjuster can actually work from.' },
+      { title: 'Rebuild & walkthrough', text: 'Finish work completed, then we walk the property with you before we call it done.' },
+    ]}
+  />
+</BaseLayout>

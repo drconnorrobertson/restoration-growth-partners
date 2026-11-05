@@ -1,0 +1,116 @@
+---
+/**
+ * Utility strip + sticky conversion header (§9).
+ * Desktop: logo · nav · phone CTA (dominant) · request-service CTA (outline).
+ * Mobile: tap-to-call left · logo centered · menu right — call action never hides in the menu.
+ */
+import { site } from '../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  /** Utility strip proof chips — verified claims only (§6). Defaults to preview-allowed claims. */
+  chips?: string[];
+}
+
+const {
+  chips = site.claims.filter((c) => c.state === 'visible_preview_allowed').map((c) => c.text),
+} = Astro.props;
+/**
+ * BaseLayout always forwards a `logo` slot, so a page that passes no logo still "has" one — empty.
+ * Render it and fall back to the site name, or the home link has no accessible name (link-name, §28).
+ */
+const logoHtml = Astro.slots.has('logo') ? (await Astro.slots.render('logo')).trim() : '';
+---
+
+{chips.length > 0 && (
+  <div class="bg-dark text-on-dark/90">
+    <div class="mx-auto flex max-w-7xl items-center justify-center gap-6 px-6 py-2 text-xs font-bold tracking-wide">
+      {chips.map((chip) => (
+        <span class="hidden items-center gap-2 first:flex sm:flex">
+          <span class="size-1.5 rounded-full bg-accent-bright" aria-hidden="true"></span>
+          {chip}
+        </span>
+      ))}
+    </div>
+  </div>
+)}
+
+<header class="sticky top-0 z-40 bg-white shadow-md" data-site-header>
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:h-20 md:px-6">
+    <a
+      href={site.phoneHref}
+      class="inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-accent text-white transition hover:bg-accent-hover md:hidden"
+      aria-label={`Call ${site.phoneDisplay}`}
+    >
+      <Icon name="lucide:phone" class="size-5" aria-hidden="true" />
+    </a>
+
+    <a href="/" class="min-w-0 font-display text-2xl font-bold leading-none text-ink md:text-3xl">
+      {logoHtml ? <Fragment set:html={logoHtml} /> : site.name}
+    </a>
+
+    {/*
+      Breakpoints: logo + nav + both CTAs are wider than 768px, so the desktop nav starts at lg
+      (768–1023 shows logo + CTAs + menu toggle). Otherwise the Request Service button sits past the
+      right edge at 768 (hidden, not scrollable, because of html { overflow-x: clip }). The logo is
+      min-w-0 so a long text name wraps at 320px instead of pushing the menu button off-screen.
+    */}
+    <nav class="hidden items-center gap-6 text-sm font-semibold text-ink lg:flex" aria-label="Main">
+      {site.nav.map((item) => (
+        <a href={item.url} class="transition hover:text-accent">{item.label}</a>
+      ))}
+    </nav>
+
+    <div class="hidden items-center gap-3 md:ml-auto md:flex lg:ml-0">
+      <a
+        href={site.phoneHref}
+        class="rounded-md bg-accent px-5 py-2 text-white shadow-md transition hover:bg-accent-hover"
+      >
+        <span class="block text-xs font-bold uppercase tracking-widest opacity-90">
+          Call {site.emergencyAvailability}
+        </span>
+        <span class="block font-display text-xl font-bold leading-tight">{site.phoneDisplay}</span>
+      </a>
+      <a
+        href="/#request-service"
+        class="rounded-md border border-border px-5 py-3.5 text-sm font-bold text-ink transition hover:border-ink"
+      >
+        Request Service
+      </a>
+    </div>
+
+    <button
+      type="button"
+      class="inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-border text-ink lg:hidden"
+      data-menu-toggle
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Open menu"
+    >
+      <Icon name="lucide:menu" class="size-5" aria-hidden="true" />
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden border-t border-border bg-white lg:hidden" data-mobile-menu>
+    <nav class="flex flex-col px-4 py-2" aria-label="Mobile">
+      {site.nav.map((item) => (
+        <a href={item.url} class="border-b border-border py-3.5 font-semibold text-ink last:border-b-0">
+          {item.label}
+        </a>
+      ))}
+      <a href="/#request-service" class="my-3 rounded-md bg-accent px-5 py-3.5 text-center font-bold text-white">
+        Request Service
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const menu = document.querySelector('[data-mobile-menu]');
+  toggle?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden') === false;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+</script>

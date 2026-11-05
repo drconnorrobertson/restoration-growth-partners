@@ -1,0 +1,35 @@
+---
+/**
+ * Legal page template — Privacy Policy, Terms, Accessibility statement.
+ * Compact dark hero → single narrow editorial column (no sidebar form; the footer band still
+ * closes the page with tap-to-call + form from the shared shell). Copy is the client's approved
+ * legal text, passed through the default slot — never generated.
+ */
+import PageHero from '../PageHero.astro';
+
+interface Props {
+  eyebrow: string;
+  h1: string;
+  /** Human-readable effective date, e.g. "Effective January 1, 2026". */
+  effective?: string;
+}
+const { eyebrow, h1, effective } = Astro.props;
+---
+
+<PageHero eyebrow={eyebrow} h1={h1} intro={effective} />
+
+<div class="bg-surface">
+  <article class="article legal mx-auto max-w-3xl px-4 py-12 md:px-6 md:py-16">
+    <slot />
+  </article>
+</div>
+
+<style>
+  .legal :global(h2) { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; color: var(--color-ink); margin: 2.25rem 0 0.75rem; }
+  .legal :global(h2:first-child) { margin-top: 0; }
+  .legal :global(h3) { font-family: var(--font-display); font-weight: 700; font-size: 1.125rem; color: var(--color-ink); margin: 1.5rem 0 0.5rem; }
+  .legal :global(p), .legal :global(li) { color: var(--color-ink-muted); line-height: 1.75; }
+  .legal :global(p) { margin-bottom: 1rem; }
+  .legal :global(ul) { margin: 0 0 1rem 1.25rem; list-style: disc; }
+  .legal :global(a) { color: var(--color-accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+</style>

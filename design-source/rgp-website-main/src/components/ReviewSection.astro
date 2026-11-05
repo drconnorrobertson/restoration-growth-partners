@@ -1,0 +1,82 @@
+---
+/**
+ * Reviews — variants `real_widget_stacked` and `reserved_polished_state` (§16).
+ * Stacked layout: intro copy above, widget full row width below — never split columns.
+ * Pass the real widget embed through the `widget` slot; without it the polished
+ * reserved state renders (temporary only — must be replaced before launch, §16).
+ * No ratings, counts, or quotes are ever invented here (§6).
+ */
+import { site } from '../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  eyebrow: string;
+  heading: string;
+  intro?: string;
+  /** Optional approved external reviews URL for the reserved state's outbound link. */
+  reviewsUrl?: string;
+  /**
+   * Which Elfsight widget to render. Defaults to `inner`, so the 35 inner pages need no edit.
+   * An explicit `widget` slot still wins over config.
+   */
+  variant?: 'homepage' | 'inner' | 'reviewsPage';
+  id?: string;
+}
+
+const { eyebrow, heading, intro, reviewsUrl, id = 'reviews', variant = 'inner' } = Astro.props;
+const widgetId = site.reviews?.[variant] || '';
+/** Slot wins; then config; otherwise the reserved state (§16). */
+const hasWidget = Astro.slots.has('widget') || Boolean(widgetId);
+---
+
+<section class="bg-surface py-16 md:py-20" id={id}>
+  <div class="mx-auto max-w-7xl px-4 md:px-6">
+    <p class="text-xs font-bold uppercase tracking-eyebrow text-accent">{eyebrow}</p>
+    <h2 class="mt-3 max-w-2xl font-display text-4xl font-bold text-ink md:text-5xl">{heading}</h2>
+    {intro && <p class="mt-4 max-w-2xl text-ink-muted">{intro}</p>}
+
+    <div class="mt-10 min-w-0 max-w-full overflow-hidden">
+      {Astro.slots.has('widget') ? (
+        <slot name="widget" />
+      ) : widgetId ? (
+        <div class={`elfsight-app-${widgetId}`} data-elfsight-app-lazy data-review-widget></div>
+      ) : (
+        <div class="rounded-md border border-border bg-white px-8 py-12 text-center shadow-sm">
+          <Icon name="lucide:quote" class="mx-auto size-10 text-accent" fill="currentColor" aria-hidden="true" />
+          <h3 class="mt-4 font-display text-2xl font-bold text-ink">
+            Hear directly from {site.name} customers
+          </h3>
+          <p class="mx-auto mt-2 max-w-md text-sm text-ink-muted">
+            We share every review, unedited, from the platforms our customers use.
+          </p>
+          {reviewsUrl && (
+            <a
+              href={reviewsUrl}
+              rel="noopener noreferrer"
+              target="_blank"
+              class="mt-6 inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 font-bold text-white transition hover:bg-accent-hover"
+            >
+              Read our reviews{' '}
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<script>
+  /**
+   * Elfsight's platform script loads only when a configured widget comes within 600px of the
+   * viewport (§16/§28) — never on page load, and never on pages without a widget. PageSpeed flagged
+   * eager Elfsight on several client sites (extra requests, preconnects and main-thread work before
+   * anyone scrolls to the reviews). The script scans for the widget div when it loads, so injecting
+   * it late is safe.
+   */
+  import { whenNear, loadScriptOnce } from '../scripts/load-on-approach';
+
+  document.querySelectorAll('[data-review-widget]').forEach((el) => {
+    whenNear(el, () => { loadScriptOnce('https://elfsightcdn.com/platform.js'); }, { rootMargin: 600 });
+  });
+</script>

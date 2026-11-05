@@ -1,0 +1,25 @@
+---
+/**
+ * Template preview route (§17): the Careers page (FormPageTemplate + CareersForm) with neutral example copy.
+ * `preview` shows the form even though site.forms.careers is off in the starter; until leadrouter:setup has
+ * connected the careers workflow it shows "not connected" and is disabled. noindex; excluded from nav and sitemaps.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FormPageTemplate from '../../components/templates/FormPageTemplate.astro';
+import { site } from '../../data/site';
+---
+
+<BaseLayout title={`Careers at ${site.name} — Template preview`} description="Internal careers page template preview." noindex>
+  <FormPageTemplate
+    form="careers"
+    preview
+    heroEyebrow="Careers"
+    h1={`Join the ${site.name} Team`}
+    heroIntro="Example intro: one sentence on what the work is and who does well here. Replace with the client's approved copy."
+  >
+    <h2>Why work with us</h2>
+    <p>Example copy block. The client's approved careers copy goes here: what the crews do day to day, training, schedule and on-call expectations, and what the hiring process looks like after someone applies.</p>
+    <h2>Open positions</h2>
+    <p>List the roles from the intake. The form's position list comes from <code>site.forms.careers.positions</code>, so the two stay the same.</p>
+  </FormPageTemplate>
+</BaseLayout>

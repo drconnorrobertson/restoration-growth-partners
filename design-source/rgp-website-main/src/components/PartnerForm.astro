@@ -1,0 +1,158 @@
+---
+/// <reference path="../webmcp.d.ts" />
+/**
+ * Standard Partner inquiry form (§11, §27) — insurance agents, property managers, realtors, trades who want to refer
+ * work. Same machinery as RequestServicePanel: the ONE agency router with the client's id, Turnstile on first
+ * interaction (held submit, "Verifying…", auto-send, 15 s error keeping every field), the result shown from
+ * ?form_status (src/scripts/lead-forms.ts), a WebMCP tool. The router sends it to the client's PARTNER workflow in
+ * GoHighLevel — never the lead workflow, never New Leads, never the office call.
+ *
+ * Configured in site.forms.partner. Renders NOTHING unless site.forms.partner.enabled (template previews pass
+ * `preview`), and stays disabled with a visible notice until `npm run leadrouter:setup` has connected the partner
+ * workflow (site.leadRouter.partnerReady).
+ */
+import { site } from '../data/site';
+
+interface Props {
+  formLocation?: string;
+  idPrefix?: string;
+  /** Visible card title (a UI label, not a heading — §11). */
+  title?: string;
+  /** Template previews only: render even while site.forms.partner.enabled is false. */
+  preview?: boolean;
+}
+const { formLocation = 'partners', idPrefix = 'partner', title = 'Partner With Us', preview = false } = Astro.props;
+
+const cfg = site.forms.partner;
+const router = site.leadRouter;
+const show = cfg.enabled || preview;
+/** Never post to a router that has no partner workflow for this client: the router would refuse the inquiry. */
+const ready = Boolean(router.submitUrl && router.clientId && router.partnerReady);
+const toolName = idPrefix === 'partner' ? 'partner_enquiry' : `partner_enquiry_${idPrefix.toLowerCase().replace(/[^a-z0-9]+/g, '_')}`;
+const labelCls = 'mb-1 block text-xs font-bold uppercase tracking-wide text-ink-muted';
+const fieldCls = 'w-full rounded-sm border border-border min-h-11 px-3 py-2.5 text-sm outline-none transition focus:border-accent';
+const id = (name: string) => `${idPrefix}-${name}`;
+---
+
+{show && (
+  <div class="overflow-hidden rounded-md bg-white text-ink shadow-xl" data-component="partner-form">
+    <div class="bg-accent px-5 py-5 text-white sm:px-6">
+      <p id={id('title')} class="font-display text-3xl font-bold">{title}</p>
+      <p class="mt-1 text-sm text-white/90">Prefer to talk? Call <a href={site.phoneHref} class="font-bold text-white underline whitespace-nowrap">{site.phoneDisplay}</a>.</p>
+    </div>
+
+    <div class="space-y-4 p-5 sm:p-6">
+      <div data-form-status="partner_enquiry" data-form-location={formLocation} hidden role="status"
+        data-success-text={cfg.successMessage}
+        data-error-text={`Something went wrong sending your inquiry. Please try again, or call ${site.phoneDisplay}.`}
+        class="rounded-sm border-l-4 px-4 py-3 text-sm leading-snug"></div>
+
+      {!ready && (
+        <p class="rounded-sm border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-sm leading-snug text-amber-900">
+          <strong>Partner form not connected yet.</strong> Run <code>npm run leadrouter:setup</code> with the client's partner
+          workflow before launch (skill agency-lead-delivery-setup). Inquiries are disabled rather than lost.
+        </p>
+      )}
+
+      <form
+        class="space-y-4"
+        method="post"
+        action={ready ? router.submitUrl : undefined}
+        data-lead-form
+        data-form-type="partner_enquiry"
+        aria-labelledby={id('title')}
+        toolname={toolName}
+        tooldescription={`Ask ${site.name} about a referral or business partnership (insurance, property management, real estate, trades). Sends the person's name, company, phone, email and what interests them about partnering; the team replies. This is not for requesting restoration service — call ${site.phoneDisplay} or use the service request form for that.`}
+      >
+        {/* Router contract — required on every submission. */}
+        <input type="hidden" name="client_id" value={router.clientId} />
+        <input type="hidden" name="site_id" value={router.siteId} />
+        <input type="hidden" name="form_type" value="partner_enquiry" />
+        <input type="hidden" name="form_location" value={formLocation} />
+        <input type="hidden" name="page_url" data-page-url value="" />
+        <input type="hidden" name="idempotency_key" data-idempotency value="" />
+        <input type="hidden" name="utm_source" data-utm="utm_source" value="" />
+        <input type="hidden" name="utm_medium" data-utm="utm_medium" value="" />
+        <input type="hidden" name="utm_campaign" data-utm="utm_campaign" value="" />
+        <input type="hidden" name="gclid" data-utm="gclid" value="" />
+        <input type="hidden" name="fbclid" data-utm="fbclid" value="" />
+        {/* Honeypot — the router treats a filled `company_website` as spam and silently drops it. */}
+        <div class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+          <label>Company website<input type="text" name="company_website" tabindex="-1" autocomplete="off" toolparamdescription="Always leave empty. Spam trap: any value here discards the enquiry." /></label>
+        </div>
+
+        <div>
+          <label for={id('name')} class={labelCls}>Full name *</label>
+          <input id={id('name')} name="name" type="text" required autocomplete="name" toolparamdescription="Full name of the person inquiring." class={fieldCls} />
+        </div>
+        <div class={cfg.jobTitle ? 'grid grid-cols-1 gap-4 sm:grid-cols-2' : ''}>
+          <div>
+            <label for={id('company')} class={labelCls}>Company *</label>
+            <input id={id('company')} name="company_name" type="text" required autocomplete="organization" toolparamdescription="The company or agency they work for." class={fieldCls} />
+          </div>
+          {cfg.jobTitle && (
+            <div>
+              <label for={id('title-field')} class={labelCls}>Title (optional)</label>
+              <input id={id('title-field')} name="job_title" type="text" autocomplete="organization-title" toolparamdescription="Optional: their job title." class={fieldCls} />
+            </div>
+          )}
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label for={id('phone')} class={labelCls}>Phone *</label>
+            <input id={id('phone')} name="phone" type="tel" required autocomplete="tel" placeholder="(555) 000-0000" toolparamdescription="Phone number, including area code." class={fieldCls} />
+          </div>
+          <div>
+            <label for={id('email')} class={labelCls}>Email *</label>
+            <input id={id('email')} name="email" type="email" required autocomplete="email" toolparamdescription="Email address for the reply." class={fieldCls} />
+          </div>
+        </div>
+
+        {cfg.partnerTypes.length > 0 && (
+          <div>
+            <label for={id('type')} class={labelCls}>I am a… (optional)</label>
+            <select id={id('type')} name="partner_type" toolparamdescription="Optional: the kind of partner, one of the listed option values." class={`${fieldCls} bg-white`}>
+              <option value="" selected>Select one…</option>
+              {cfg.partnerTypes.map((t) => <option value={t}>{t}</option>)}
+            </select>
+          </div>
+        )}
+
+        {cfg.preferredContactTime && (
+          <fieldset>
+            <legend class={labelCls}>Best time to reach you (optional)</legend>
+            <div class="flex flex-wrap gap-x-6">
+              {['Morning', 'Afternoon', 'Evening'].map((v) => (
+                <label class="inline-flex min-h-11 cursor-pointer items-center gap-2 text-sm">
+                  <input type="radio" name="preferred_contact_time" value={v} class="size-5 accent-accent" toolparamdescription={`Optional: best time to call is the ${v.toLowerCase()}.`} />
+                  {v}
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        )}
+
+        <div>
+          <label for={id('message')} class={labelCls}>What interests you about partnering with us? *</label>
+          <textarea id={id('message')} name="message" rows="4" required toolparamdescription="What they would like to discuss: the kind of referrals or partnership they have in mind." class={fieldCls}></textarea>
+        </div>
+
+        {router.turnstileSiteKey && (
+          <div>
+            <div class="cf-turnstile max-w-full overflow-hidden" data-sitekey={router.turnstileSiteKey} data-theme="light"></div>
+            <div data-turnstile-status role="status" aria-live="polite" class="[&>p]:mt-3"></div>
+          </div>
+        )}
+
+        <button type="submit" disabled={!ready}
+          class="w-full rounded-md bg-accent py-3.5 font-bold text-white shadow-md transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50">
+          Send Partner Inquiry →
+        </button>
+      </form>
+    </div>
+  </div>
+)}
+
+<script>
+  import '../scripts/lead-forms';
+</script>

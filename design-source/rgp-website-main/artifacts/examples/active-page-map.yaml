@@ -1,0 +1,53 @@
+# VALID fixture — doubles as a worked example. Keep it passing.
+meta:
+  client: Example Restoration Co.
+  source_snapshot: "fixture — no sheet"
+  master_template_ref: "fixture"
+  primary_service_page_target_area: Example City
+  primary_service_page_target_state: ST   # two-letter state; titles and headings read "{City}, {ST}" (§28)
+  status: Approved
+  approved_by: fixture
+pages:
+  - page_id: home
+    url: /
+    page_type: homepage
+    status: Approved
+    brief: { required: false, brief_status: No Brief Required }
+    navigation_inclusion: [header]
+    schema_plan: [LocalBusiness, FAQPage]
+    blockers: []
+  - page_id: water-damage-restoration
+    url: /water-damage-restoration/
+    page_type: parent_hub
+    primary_keyword: water damage restoration   # master Page Map "Primary Keyword", location removed (§28)
+    status: Ready To Build
+    brief: { required: true, brief_ref: "https://docs.google.com/document/d/EXAMPLE-water-hub", brief_title: "Content Brief - Water Damage Restoration", brief_status: Assigned }
+    navigation_inclusion: [header, footer]
+    schema_plan: [Service, BreadcrumbList]
+    blockers: []
+  - page_id: example-city-hub
+    url: /service-areas/example-city/
+    page_type: city_hub
+    city: Example City
+    state: ST
+    primary_keyword: restoration services
+    status: Approved
+    brief: { required: true, brief_ref: "https://docs.google.com/document/d/EXAMPLE-water-hub", brief_title: "Content Brief - Water Damage Restoration", brief_status: Assigned }
+    navigation_inclusion: [hub_listing, sitemap_only]
+    schema_plan: [Service, BreadcrumbList]
+    blockers: []
+  - page_id: example-city-water
+    url: /service-areas/example-city/water-damage-restoration/
+    page_type: city_service
+    city: Example City
+    state: ST
+    primary_keyword: water damage restoration
+    status: Approved
+    brief: { required: true, brief_ref: "https://docs.google.com/document/d/EXAMPLE-water-hub", brief_title: "Content Brief - Water Damage Restoration", brief_status: Assigned }
+    navigation_inclusion: [hub_listing, sitemap_only]
+    schema_plan: [Service, BreadcrumbList]
+    blockers: []
+excluded_pages:
+  - page_id: drug-lab-cleanup
+    reason: "Client does not offer this service (intake: Offer Status = No)."
+blockers: []

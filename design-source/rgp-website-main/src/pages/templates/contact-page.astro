@@ -1,0 +1,30 @@
+---
+/**
+ * Template preview route (§17): the contact page template with realistic
+ * placeholder content and three locations, to exercise the multi-GBP case.
+ * noindex; excluded from nav and sitemaps.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactPageTemplate from '../../components/templates/ContactPageTemplate.astro';
+import { site } from '../../data/site';
+---
+
+<BaseLayout
+  title={`Contact ${site.name} — Template preview`}
+  description="Internal contact page template preview."
+  noindex
+>
+  <ContactPageTemplate
+    heroEyebrow="Contact us"
+    h1={`Need Restoration Help? Contact ${site.name}`}
+    heroIntro={`For active property damage, the fastest path is a direct call to our dispatch line — answered ${site.emergencyAvailability}.`}
+    requestEyebrow="Request service"
+    requestHeading="Call first for active damage. Use the form for stable situations."
+    requestCopy={[
+      'The form is best for non-emergency inspections, estimates, follow-up questions, and service requests where the property is already stable.',
+      'If the damage is spreading, unsafe, or time-sensitive, call us directly and a real person will answer.',
+    ]}
+    locationsHeading={`${site.name} location information`}
+    locationsIntro="Each location is a separate office with its own direct line. Call the one nearest your property, or use the main dispatch number any time."
+  />
+</BaseLayout>

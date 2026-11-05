@@ -1,0 +1,224 @@
+---
+/**
+ * Service area — variant `regional_service_explorer` (§15 alternate).
+ * Full-width explorer card: segmented county pills + city search filter on the
+ * left pane, live map on the right. Built for large county/city sets where the
+ * accordion variant gets too long. Same §15/§28 loading contract as ServiceAreaMap: Leaflet's JS
+ * and CSS load only when the map comes within 300px of the viewport (observer plus scroll
+ * fallback, never a timer).
+ */
+import { site } from '../data/site';
+
+interface CityService {
+  label: string;
+  url: string;
+}
+
+interface City {
+  name: string;
+  url?: string;
+  services?: CityService[];
+}
+
+interface County {
+  name: string;
+  cities: City[];
+}
+
+interface Props {
+  eyebrow: string;
+  heading: string;
+  intro?: string;
+  counties: County[];
+  mapCenter: [number, number];
+  mapZoom?: number;
+  polygon?: [number, number][];
+  mapCaption?: string;
+  /** Popup text on the service-area boundary. */
+  areaLabel?: string;
+  id?: string;
+}
+
+const { eyebrow, heading, intro, counties, mapCenter, mapZoom = 8, polygon = [], mapCaption, areaLabel, id = 'areas' } = Astro.props;
+
+/**
+ * Map pins come from `site.locations` — the SAME array the footer NAP cards and
+ * LocalBusiness schema read — so a pin can never disagree with a printed
+ * address (§15). Only locations with coordinates are plotted; a location
+ * missing lat/lng is skipped rather than guessed, and that is a QA flag.
+ * No representative/decorative city markers are ever added.
+ */
+const gbpMarkers = site.locations
+  .filter((l) => typeof l.lat === 'number' && typeof l.lng === 'number')
+  .map((l) => ({ name: l.name, address: l.address, phone: l.phone, lat: l.lat, lng: l.lng }));
+
+const mapConfig = JSON.stringify({
+  center: mapCenter,
+  zoom: mapZoom,
+  polygon,
+  areaLabel: areaLabel ?? mapCaption,
+  locations: gbpMarkers,
+});
+---
+
+<section class="bg-dark py-16 text-on-dark md:py-20" id={id}>
+  <div class="mx-auto max-w-7xl px-4 md:px-6">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="text-xs font-bold uppercase tracking-eyebrow text-accent-bright">{eyebrow}</p>
+      <h2 class="mt-3 font-display text-4xl font-bold md:text-5xl">{heading}</h2>
+      {intro && <p class="mt-4 text-on-dark/75">{intro}</p>}
+    </div>
+
+    <div class="mt-10 overflow-hidden rounded-md border border-dark-3 bg-dark-2 shadow-xl" data-region-explorer>
+      <div class="flex flex-wrap items-center gap-2 border-b border-dark-3 p-4">
+        {counties.map((county, i) => (
+          <button
+            type="button"
+            class:list={[
+              'rounded-full px-4 py-2 text-sm font-bold transition',
+              i === 0 ? 'bg-accent text-white' : 'bg-dark-3 text-on-dark/70 hover:text-on-dark',
+            ]}
+            data-county-tab={county.name}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+          >
+            {county.name}
+          </button>
+        ))}
+        <input
+          type="search"
+          placeholder="Search cities…"
+          class="ml-auto w-full rounded-md border border-dark-3 bg-dark px-4 py-2 text-sm text-on-dark placeholder:text-on-dark/40 focus:border-accent focus:outline-none sm:w-56"
+          data-city-search
+          aria-label="Search cities"
+        />
+      </div>
+
+      <div class="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+        <div class="max-h-[420px] overflow-y-auto p-2" data-city-list>
+          {counties.map((county, ci) => (
+            <ul class:list={[{ hidden: ci !== 0 }]} data-county-panel={county.name}>
+              {county.cities.map((city) => (
+                <li class="border-b border-dark-3 last:border-b-0" data-city-row data-city-name={city.name.toLowerCase()}>
+                  <div class="flex items-center gap-2 px-4 py-3">
+                    <span class="size-1.5 rounded-full bg-accent-bright" aria-hidden="true"></span>
+                    {city.url ? (
+                      <a href={city.url} class="text-sm font-semibold transition hover:text-accent-bright">{city.name}</a>
+                    ) : (
+                      <span class="text-sm font-semibold">{city.name}</span>
+                    )}
+                    {city.services && city.services.length > 0 && (
+                      <details class="ml-auto">
+                        <summary class="cursor-pointer list-none text-xs font-bold text-accent-bright [&::-webkit-details-marker]:hidden">Services ▾</summary>
+                      </details>
+                    )}
+                  </div>
+                  {city.services && city.services.length > 0 && (
+                    <ul class="hidden gap-1 px-8 pb-3">
+                      {city.services.map((svc) => (
+                        <li><a href={svc.url} class="text-xs text-on-dark/60 transition hover:text-accent-bright">{svc.label}</a></li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
+
+        <!-- `isolate` contains Leaflet's z-400/z-1000 panes so they cannot paint
+             over the sticky header (z-40). See ServiceAreaMap for the full note. -->
+        <div class="map-pane isolate border-t border-dark-3 lg:border-l lg:border-t-0">
+          <div class="h-full w-full" data-service-area-map data-map-config={mapConfig}></div>
+        </div>
+      </div>
+    </div>
+
+    {mapCaption && (
+      <p class="mt-4 text-center text-xs font-bold uppercase tracking-eyebrow text-on-dark/50">{mapCaption}</p>
+    )}
+  </div>
+</section>
+
+<script>
+  /**
+   * §15 loading contract. Leaflet's JS, CSS and tiles load only when the map is NEAR the viewport
+   * (300px pre-warm), because they are heavy and were flagged by PageSpeed on several client sites.
+   *
+   * CRITICAL: the observer is not the only trigger. whenNear() also checks proximity on scroll and
+   * resize — an IntersectionObserver-only map once left visitors staring at a permanent placeholder.
+   * Never add a setTimeout fallback: it loads the map during PageSpeed's lab run.
+   *
+   * Tiles: OpenStreetMap raster, no API key, attribution required and included.
+   * Markers: ONLY the business's active Google Business Profile locations, read
+   * from shared site data (same source as the footer NAP cards and
+   * LocalBusiness schema) so pins and addresses cannot drift. No
+   * representative/decorative city markers.
+   */
+  import { whenNear } from '../scripts/load-on-approach';
+
+  async function initServiceAreaMap(el: HTMLElement) {
+    if (el.dataset.mapInitialized) return;
+    el.dataset.mapInitialized = 'true';
+
+    const L = (await import('../scripts/leaflet')).default;
+    const cfg = JSON.parse(el.dataset.mapConfig ?? '{}');
+    const map = L.map(el, { scrollWheelZoom: false }).setView(cfg.center, cfg.zoom);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    const accent =
+      getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim() || '#cc2a2a';
+
+    // Service-area boundary: brand-accent dashed outline + translucent fill.
+    let bounds: any = null;
+    if (Array.isArray(cfg.polygon) && cfg.polygon.length > 2) {
+      const poly = L.polygon(cfg.polygon, {
+        color: accent,
+        weight: 2,
+        dashArray: '6 6',
+        fillColor: accent,
+        fillOpacity: 0.12,
+      }).addTo(map);
+      if (cfg.areaLabel) poly.bindPopup(cfg.areaLabel);
+      bounds = poly.getBounds();
+    }
+
+    // GBP location pins only.
+    (cfg.locations ?? []).forEach((loc: any) => {
+      const marker = L.circleMarker([loc.lat, loc.lng], {
+        radius: 8,
+        color: '#ffffff',
+        weight: 2,
+        fillColor: accent,
+        fillOpacity: 1,
+      }).addTo(map);
+      const tel = String(loc.phone ?? '').replace(/[^+0-9]/g, '');
+      const phoneLine = tel ? '<br><a href="tel:' + tel + '">' + loc.phone + '</a>' : '';
+      marker.bindPopup('<strong>' + loc.name + '</strong><br>' + loc.address + phoneLine);
+      bounds = bounds ? bounds.extend(marker.getLatLng()) : L.latLngBounds([marker.getLatLng()]);
+    });
+
+    // Auto-fit to the boundary plus every pin.
+    if (bounds) map.fitBounds(bounds, { padding: [28, 28] });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-service-area-map]').forEach((el) => {
+    whenNear(el, () => initServiceAreaMap(el), { rootMargin: 300 });
+  });
+</script>
+
+<style>
+  /* See ServiceAreaMap: heights as scoped CSS, not arbitrary Tailwind values. */
+  .map-pane {
+    height: 320px;
+  }
+  @media (min-width: 1024px) {
+    .map-pane {
+      height: auto;
+      min-height: 420px;
+    }
+  }
+</style>

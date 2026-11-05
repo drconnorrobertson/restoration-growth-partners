@@ -1,0 +1,15 @@
+{
+  "_comment": "Agency hosting standard (CORE_CONTRACTS §25). githubOwner = the agency GitHub ORGANIZATION every client repo lives under (private). githubUser = the shared company login, used only where it is signed in on this machine; otherwise the person's own org-member login is used. githubTeam = the org team that gets push access to every client repo. vercelTeam = the Vercel scope projects are created in. buildMachine = the Vercel build machine every client project uses (standard; never turbo/enhanced — owner decision 2026-10-08, build speed does not change site speed). Change here, never in scripts. leadRouter = the ONE agency lead router every client form posts to (CORE_CONTRACTS §27; rgp-lead-router repo) and the Cloudflare account that holds it and the per-client Turnstile widgets. leadRouter.repo = where the router's GitHub workflows run (set up client, check leads, deploy); the agency keys are GitHub secrets there, never on a machine.",
+  "githubOwner": "Restoration-Growth-Partners",
+  "githubUser": "RGP623",
+  "githubTeam": "website-team",
+  "vercelTeam": "restoration-growth-partners",
+  "productionBranch": "main",
+  "repoSuffix": "-website",
+  "buildMachine": "standard",
+  "leadRouter": {
+    "url": "https://rgp-lead-router.login-cce.workers.dev",
+    "repo": "Restoration-Growth-Partners/rgp-lead-router",
+    "cloudflareAccountId": "cce2b4d53815658bebc68bbb52e7305a"
+  }
+}

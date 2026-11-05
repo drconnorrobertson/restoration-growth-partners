@@ -1,0 +1,40 @@
+---
+/**
+ * Blog index + pagination (§29): /blog/, /blog/2/, … — PUBLISHED posts only (blogData()).
+ * With no published post the route builds nothing, so a site without a blog has no /blog/ page.
+ * H1, intro and meta description come from site.blog (approved copy); the title follows PAGE_TITLE_RULES.blog_index (§28).
+ */
+import type { GetStaticPaths, ImageMetadata } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogIndexTemplate from '../../components/templates/BlogIndexTemplate.astro';
+import { Image } from 'astro:assets';
+import logo from '../../assets/brand/logo.png';
+import { site } from '../../data/site';
+import { blogData } from '../../utils/blog';
+import { allowedTitles } from '../../utils/seo.mjs';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const { published } = await blogData();
+  if (!published.length) return [];
+  return paginate(published, { pageSize: site.blog.postsPerPage });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const { coverOf } = await blogData();
+const n = page.currentPage;
+const base = allowedTitles('blog_index', { brand: site.name })?.[0] ?? `${site.name} Blog`;
+const title = n === 1 ? base : `${site.name} Blog | Page ${n}`;
+const description = n === 1 ? site.blog.description : `${site.blog.description} Page ${n}.`;
+---
+
+<BaseLayout title={title} description={description} schema={{ collection: true, itemList: page.data.map((p) => ({ name: p.title, url: p.url })) }}>
+  <Image slot="logo" src={logo} alt={site.name} class="h-9 w-auto md:h-11" loading="eager" />
+  <BlogIndexTemplate
+    eyebrow="Blog"
+    h1={n === 1 ? site.blog.heading : `${site.blog.heading} — Page ${n}`}
+    intro={site.blog.intro}
+    posts={page.data.map((p) => ({ title: p.title, url: p.url, excerpt: p.description, date: p.publishDate, image: p.heroImage as ImageMetadata | undefined, imageAlt: p.heroImageAlt, cover: coverOf(p)?.card }))}
+    timeZone="UTC"
+    pagination={{ current: n, last: page.lastPage, prev: page.url.prev ? `${page.url.prev}/`.replace(/\/\/$/, '/') : undefined, next: page.url.next ? `${page.url.next}/`.replace(/\/\/$/, '/') : undefined }}
+  />
+</BaseLayout>

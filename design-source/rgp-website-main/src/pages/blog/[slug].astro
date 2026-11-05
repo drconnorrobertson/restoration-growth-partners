@@ -1,0 +1,68 @@
+---
+/**
+ * Blog post (§29) — one page per PUBLISHED post (blogData()). A post whose publishDate is after the
+ * build time, or a draft, gets no page; the publish workflow rebuilds once it is due.
+ * Copy comes only from the post file (approved Final Page Copy, blog mode). Layout only here.
+ */
+import type { GetStaticPaths, ImageMetadata } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogPostTemplate from '../../components/templates/BlogPostTemplate.astro';
+import { Image, getImage } from 'astro:assets';
+import logo from '../../assets/brand/logo.png';
+import { site } from '../../data/site';
+import { blogData, type Post } from '../../utils/blog';
+import { allowedTitles } from '../../utils/seo.mjs';
+
+export const getStaticPaths = (async () => {
+  const { published } = await blogData();
+  return published.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}) satisfies GetStaticPaths;
+
+const { post } = Astro.props as { post: Post };
+const heroImage = post.heroImage as ImageMetadata | undefined;
+const { relatedOf, bodyOf, parentOf, coverOf } = await blogData();
+const parent = parentOf(post);
+const related = relatedOf(post).map((r) => ({ label: r.title, url: r.url }));
+const title = allowedTitles('blog_post', { headline: post.title, brand: site.name })?.[0] ?? post.title;
+const og = heroImage ? await getImage({ src: heroImage, width: 1200, height: 630, format: 'jpg', fit: 'cover' }) : undefined;
+// No photo → the automatic cover (§29), rendered by ./[slug]/[file].ts. The page banner is unchanged.
+const ogImage = og?.src ?? coverOf(post)?.og;
+// Company author (§29): BlogPosting author + publisher = the Organization, with the company logo.
+const logoPng = await getImage({ src: logo, format: 'png' });
+---
+
+<BaseLayout
+  title={title}
+  description={post.description}
+  ogImage={ogImage}
+  ogType="article"
+  schema={{
+    breadcrumbs: [{ name: 'Home', url: '/' }, { name: 'Blog', url: '/blog/' }, { name: post.title, url: post.url }],
+    blogPosting: {
+      headline: post.title,
+      datePublished: post.publishDate,
+      dateModified: post.updatedDate,
+      logo: new URL(logoPng.src, Astro.site).href,
+      image: ogImage ? new URL(ogImage, Astro.site).href : undefined,
+      articleSection: post.cluster,
+    },
+  }}
+>
+  <Image slot="logo" src={logo} alt={site.name} class="h-9 w-auto md:h-11" loading="eager" />
+  <BlogPostTemplate
+    title={post.title}
+    date={post.publishDate}
+    updated={post.updatedDate}
+    url={post.url}
+    intro={post.intro}
+    timeZone="UTC"
+    parent={parent}
+    related={related}
+    coreHubs={site.services.map((s) => ({ label: s.label, url: s.url }))}
+    heroImage={heroImage}
+    heroImageAlt={post.heroImageAlt}
+    faqs={post.faqs}
+  >
+    <Fragment set:html={bodyOf(post)} />
+  </BlogPostTemplate>
+</BaseLayout>

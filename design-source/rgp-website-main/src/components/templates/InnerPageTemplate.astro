@@ -1,0 +1,146 @@
+---
+/**
+ * Inner-page template (§12) — the ONE layout every service, city, and
+ * city-service page renders through. Pages differ by data, never by layout.
+ *
+ * Structure: compact dark PageHero → two-column body → post-body sections slot.
+ *   Left column  = editorial content (the page's approved copy, in brief order),
+ *                  passed through the default slot. Body modules allowed:
+ *                  InlineCTA, ContentAlertList, IncludedPanel, InnerSubsections.
+ *   Right column = sticky sidebar: form FIRST, proof card, capped nav, trust rows.
+ *
+ * Sticky contract (§12): `position: sticky` directly on the <aside>, offset
+ * below the sticky header, no internal scrollbars, no viewport-height caps —
+ * the page scrolls, the column sticks and releases naturally. Requires
+ * `overflow-x: clip` (not hidden) on ancestors — set globally in global.css.
+ * Mobile: sidebar drops into normal flow BELOW the article.
+ */
+import PageHero from '../PageHero.astro';
+import RequestServicePanel from '../RequestServicePanel.astro';
+import SidebarNav from '../SidebarNav.astro';
+import { site } from '../../data/site';
+import { Icon } from 'astro-icon/components';
+
+interface NavLink {
+  label: string;
+  url: string;
+}
+
+interface Props {
+  heroEyebrow: string;
+  h1: string;
+  heroIntro?: string;
+  parentHub?: NavLink;
+  current: NavLink;
+  relatedNav?: NavLink[];
+  coreHubs?: NavLink[];
+  /** Trust rows under the sidebar nav — verified claims only (§6). */
+  trustItems?: string[];
+}
+
+const {
+  heroEyebrow,
+  h1,
+  heroIntro,
+  parentHub,
+  current,
+  relatedNav = [],
+  coreHubs = [],
+  trustItems = site.claims.filter((c) => c.state === 'visible_preview_allowed').map((c) => c.text),
+} = Astro.props;
+---
+
+<PageHero eyebrow={heroEyebrow} h1={h1} intro={heroIntro} />
+
+<div class="bg-surface">
+  <div class="mx-auto grid max-w-7xl grid-cols-1 items-start gap-10 px-4 py-12 md:px-6 md:py-16 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12">
+    <!-- Left column: editorial content owns the brief structure -->
+    <article class="article min-w-0">
+      <slot />
+    </article>
+
+    <!-- Right column: sticky sidebar, form first (§12) -->
+    <aside class="grid min-w-0 gap-6 self-start lg:sticky lg:top-24" id="request-service">
+      <slot name="sidebar-widget" />
+      <RequestServicePanel />
+      <slot name="sidebar-proof">
+        <div class="rounded-md border border-border bg-white p-5 shadow-sm">
+          <p class="text-xs font-bold uppercase tracking-eyebrow text-ink-muted">Why call {site.name}</p>
+          <ul class="mt-3 space-y-2.5">
+            {trustItems.map((item) => (
+              <li class="flex items-center gap-2.5 text-sm font-semibold text-ink">
+                <span class="inline-flex size-5 shrink-0 items-center justify-center rounded-full bg-accent" aria-hidden="true">
+                  <Icon name="lucide:check" class="size-3 text-white" stroke-width={3} aria-hidden="true" />
+                </span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </slot>
+      <SidebarNav parentHub={parentHub} current={current} related={relatedNav} coreHubs={coreHubs} />
+    </aside>
+  </div>
+</div>
+
+<!-- Post-body reusable sections (process, reviews, service area, FAQ, final CTA) -->
+<slot name="post-body" />
+
+<style>
+  /*
+   * Editorial typography for slotted article content (§12: left column stays
+   * primarily editorial). Body modules opt out via the `not-article` class.
+   */
+  .article :global(h2) {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.875rem;
+    line-height: 1.1;
+    color: var(--color-ink);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  .article :global(h2:first-child) {
+    margin-top: 0;
+  }
+  /*
+   * Article H3s carry a left accent rule rather than icons or cards.
+   * §12: "Keep body modules restrained: no nested cards, no excessive icons" and
+   * "Keep the left column primarily editorial; do not turn every section into a card."
+   * A rule marks the subsection and makes long copy scannable without either.
+   */
+  .article :global(h3:not(.not-article h3)) {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.375rem;
+    color: var(--color-ink);
+    margin-top: 2.25rem;
+    margin-bottom: 0.75rem;
+    padding-left: 0.875rem;
+    border-left: 3px solid var(--color-accent);
+  }
+  .article :global(p:not(.not-article p)) {
+    color: var(--color-ink-muted);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+  .article :global(ul:not(.not-article ul)) {
+    color: var(--color-ink-muted);
+    line-height: 1.7;
+    margin: 0 0 1rem 1.25rem;
+    list-style: disc;
+  }
+  .article :global(ul:not(.not-article ul) li) {
+    margin-bottom: 0.375rem;
+    padding-left: 0.25rem;
+  }
+  .article :global(a:not(.not-article a)) {
+    color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .article :global(strong) {
+    color: var(--color-ink);
+  }
+</style>

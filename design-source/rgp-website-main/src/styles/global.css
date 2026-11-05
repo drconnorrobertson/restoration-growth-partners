@@ -1,0 +1,49 @@
+/* Self-hosted fonts (§20) are declared in astro.config.mjs (Astro Fonts API) and emitted by <Font />
+   in BaseLayout — never @import font CSS here. */
+
+@import "tailwindcss";
+@import "./theme.css"; /* per-client swap: point at src/styles/themes/<client>.css */
+
+/*
+ * Base rules shared by every client site.
+ * MUST live in @layer base — unlayered CSS outranks every Tailwind utility,
+ * which silently breaks utilities like leading-none on headings.
+ * Overflow control: clip, not hidden, so sticky positioning survives (§12).
+ */
+@layer base {
+  html {
+    overflow-x: clip;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background: var(--color-surface);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.05;
+  }
+
+  /*
+   * Astro's <Picture> wraps the <img> in a <picture>, which is display:inline
+   * with no dimensions — so utility classes like h-full on the img resolve
+   * against a zero-height parent and the image collapses. `display: contents`
+   * removes the wrapper from layout so the img sizes against the real container.
+   */
+  picture {
+    display: contents;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

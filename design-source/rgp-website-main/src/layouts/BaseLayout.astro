@@ -1,0 +1,334 @@
+---
+/**
+ * Shared shell for every page type. Mounts header, footer, and the sticky
+ * mobile CTA (§10) so all pages inherit them — never per-page (§17).
+ */
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+import SiteHeader from '../components/SiteHeader.astro';
+import MegaMenuHeader from '../components/MegaMenuHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import StickyMobileCTA from '../components/StickyMobileCTA.astro';
+import { site } from '../data/site';
+import SchemaOrg from '../components/SchemaOrg.astro';
+
+interface Props {
+  /**
+   * Header variant (design-recipe `header` enum).
+   * `mega_menu_grouped_services` is REQUIRED for clients with >1 service category
+   * and child pages; `utility_strip_sticky_header` is the flat-nav fallback.
+   */
+  header?: 'utility_strip_sticky_header' | 'mega_menu_grouped_services';
+  title: string;
+  description: string;
+  /** Template preview routes set this to true (§17). */
+  noindex?: boolean;
+  /** The 404 page only (§31): noindex and NO canonical — a not-found page has no URL of its own to point to. */
+  notFound?: boolean;
+  /** Per-page social image path (public/...). Defaults to the generated /og-default.png (§26). */
+  ogImage?: string;
+  /** Open Graph type: 'article' for blog posts (§29), 'website' everywhere else. */
+  ogType?: 'website' | 'article';
+  /**
+   * Page-specific JSON-LD (§22). The sitewide business entity is emitted on EVERY page by
+   * SchemaOrg itself; this only carries what is unique to this page.
+   */
+  schema?: {
+    service?: { name: string; serviceType?: string };
+    areaServedCity?: string;
+    /** Overrides the trail BaseLayout derives from the URL (e.g. to skip a parent that is not built). */
+    breadcrumbs?: { name: string; url: string }[];
+    /** ONLY for FAQs written in the article body. FAQSection emits its own FAQPage; validate:built fails a second one. */
+    faqs?: { question: string; answer: string }[];
+    itemList?: { name: string; url: string }[];
+    collection?: boolean;
+    isHomepage?: boolean;
+    /** Blog posts only (§29): BlogPosting as the page's mainEntity; author + publisher = the Organization (logo = its absolute URL). */
+    blogPosting?: { headline: string; datePublished: string; dateModified?: string; logo?: string; image?: string; articleSection?: string };
+  };
+}
+
+const { title, description, notFound = false, noindex = notFound, header = 'utility_strip_sticky_header', schema = {}, ogImage = '/og-default.png', ogType = 'website' } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+
+/**
+ * Breadcrumb trail for structured data (§22): every inner page gets a BreadcrumbList — Home › each
+ * parent path › this page — derived from the URL unless the page passes schema.breadcrumbs. Names
+ * come from the site's own labels (services, nav, utility, legal, footer areas) where a URL matches,
+ * otherwise from the URL segment ("burst-pipe" → "Burst Pipe"). validate:built fails an inner page
+ * without one, or one that names a page that was not built.
+ */
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const isInnerPage = path !== '/' && !path.startsWith('/templates/') && !/^\/404\//.test(path);
+const crumbLabels = new Map<string, string>(
+  [...site.services, ...site.nav, ...site.utilityNav, ...site.legalLinks, ...site.footerAreaLinks].map((l) => [l.url, l.label]),
+);
+const segmentName = (seg: string) => decodeURIComponent(seg).replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+const segments = path.split('/').filter(Boolean);
+const breadcrumbs = schema.breadcrumbs ?? (isInnerPage
+  ? [
+      { name: 'Home', url: '/' },
+      ...segments.map((seg, i) => {
+        const url = `/${segments.slice(0, i + 1).join('/')}/`;
+        return { name: crumbLabels.get(url) ?? segmentName(seg), url };
+      }),
+    ]
+  : undefined);
+// PostHog tags every event with the client's slug (shared "RGP - Clients" project, §19).
+const postHogClient = site.posthog.client || site.leadRouter.clientId;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Fonts (§20, astro.config.mjs). No preload: on a throttled phone connection, preloading two
+        faces delayed first paint by 0.1–0.2 s, while the size-matched fallback faces alone already
+        removed font-swap layout shift (A/B, 2026-10-07). */}
+    <Font cssVariable="--font-display-face" />
+    <Font cssVariable="--font-body-face" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {(noindex || site.previewMode) && <meta name="robots" content="noindex,nofollow" />}
+    {/* Self-referencing canonical on every page — Stage 7 QA verifies canonical URLs
+        (agents/07). Built from Astro.url against the configured production `site`, so it
+        cannot drift from the route that renders it. */}
+    {!notFound && <link rel="canonical" href={canonicalUrl} />}
+    {/* Site identity (§26): generated from the client logo by `npm run favicons:generate`; validate:built
+        requires these on every page and refuses launch while public/site-identity.json says placeholder. */}
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site).href} />
+    {/* Turnstile (§11, §19, §28) — api.js is NOT in the page. This small loader injects it ONCE, the
+        first time a visitor focuses, taps, clicks or types inside any lead form (the panel mounts
+        twice on most pages, hero + sidebar), so PageSpeed's lab run and visitors who never touch a
+        form never download it. No preconnect to challenges.cloudflare.com either: nothing at load
+        uses it. validate:built fails a page whose HTML loads api.js, or one with a widget and no
+        loader (scripts/lib/turnstile-checks.mjs).
+        Every widget is rendered explicitly so it fits its form (§8): appearance 'interaction-only'
+        keeps it invisible unless Cloudflare needs the visitor to tick the box, and the size is
+        picked from the widget's own width at render time — 'flexible' (300px minimum) when there is
+        room, 'compact' (150px) when narrower. A fixed 300px widget in a narrow phone card pushed a
+        client's whole hero past the right edge of the screen.
+        A submit that beats the token is HELD (button reads "Verifying…") and sent automatically the
+        moment the token arrives, as `cf-turnstile-response` — the field the lead router verifies
+        (§27). If Turnstile cannot load or answer within 15 s, the form shows an inline error and
+        keeps everything typed; a lead is never silently dropped. */}
+    {site.leadRouter.turnstileSiteKey && (
+      <script is:inline data-turnstile-loader>
+        (function () {
+          var FORM = 'form[data-lead-form]';
+          var SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileReady';
+          var WAIT_MS = 15000;
+          var state = 'idle'; // idle · loading · ready · failed
+          var loadTimer;
+
+          var widgetOf = function (form) { return form.querySelector('.cf-turnstile[data-sitekey]'); };
+          var tokenOf = function (form) {
+            var el = form.querySelector('[name="cf-turnstile-response"]');
+            return el ? el.value : '';
+          };
+          var forms = function () { return Array.prototype.slice.call(document.querySelectorAll(FORM)); };
+          var pendingForms = function () { return forms().filter(function (f) { return f.dataset.tsPending; }); };
+
+          // The status region is an always-present, empty live region (role=status) in the form, so
+          // screen readers announce what is put in it; a region that is unhidden at the same moment
+          // its text changes is often not read out.
+          function status(form, text, isError) {
+            var region = form.querySelector('[data-turnstile-status]');
+            if (!region) return;
+            region.textContent = '';
+            if (!text) return;
+            var p = document.createElement('p');
+            p.className = 'rounded-sm border-l-4 px-4 py-3 text-sm leading-snug ' +
+              (isError ? 'border-amber-500 bg-amber-50 text-amber-900' : 'border-accent bg-surface text-ink');
+            p.textContent = text;
+            region.appendChild(p);
+          }
+          function button(form, label) {
+            var b = form.querySelector('button[type="submit"]');
+            if (!b) return;
+            if (!b.dataset.tsLabel) b.dataset.tsLabel = b.textContent;
+            b.textContent = label || b.dataset.tsLabel;
+            if (label) b.setAttribute('aria-busy', 'true'); else b.removeAttribute('aria-busy');
+          }
+          function release(form) {
+            clearTimeout(Number(form.dataset.tsTimer));
+            delete form.dataset.tsPending;
+            delete form.dataset.tsTimer;
+            button(form);
+          }
+          function fail(form) {
+            release(form);
+            var panel = form.closest('[data-component]'); // request-service, careers-form, partner-form
+            var tel = panel && panel.querySelector('a[href^="tel:"]');
+            status(form, "We couldn't run the spam check, so your request has NOT been sent yet. " +
+              'Everything you typed is still here: press Send again' +
+              (tel ? ', or call ' + tel.textContent.trim() + '.' : ', or call us.'), true);
+          }
+          function send(form) {
+            release(form);
+            status(form, '');
+            button(form, 'Sending…');
+            form.requestSubmit();
+          }
+
+          function renderAll() {
+            document.querySelectorAll('.cf-turnstile[data-sitekey]').forEach(function (el) {
+              if (el.dataset.tsWidget) return;
+              var form = el.closest('form');
+              el.dataset.tsWidget = window.turnstile.render(el, {
+                sitekey: el.dataset.sitekey,
+                theme: el.dataset.theme || 'light',
+                appearance: 'interaction-only',
+                size: el.getBoundingClientRect().width >= 300 ? 'flexible' : 'compact',
+                'response-field-name': 'cf-turnstile-response',
+                callback: function () {
+                  delete el.dataset.tsStale;
+                  if (form && form.dataset.tsPending) send(form);
+                },
+                // Turnstile retries errors itself; a held submit keeps waiting until the 15 s limit.
+                'error-callback': function () { el.dataset.tsStale = '1'; },
+                'expired-callback': function () { el.dataset.tsStale = '1'; },
+                // The visitor was asked to tick the box and did not: release the form with the error.
+                'timeout-callback': function () {
+                  el.dataset.tsStale = '1';
+                  if (form && form.dataset.tsPending) fail(form);
+                },
+                // Cloudflare wants a tick: stop the clock and say so — the visitor is acting, not stuck.
+                'before-interactive-callback': function () {
+                  if (!form || !form.dataset.tsPending) return;
+                  clearTimeout(Number(form.dataset.tsTimer));
+                  status(form, 'One last step: tick the box below and your request sends automatically.');
+                },
+              }) || '1';
+            });
+          }
+          window.onTurnstileReady = function () {
+            clearTimeout(loadTimer);
+            state = 'ready';
+            renderAll();
+          };
+          var attempt = 0;
+          function load() {
+            if (state === 'loading' || state === 'ready') return;
+            state = 'loading';
+            var mine = ++attempt; // a stale attempt (an earlier, hung script) must not fail a retry
+            var giveUp = function () {
+              if (mine !== attempt || state !== 'loading') return;
+              state = 'failed';
+              pendingForms().forEach(fail);
+            };
+            var s = document.createElement('script');
+            s.src = SRC;
+            s.async = true;
+            s.onerror = function () { s.remove(); giveUp(); };
+            document.head.appendChild(s);
+            clearTimeout(loadTimer);
+            loadTimer = setTimeout(giveUp, WAIT_MS);
+          }
+
+          ['focusin', 'pointerdown', 'touchstart', 'keydown'].forEach(function (type) {
+            document.addEventListener(type, function (e) {
+              if (e.target instanceof Element && e.target.closest(FORM)) load();
+            }, { capture: true, passive: true });
+          });
+
+          // Capture phase on document: runs before the form's own submit handler, analytics and
+          // anything else, so a held attempt is invisible to them — only the real send counts.
+          document.addEventListener('submit', function (e) {
+            var form = e.target;
+            if (!(form instanceof HTMLFormElement) || !form.matches(FORM)) return;
+            var widget = widgetOf(form);
+            if (!widget || tokenOf(form)) return;
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            if (form.dataset.tsPending) return; // already waiting (double click / Enter twice)
+            form.dataset.tsPending = '1';
+            button(form, 'Verifying…');
+            status(form, 'Checking this is a real request — it sends automatically in a moment.');
+            form.dataset.tsTimer = String(setTimeout(function () { if (form.dataset.tsPending) fail(form); }, WAIT_MS));
+            if (state === 'failed') state = 'idle'; // try again: a dropped connection may be back
+            if (widget.dataset.tsStale && window.turnstile) {
+              // A widget that errored, expired or timed out has no token coming: ask for a fresh one.
+              delete widget.dataset.tsStale;
+              try { window.turnstile.reset(widget.dataset.tsWidget); } catch (err) { /* the 15 s limit still applies */ }
+            }
+            if (window.turnstile && state !== 'ready') window.onTurnstileReady();
+            else load();
+          }, true);
+
+          // Back/forward cache: never restore a page stuck on "Sending…".
+          window.addEventListener('pageshow', function (e) {
+            if (e.persisted) forms().forEach(function (f) { release(f); status(f, ''); });
+          });
+        })();
+      </script>
+    )}
+    {/* Analytics — renders only when an ID is set, so an unconfigured site ships no broken tag. */}
+    {site.analytics.gtmId && (
+      <script is:inline set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${site.analytics.gtmId}');`} />
+    )}
+    {!site.analytics.gtmId && site.analytics.ga4Id && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${site.analytics.ga4Id}`}></script>
+        <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${site.analytics.ga4Id}');`} />
+      </>
+    )}
+    {/* PostHog (§19/§28): the shared "RGP - Clients" project, every event tagged with this client's slug;
+        renders only when the key AND the client slug are set. This JSON
+        tag is the config + the marker validate:launch looks for; src/scripts/posthog-loader.ts loads
+        the SDK on the visitor's first input, so the PageSpeed lab run never downloads it (PageSpeed
+        flagged the snippet SDK as unused JavaScript on client sites). Events are tagged preview|production, person profiles stay off,
+        recordings mask all inputs, and Core Web Vitals are captured from real visitors ($web_vitals). */}
+    {site.posthog.projectKey && postHogClient && (
+      <script is:inline type="application/json" id="posthog-config" data-analytics="posthog" set:html={JSON.stringify({ key: site.posthog.projectKey, apiHost: site.posthog.apiHost, environment: site.previewMode ? 'preview' : 'production', client: postHogClient, clientName: site.name })} />
+    )}
+    {/* Structured data on every page: the brand Organization and one LocalBusiness per GBP office, plus whatever this page adds (§22). */}
+    <SchemaOrg url={canonicalUrl} name={title} description={description} {...schema} breadcrumbs={breadcrumbs} />
+  </head>
+  <body class="pb-20 md:pb-0">
+    {/* GTM's no-JS fallback frame. title + loading="lazy" are harmless on a hidden frame and keep validate:built's
+        frame-title and lazy-iframe checks passing on every page (§28; tests/scripts/gtm-build.test.mjs). */}
+    {site.analytics.gtmId && (
+      <noscript set:html={`<iframe src="https://www.googletagmanager.com/ns.html?id=${site.analytics.gtmId}" title="Google Tag Manager" loading="lazy" height="0" width="0" style="display:none;visibility:hidden"></iframe>`} />
+    )}
+    {header === 'mega_menu_grouped_services' ? (
+      <MegaMenuHeader><slot name="logo" slot="logo" /></MegaMenuHeader>
+    ) : (
+      <SiteHeader><slot name="logo" slot="logo" /></SiteHeader>
+    )}
+    <main>
+      <slot />
+    </main>
+    <SiteFooter
+      blurb={site.footerBlurb}
+      areaLinks={site.footerAreaLinks}
+    />
+    <StickyMobileCTA />
+    {/* Elfsight's platform script is NOT loaded here: ReviewSection injects it when a widget nears
+      the viewport (§16/§28 — PageSpeed flagged eager Elfsight on client sites). */}
+  <script>
+    import '../scripts/posthog-loader';
+  </script>
+  {/* Call tracking / DNI — last in <body> and `defer`, so every tel: link exists before the swapper
+      runs (§9) without blocking the parser; defer keeps the two scripts in order. */}
+  {site.callTracking.numberPoolUrl && (
+    <script is:inline defer src={site.callTracking.numberPoolUrl}></script>
+  )}
+  {site.callTracking.userSessionUrl && (
+    <script is:inline defer src={site.callTracking.userSessionUrl}></script>
+  )}
+</body>
+</html>

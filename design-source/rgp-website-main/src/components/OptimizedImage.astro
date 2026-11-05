@@ -1,0 +1,45 @@
+---
+/**
+ * Standard content imagery — service cards, intro panels, in-body photos (§18).
+ * Lazy by default (these sit below the fold); use HeroImage.astro for anything
+ * above the fold or likely to be the LCP element.
+ *
+ * Emits responsive AVIF/WebP with a JPG fallback and explicit dimensions so
+ * every image reserves its layout space. Requires an imported image
+ * (ImageMetadata) — raw string paths bypass the optimization pipeline (§18).
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  widths?: number[];
+  sizes?: string;
+  class?: string;
+  /** Set eager only when this specific image is above the fold. */
+  loading?: 'lazy' | 'eager';
+}
+
+const {
+  src,
+  alt,
+  widths = [400, 640, 900],
+  sizes = '(min-width: 1024px) 33vw, 100vw',
+  class: className = '',
+  loading = 'lazy',
+} = Astro.props;
+---
+
+<Picture
+  src={src}
+  alt={alt}
+  formats={['avif', 'webp']}
+  fallbackFormat="jpg"
+  widths={widths}
+  sizes={sizes}
+  loading={loading}
+  decoding="async"
+  aria-hidden={alt === '' ? 'true' : undefined}
+  class={className}
+/>

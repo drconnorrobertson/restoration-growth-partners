@@ -226,3 +226,8 @@ For deployment help:
 
 **Created**: April 28, 2026
 **Status**: Ready for Production Deployment
+
+
+## November 2026 design source
+
+The complete uploaded design is preserved in [design-source](design-source/README.md). See [RGP context and design readiness](docs/rgp-design-context.md) for the agency brief, preservation details, existing SEO work, and outstanding design issues.

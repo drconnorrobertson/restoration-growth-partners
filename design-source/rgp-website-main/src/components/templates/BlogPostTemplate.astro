@@ -1,0 +1,130 @@
+---
+/**
+ * Blog post (§29) — the inner-page template (two columns, sticky form sidebar) with a company byline, the
+ * "In this article" table of contents, the approved body in the default slot, the "About {company}" box,
+ * a links block to the parent service page and the related posts, and the post's FAQs through FAQSection
+ * (which emits FAQPage JSON-LD from the same array it renders, §22 — so FAQ schema exists only when the
+ * FAQs are on the page).
+ * Real posts pass PUBLISHED related posts only (blogData().relatedOf); this template never filters.
+ *
+ * Company author (owner decision 2026-10-14): the author is ALWAYS the company — logo + "By {site.name}" +
+ * date at the top, and the About box (logo, name, site.blog.about or else site.footerBlurb — approved copy
+ * only — and links to the About/Contact pages that exist in site.utilityNav) after the article.
+ * TOC (owner decision 2026-10-14): built by code from the body's H2s (src/utils/blog-toc.mjs) — each H2
+ * gets a stable slug id; the TOC is shown only with 3+ H2s. Plain HTML, no JS.
+ * Both are enforced on every published post by scripts/lib/blog-checks.mjs (postbuild + validate:built).
+ */
+import InnerPageTemplate from './InnerPageTemplate.astro';
+import FAQSection from '../FAQSection.astro';
+import OptimizedImage from '../OptimizedImage.astro';
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import brandLogo from '../../assets/brand/logo.png';
+import { site } from '../../data/site';
+import { buildToc } from '../../utils/blog-toc.mjs';
+
+interface Link { label: string; url: string }
+interface Props {
+  title: string;
+  /** ISO date-time with offset. */
+  date: string;
+  updated?: string;
+  url: string;
+  intro?: string;
+  blogUrl?: string;
+  /** Zone the dates are shown in. Posts publish at 06:00 UTC (§29), so UTC shows the publish date. */
+  timeZone?: string;
+  /** The service/hub page this post supports (page map parent). */
+  parent?: Link;
+  related?: Link[];
+  coreHubs?: Link[];
+  heroImage?: ImageMetadata;
+  heroImageAlt?: string;
+  faqs?: { question: string; answer: string }[];
+  /** The company logo (default: src/assets/brand/logo.png, the same file the header uses). */
+  logo?: ImageMetadata;
+}
+const { title, date, updated, url, intro, blogUrl = '/blog/', timeZone = 'UTC', parent, related = [], coreHubs = [], heroImage, heroImageAlt = '', faqs = [], logo = brandLogo } = Astro.props;
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-US', { timeZone, year: 'numeric', month: 'long', day: 'numeric' });
+const showUpdated = updated && fmt(updated) !== fmt(date);
+
+// Ids the page shell already uses (inner-page template, FAQ section, TOC, About box) — never given to a heading.
+const toc = buildToc(await Astro.slots.render('default'), { reserved: ['request-service', 'post-faq', 'about-company', 'main', 'faq'] });
+const aboutText = site.blog.about || site.footerBlurb;
+const aboutLinks = (site.utilityNav as { id: string; label: string; url: string }[])
+  .filter((l) => l.id === 'about' || l.id === 'contact')
+  .map((l) => ({ url: l.url, label: l.id === 'about' ? `More about ${site.name}` : `Contact ${site.name}` }));
+---
+
+<InnerPageTemplate
+  heroEyebrow={`Blog · ${fmt(date)}`}
+  h1={title}
+  heroIntro={intro}
+  parentHub={{ label: 'blog posts', url: blogUrl }}
+  current={{ label: title, url }}
+  relatedNav={[...(parent ? [parent] : []), ...related]}
+  coreHubs={coreHubs}
+>
+  <p class="not-article mb-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-semibold text-ink-muted" data-byline>
+    <span class="inline-flex items-center gap-2"><Image src={logo} alt="" aria-hidden="true" height={24} densities={[1, 2]} class="h-6 w-auto" loading="eager" />{' '}<span>By {site.name}</span></span>{' '}
+    <span>Published <time datetime={date}>{fmt(date)}</time></span>{' '}
+    {showUpdated && <span>Updated <time datetime={updated}>{fmt(updated!)}</time></span>}
+  </p>
+  {heroImage && <OptimizedImage src={heroImage} alt={heroImageAlt} loading="eager" widths={[640, 900, 1200]} sizes="(min-width: 1024px) 760px, 100vw" class="not-article mb-8 aspect-video w-full rounded-md object-cover" />}
+  {toc.show && (
+    <nav class="not-article mb-8 rounded-md border border-border bg-white px-5 py-4 shadow-sm" aria-label="In this article" data-toc>
+      <p class="text-xs font-bold uppercase tracking-eyebrow text-ink-muted">In this article</p>
+      <ol class="mt-2 list-decimal space-y-1.5 pl-5 text-sm leading-snug marker:text-ink-muted">
+        {toc.headings.map((h) => <li><a href={`#${h.id}`} class="font-semibold text-ink hover:text-accent">{h.text}</a></li>)}
+      </ol>
+    </nav>
+  )}
+  <Fragment set:html={toc.html} />
+  <section class="not-article mt-10 flex flex-col gap-4 rounded-md border border-border bg-white p-6 shadow-sm sm:flex-row sm:items-start" aria-labelledby="about-company" data-blog-author>
+    <Image src={logo} alt="" aria-hidden="true" height={40} densities={[1, 2]} class="h-10 w-auto shrink-0 self-start" />
+    <div class="min-w-0">
+      <h2 id="about-company" class="blog-about-title font-display text-xl font-bold text-ink">About {site.name}</h2>
+      <p class="mt-2 leading-relaxed text-ink-muted">{aboutText}</p>
+      {aboutLinks.length > 0 && (
+        <p class="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
+          {aboutLinks.map((l) => <a href={l.url} class="text-accent hover:text-accent-hover">{l.label}</a>)}
+        </p>
+      )}
+    </div>
+  </section>
+  {(parent || related.length > 0) && (
+    <aside class="not-article mt-10 rounded-md border border-border bg-white p-6 shadow-sm" data-blog-links>
+      {parent && (
+        <>
+          <p class="text-xs font-bold uppercase tracking-eyebrow text-ink-muted">Related service</p>
+          <p class="mt-2"><a href={parent.url} class="font-display text-lg font-bold text-accent hover:text-accent-hover">{parent.label}</a></p>
+        </>
+      )}
+      {related.length > 0 && (
+        <>
+          <p class:list={['text-xs font-bold uppercase tracking-eyebrow text-ink-muted', parent && 'mt-5']}>Related articles</p>
+          <ul class="mt-2 space-y-2">
+            {related.map((r) => <li><a href={r.url} class="font-semibold text-ink hover:text-accent">{r.label}</a></li>)}
+          </ul>
+        </>
+      )}
+    </aside>
+  )}
+  <Fragment slot="post-body">
+    {faqs.length > 0 && <FAQSection eyebrow="FAQ" heading="Frequently Asked Questions" faqs={faqs} id="post-faq" />}
+    <slot name="post-body" />
+  </Fragment>
+</InnerPageTemplate>
+
+<style>
+  /* TOC jumps land below the sticky header. */
+  :global(.article h2[id]) {
+    scroll-margin-top: 6.5rem;
+  }
+  /* The About box heading is a real H2 but not article-sized (InnerPageTemplate styles every .article h2). */
+  :global(.article [data-blog-author] h2.blog-about-title) {
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.25;
+  }
+</style>

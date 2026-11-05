@@ -1,0 +1,67 @@
+---
+/**
+ * Blog index (/blog/, /blog/2/, …) — a plain, fast list of posts. Real pages pass only PUBLISHED posts
+ * from blogData() (src/utils/blog.ts, §29); this template never invents titles or dates.
+ */
+import PageHero from '../PageHero.astro';
+import OptimizedImage from '../OptimizedImage.astro';
+import type { ImageMetadata } from 'astro';
+
+export interface PostSummary {
+  title: string;
+  url: string;
+  excerpt: string;
+  /** ISO date-time (with offset) or date. */
+  date: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  /**
+   * The automatic cover (§29) for a post without `image`: { width: url } of the 16:9 WebP card files
+   * (blogData().coverOf(p).card). Decorative — the title is the next element — so alt="" + aria-hidden.
+   */
+  cover?: Record<number, string>;
+}
+interface Props {
+  eyebrow: string;
+  h1: string;
+  intro?: string;
+  posts: PostSummary[];
+  /** Zone the dates are shown in. Posts publish at 06:00 UTC (§29), so UTC shows the publish date. */
+  timeZone?: string;
+  /** Pagination links; omit on a single page. */
+  pagination?: { current: number; last: number; prev?: string; next?: string };
+}
+const { eyebrow, h1, intro, posts, timeZone = 'UTC', pagination } = Astro.props;
+const fmt = (d: string) => new Date(d).toLocaleDateString('en-US', { timeZone, year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<PageHero eyebrow={eyebrow} h1={h1} intro={intro} />
+
+<section class="bg-surface py-12 md:py-16" data-blog-index>
+  <ul class="mx-auto grid max-w-6xl gap-8 px-4 md:grid-cols-2 md:px-6 lg:grid-cols-3">
+    {posts.map((p) => (
+      <li class="flex min-w-0 flex-col overflow-hidden rounded-md border border-border bg-white shadow-sm">
+        {p.image && <OptimizedImage src={p.image} alt={p.imageAlt ?? ''} class="aspect-video w-full object-cover" />}
+        {!p.image && p.cover && (() => {
+          const ws = Object.keys(p.cover!).map(Number).sort((a, b) => a - b);
+          const largest = ws[ws.length - 1];
+          return <img src={p.cover![ws[0]]} srcset={ws.map((w) => `${p.cover![w]} ${w}w`).join(', ')} sizes="(min-width: 1024px) 368px, (min-width: 768px) 50vw, 100vw" width={largest} height={Math.round((largest * 9) / 16)} alt="" aria-hidden="true" loading="lazy" decoding="async" class="aspect-video w-full object-cover" data-blog-cover />;
+        })()}
+        <div class="flex flex-1 flex-col p-6">
+          <time datetime={p.date} class="text-xs font-bold uppercase tracking-eyebrow text-ink-muted">{fmt(p.date)}</time>
+          <h2 class="mt-2 font-display text-xl font-bold leading-tight text-ink"><a href={p.url} class="hover:text-accent">{p.title}</a></h2>
+          <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-muted">{p.excerpt}</p>
+          <a href={p.url} class="mt-4 text-sm font-bold text-accent">Read more<span class="sr-only"> of {p.title}</span> &rarr;</a>
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  {pagination && pagination.last > 1 && (
+    <nav class="mx-auto mt-10 flex max-w-6xl items-center justify-between gap-4 px-4 md:px-6" aria-label="Blog pages">
+      {pagination.prev ? <a href={pagination.prev} class="text-sm font-bold text-accent">&larr; Newer posts</a> : <span></span>}
+      <p class="text-sm font-semibold text-ink-muted">Page {pagination.current} of {pagination.last}</p>
+      {pagination.next ? <a href={pagination.next} class="text-sm font-bold text-accent">Older posts &rarr;</a> : <span></span>}
+    </nav>
+  )}
+</section>

@@ -1,0 +1,57 @@
+---
+/**
+ * STARTER ROOT — a directory of the noindex template preview routes (§17).
+ * This is NOT a client homepage. A client build (Rule Zero) replaces this file with the real
+ * homepage assembled from the approved Design Recipe + Messaging Pack. Standalone on purpose:
+ * no site header/footer, so the starter's own build has no links to routes that don't exist.
+ */
+import '../styles/global.css';
+import { Font } from 'astro:assets';
+const routes: [string, string][] = [
+  ['/templates/homepage/', 'Full homepage assembly (emergency_split_hero)'],
+  ['/templates/inner-page/', 'Inner-page template — service, child, city hub'],
+  ['/templates/city-service/', 'Generated city-service page'],
+  ['/templates/contact-page/', 'Contact page (§13)'],
+  ['/templates/about/', 'About page (inner template + GalleryImage grid)'],
+  ['/templates/reviews/', 'Reviews page (widget at full width)'],
+  ['/templates/service-area/', 'Service-area index (map + every city link)'],
+  ['/templates/legal/', 'Legal page (privacy / terms)'],
+  ['/templates/careers/', 'Careers page (standard careers application form)'],
+  ['/templates/partners/', 'Partner page (standard partner inquiry form)'],
+  ['/templates/blog/', 'Blog index'],
+  ['/templates/blog-post/', 'Blog post (inner template)'],
+  ['/templates/sections-a/', 'Services grid + differentiator'],
+  ['/templates/sections-b/', 'Process + reviews'],
+  ['/templates/sections-c/', 'Service-area map + FAQ'],
+  ['/templates/sections-d/', 'Footer (three bands)'],
+  ['/templates/variants-b1/', 'Variants: icon cards + stepper'],
+  ['/templates/variants-b2/', 'Variants: regional service explorer'],
+  ['/templates/sticky-cta-options/', 'Mobile sticky CTA options'],
+  ['/templates/mega-menu/', 'Grouped mega-menu header'],
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    {/* Standalone page (no BaseLayout), so it emits the §20 font faces itself. */}
+    <Font cssVariable="--font-display-face" />
+    <Font cssVariable="--font-body-face" />
+    <title>Agency Restoration Starter — template previews</title>
+  </head>
+  <!-- data-starter-directory: validate-built-html skips production-page checks here. A client build replaces this file, so the marker never ships. -->
+  <body class="bg-surface text-ink" data-starter-directory>
+    <main class="mx-auto max-w-3xl px-6 py-16">
+      <p class="text-xs font-bold uppercase tracking-eyebrow text-accent">Agency starter</p>
+      <h1 class="mt-2 font-display text-4xl font-bold">Template previews</h1>
+      <p class="mt-3 text-ink-muted">Noindex approval surfaces rendered with example data. A client build replaces this page with the real homepage.</p>
+      <ul class="mt-8 divide-y divide-border rounded-md border border-border bg-white">
+        {routes.map(([url, label]) => (
+          <li><a class="flex items-center justify-between gap-4 px-5 py-4 font-semibold hover:bg-surface-2" href={url}><span>{label}</span><code class="min-w-0 break-all text-xs font-normal text-ink-muted">{url}</code></a></li>
+        ))}
+      </ul>
+    </main>
+  </body>
+</html>
