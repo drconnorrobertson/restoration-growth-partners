@@ -1,0 +1,13 @@
+---
+import { site } from '../data/site';
+interface Props { idPrefix?: string; }
+---
+<div class="rounded-md border border-border bg-white p-6 text-ink shadow-xl sm:p-8" data-strategy-panel>
+<p class="text-xs font-bold uppercase tracking-eyebrow text-accent">Your next move</p>
+<h2 class="mt-3 font-display text-3xl font-bold sm:text-4xl">Let’s talk growth.</h2>
+<p class="mt-4 leading-relaxed text-ink-muted">Tell us about your restoration company. We’ll discuss your market, your lead sources, and where a connected marketing strategy can help.</p>
+<ul class="mt-6 space-y-3 border-y border-border py-6 text-sm font-semibold">
+<li>01 · Your services and target markets</li><li>02 · Your current search visibility</li><li>03 · A practical path forward</li></ul>
+<a class="mt-6 flex min-h-12 items-center justify-center rounded-md bg-accent px-5 py-4 text-center font-bold text-white transition hover:bg-accent-hover" href={site.booking.calendarUrl} target="_blank" rel="noopener noreferrer">Choose a time to talk <span class="sr-only">(opens booking calendar in a new tab)</span><span class="ml-2" aria-hidden="true">↗</span></a>
+<p class="mt-4 text-center text-sm text-ink-muted">Prefer email? <a class="font-semibold text-accent underline" href={`mailto:${site.email}`}>{site.email}</a></p>
+</div>

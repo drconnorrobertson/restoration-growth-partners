@@ -1,0 +1,233 @@
+---
+/**
+ * JSON-LD structured data (CORE_CONTRACTS §22 + the RGP master sheet's location schema contract).
+ *
+ * ONE Organization for the brand (stable @id /#organization) plus ONE LocalBusiness per REAL
+ * office — one per Google Business Profile in site.locations — each pointing back to the brand
+ * with `parentOrganization` (schema.org's replacement for `branchOf`). Every other node references
+ * these @ids. The master sheet is explicit: "Reuse the verified sitewide Organization/LocalBusiness
+ * entity; do not create a new business identity per city." A service-area city is never labelled
+ * as a LocalBusiness — it appears only as areaServed — UNLESS that city has its own GBP office, in
+ * which case its city page is `about` that office (§22, owner decision 2026-09-30).
+ *
+ * NOTHING HERE IS INVENTED. Every value traces to `site.ts`, which traces to the approved GBP.
+ * geo is emitted only when the location carries its GBP lat/lng; 24/7 hours only when the location
+ * or the site says 24/7. Deliberately omitted because they are unverified or would be fabrication:
+ *   · aggregateRating / reviewCount — inventing review data is fabrication, and the review widget
+ *     is still owed (B-13)
+ *   · priceRange — never established
+ *   · hasCredential for IICRC — proof still owed (B-12, launch_proof_required)
+ */
+import { site } from '../data/site';
+import { telHref } from '../utils/phone';
+
+interface Props {
+  /** Absolute canonical URL of the current page. */
+  url: string;
+  /** Visible page title/name. */
+  name: string;
+  description: string;
+  /** Service offered on this page, when it is a service or city-service page. */
+  service?: { name: string; serviceType?: string };
+  /** City this page serves, for city and city-service pages. */
+  areaServedCity?: string;
+  /** Breadcrumb trail matching visible navigation. */
+  breadcrumbs?: { name: string; url: string }[];
+  /** FAQs rendered on the page — must match the visible copy exactly. */
+  faqs?: { question: string; answer: string }[];
+  /** Destination pages listed on a hub, for its ItemList. */
+  itemList?: { name: string; url: string }[];
+  /** Emit CollectionPage instead of WebPage — city hubs and the service-area overview. */
+  collection?: boolean;
+  /** Emit the WebSite node. Homepage only, so it is declared once. */
+  isHomepage?: boolean;
+  /**
+   * Blog post (§29): emits a BlogPosting that is the page's mainEntity. Dates are ISO with offset.
+   * author AND publisher are always the Organization (owner decision 2026-10-14: company author, never a
+   * Person) — the same @id as the sitewide node, with name, url and `logo` (absolute URL of the company logo,
+   * which is also added to the Organization node on that page).
+   */
+  blogPosting?: { headline: string; datePublished: string; dateModified?: string; logo?: string; image?: string; articleSection?: string };
+}
+
+const {
+  url, name, description, service, areaServedCity,
+  breadcrumbs, faqs, itemList, collection = false, isHomepage = false, blogPosting,
+} = Astro.props;
+
+const ORIGIN = (Astro.site?.origin ?? site.siteUrl).replace(/\/$/, '');
+const ORG = `${ORIGIN}/#organization`;
+
+/** Strip HTML from FAQ answers — schema text must be plain and match what is visible. */
+const plain = (s: string) => s.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const e164 = (phone: string) => telHref(phone).replace('tel:', '');
+
+/**
+ * Parse a display address from the END, so every shape the Local SEO sheets use works:
+ * "123 Main St, Memphis, TN 38133" · "3804 S Green St, Ste B, Tupelo, MS 38801, United States" ·
+ * "3080 Bartlett Corporate Dr, Memphis, Tennessee, 38133". (The previous parser assumed exactly four
+ * comma parts, so a three-part address put the city in streetAddress and "ST 00001" in the locality.)
+ */
+function parseAddress(address: string) {
+  const parts = address.split(',').map((p) => p.trim()).filter(Boolean);
+  if (/^(united states|usa|us)$/i.test(parts[parts.length - 1] ?? '')) parts.pop();
+  let region = '';
+  let postal = '';
+  const last = parts.pop() ?? '';
+  if (/^\d{5}(-\d{4})?$/.test(last)) { postal = last; region = parts.pop() ?? ''; }
+  else { const m = last.match(/^(.*?)\s+(\d{5}(?:-\d{4})?)$/); if (m) { region = m[1]; postal = m[2]; } else region = last; }
+  const locality = parts.pop() ?? '';
+  return { '@type': 'PostalAddress', streetAddress: parts.join(', '), addressLocality: locality, addressRegion: region, postalCode: postal, addressCountry: 'US' };
+}
+
+const cityNode = (name: string) => ({ '@type': 'City', name, containedInPlace: { '@type': 'State', name: site.stateName } });
+const siteWideAreas = site.serviceArea.counties.flatMap((c) =>
+  c.cities.map((ct) => ({ '@type': 'City', name: ct.name, containedInPlace: { '@type': 'AdministrativeArea', name: `${c.name}, ${site.stateName}` } })),
+);
+const open247 = (hours?: string) => /24\s*(hours|\/\s*7)/i.test(hours ?? '') || site.emergencyAvailability === '24/7';
+
+const organization: Record<string, unknown> = {
+  '@type': 'Organization',
+  '@id': ORG,
+  name: site.name,
+  legalName: site.legalName,
+  url: `${ORIGIN}/`,
+  telephone: site.phoneHref.replace('tel:', ''),
+  email: site.email,
+  description: site.footerBlurb,
+  areaServed: siteWideAreas,
+};
+if (site.socialLinks.length) organization.sameAs = site.socialLinks.map((s) => s.url);
+
+/** One LocalBusiness per GBP office. Single-location clients get the site-wide areas on their one office. */
+const locations = site.locations.map((loc) => {
+  const address = parseAddress(loc.address);
+  const node: Record<string, unknown> = {
+    '@type': ['ProfessionalService'],
+    '@id': `${ORIGIN}/#location-${slug(`${address.addressLocality}-${address.addressRegion}`) || 'main'}`,
+    name: loc.name,
+    legalName: loc.legalName ?? site.legalName,
+    url: `${ORIGIN}/`,
+    telephone: e164(loc.phone),
+    address,
+    parentOrganization: { '@id': ORG },
+  };
+  if (open247(loc.hours)) node.openingHoursSpecification = [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+    opens: '00:00',
+    closes: '23:59',
+  }];
+  if (typeof loc.lat === 'number' && typeof loc.lng === 'number')
+    node.geo = { '@type': 'GeoCoordinates', latitude: loc.lat, longitude: loc.lng };
+  if (loc.gbpUrl) node.hasMap = loc.gbpUrl;
+  if (loc.areaServed?.length) node.areaServed = loc.areaServed.map(cityNode);
+  else if (site.locations.length === 1) node.areaServed = siteWideAreas;
+  return { node, city: String(address.addressLocality).toLowerCase(), serves: (loc.areaServed ?? []).map((c) => c.toLowerCase()) };
+});
+
+/** A city page for a city that HAS a GBP office is about that office; any other city stays a City. */
+const cityKey = areaServedCity?.toLowerCase();
+const officeInCity = cityKey ? locations.find((l) => l.city === cityKey) : undefined;
+const officeServingCity = cityKey ? (officeInCity ?? locations.find((l) => l.serves.includes(cityKey))) : undefined;
+
+const pageNode: Record<string, unknown> = {
+  '@type': collection ? 'CollectionPage' : 'WebPage',
+  '@id': url,
+  url,
+  name,
+  description,
+  isPartOf: { '@id': `${ORIGIN}/#website` },
+  about: officeInCity
+    ? { '@id': officeInCity.node['@id'] }
+    : areaServedCity
+      ? { '@type': 'City', name: areaServedCity, containedInPlace: { '@type': 'State', name: site.stateName } }
+      : { '@id': ORG },
+  publisher: { '@id': ORG },
+};
+if (itemList?.length) {
+  pageNode.mainEntity = {
+    '@type': 'ItemList',
+    itemListElement: itemList.map((it, i) => ({
+      '@type': 'ListItem', position: i + 1, name: it.name, url: `${ORIGIN}${it.url}`,
+    })),
+  };
+}
+
+const graph: Record<string, unknown>[] = [organization, ...locations.map((l) => l.node), pageNode];
+
+if (isHomepage) {
+  graph.push({
+    '@type': 'WebSite',
+    '@id': `${ORIGIN}/#website`,
+    url: `${ORIGIN}/`,
+    name: site.name,
+    publisher: { '@id': ORG },
+  });
+}
+
+if (service) {
+  const svc: Record<string, unknown> = {
+    '@type': 'Service',
+    '@id': `${url}#service`,
+    name: service.name,
+    serviceType: service.serviceType ?? service.name,
+    url,
+    provider: { '@id': officeServingCity ? officeServingCity.node['@id'] : ORG },
+  };
+  svc.areaServed = areaServedCity
+    ? { '@type': 'City', name: areaServedCity, containedInPlace: { '@type': 'State', name: site.stateName } }
+    : { '@type': 'AdministrativeArea', name: `${site.regionName}, ${site.stateName}` };
+  graph.push(svc);
+  if (!itemList?.length) pageNode.mainEntity = { '@id': `${url}#service` };
+}
+
+if (blogPosting) {
+  // Company author (§29): the Organization by @id, repeated inline (name, url, logo) for readers that do not resolve @id.
+  const logo = blogPosting.logo ? { '@type': 'ImageObject', url: blogPosting.logo } : undefined;
+  if (logo) organization.logo = logo;
+  const companyRef = { '@type': 'Organization', '@id': ORG, name: site.name, url: `${ORIGIN}/`, ...(logo ? { logo } : {}) };
+  const post: Record<string, unknown> = {
+    '@type': 'BlogPosting',
+    '@id': `${url}#article`,
+    headline: blogPosting.headline,
+    description,
+    url,
+    datePublished: blogPosting.datePublished,
+    dateModified: blogPosting.dateModified ?? blogPosting.datePublished,
+    author: companyRef,
+    publisher: companyRef,
+    mainEntityOfPage: { '@id': url },
+  };
+  if (blogPosting.image) post.image = blogPosting.image;
+  if (blogPosting.articleSection) post.articleSection = blogPosting.articleSection;
+  graph.push(post);
+  pageNode.mainEntity = { '@id': `${url}#article` };
+}
+
+if (breadcrumbs?.length) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    '@id': `${url}#breadcrumb`,
+    itemListElement: breadcrumbs.map((b, i) => ({
+      '@type': 'ListItem', position: i + 1, name: b.name, item: `${ORIGIN}${b.url}`,
+    })),
+  });
+}
+
+if (faqs?.length) {
+  graph.push({
+    '@type': 'FAQPage',
+    '@id': `${url}#faq`,
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: plain(f.question),
+      acceptedAnswer: { '@type': 'Answer', text: plain(f.answer) },
+    })),
+  });
+}
+
+const jsonld = { '@context': 'https://schema.org', '@graph': graph };
+---
+<script type="application/ld+json" set:html={JSON.stringify(jsonld)} is:inline />
